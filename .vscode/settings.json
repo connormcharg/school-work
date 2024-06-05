@@ -1,0 +1,20 @@
+{
+    "workbench.startupEditor": "none",
+    "workbench.colorTheme": "Dracula",
+    "editor.fontSize": 20,
+    "workbench.iconTheme": "vscode-icons",
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+    "editor.formatOnType": true,
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
+    "git.autofetch": true,
+    "extensions.ignoreRecommendations": true,
+    "security.workspace.trust.untrustedFiles": "open",
+    "github.copilot.editor.enableAutoCompletions": true,
+    "keyboard.layout": "00000809"
+}

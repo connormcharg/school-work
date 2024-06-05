@@ -1,0 +1,1 @@
+cd /workspaces/school-work/SignalRTesting/ && dotnet restore

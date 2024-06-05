@@ -1,0 +1,35 @@
+{
+    "forwardPorts": [
+        5005, 7150
+    ],
+    "portsAttributes": {
+        "5005": {
+            "protocol": "http",
+            "visibility": "public"
+        },
+        "7150": {
+            "protocol": "http",
+            "visibility": "public"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "workbench.colorTheme": "Dracula",
+                "editor.fontFamily": "Consolas, 'Courier New', monospace",
+                "editor.fontSize": 16,
+            },
+            "extensions": [
+                "ms-dotnettools.csdevkit",
+                "github.copilot",
+                "dracula-theme.theme-dracula",
+                "oderwat.indent-rainbow",
+                "vscode-icons-team.vscode-icons"
+            ]
+        }
+    },
+    "features": {
+        "git": "latest"
+    },
+    "postCreateCommand": "chmod +x /workspaces/school-work/.devcontainer/post-create.sh && /workspaces/school-work/.devcontainer/post-create.sh",
+}
