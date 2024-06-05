@@ -14,11 +14,6 @@
     },
     "customizations": {
         "vscode": {
-            "settings": {
-                "workbench.colorTheme": "Dracula",
-                "editor.fontFamily": "Consolas, 'Courier New', monospace",
-                "editor.fontSize": 16,
-            },
             "extensions": [
                 "ms-dotnettools.csdevkit",
                 "github.copilot",
