@@ -591,7 +591,7 @@
           "build/Microsoft.NET.ILLink.Tasks.props": {}
         }
       },
-      "Microsoft.NET.Sdk.WebAssembly.Pack/8.0.6": {
+      "Microsoft.NET.Sdk.WebAssembly.Pack/8.0.5": {
         "type": "package",
         "build": {
           "build/Microsoft.NET.Sdk.WebAssembly.Pack.props": {},
@@ -1292,7 +1292,7 @@
           "build/Microsoft.NET.ILLink.Tasks.props": {}
         }
       },
-      "Microsoft.NET.Sdk.WebAssembly.Pack/8.0.6": {
+      "Microsoft.NET.Sdk.WebAssembly.Pack/8.0.5": {
         "type": "package",
         "build": {
           "build/Microsoft.NET.Sdk.WebAssembly.Pack.props": {},
@@ -2334,10 +2334,10 @@
         "tools/net7.0/illink.runtimeconfig.json"
       ]
     },
-    "Microsoft.NET.Sdk.WebAssembly.Pack/8.0.6": {
-      "sha512": "4X+KpUFx/0feEWcMi4v+QVu8rMbYzHfbUv8nONSeZ4AiVects9F91kbQTL3GWs3mcGtejMtW86DIVE8UbghQlA==",
+    "Microsoft.NET.Sdk.WebAssembly.Pack/8.0.5": {
+      "sha512": "CABBOqZZEDgiVSjkwUr+pJEGEtQbrT+6dltzJnBDap7mOSvfn53+zwb112hRGB7ynm9ikAocGZTUp+GizbH7XQ==",
       "type": "package",
-      "path": "microsoft.net.sdk.webassembly.pack/8.0.6",
+      "path": "microsoft.net.sdk.webassembly.pack/8.0.5",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -2365,7 +2365,7 @@
         "build/Microsoft.NET.Sdk.WebAssembly.Pack.props",
         "build/Microsoft.NET.Sdk.WebAssembly.Pack.targets",
         "build/Wasm.web.config",
-        "microsoft.net.sdk.webassembly.pack.8.0.6.nupkg.sha512",
+        "microsoft.net.sdk.webassembly.pack.8.0.5.nupkg.sha512",
         "microsoft.net.sdk.webassembly.pack.nuspec",
         "tools/net472/Microsoft.Bcl.AsyncInterfaces.dll",
         "tools/net472/Microsoft.Build.dll",
@@ -2611,37 +2611,45 @@
       "Microsoft.AspNetCore.SignalR.Client >= 8.0.6",
       "Microsoft.NET.ILLink.Analyzers >= 7.0.100-1.23401.1",
       "Microsoft.NET.ILLink.Tasks >= 7.0.100-1.23401.1",
-      "Microsoft.NET.Sdk.WebAssembly.Pack >= 8.0.6",
+      "Microsoft.NET.Sdk.WebAssembly.Pack >= 8.0.5",
       "SignalRTesting.Shared >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "/home/codespace/.nuget/packages/": {}
+    "C:\\Users\\conno\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/workspaces/school-work/SignalRTesting/SignalRTesting/Client/SignalRTesting.Client.csproj",
+      "projectUniqueName": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\SignalRTesting.Client.csproj",
       "projectName": "SignalRTesting.Client",
-      "projectPath": "/workspaces/school-work/SignalRTesting/SignalRTesting/Client/SignalRTesting.Client.csproj",
-      "packagesPath": "/home/codespace/.nuget/packages/",
-      "outputPath": "/workspaces/school-work/SignalRTesting/SignalRTesting/Client/obj/",
+      "projectPath": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\SignalRTesting.Client.csproj",
+      "packagesPath": "C:\\Users\\conno\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/codespace/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\conno\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "/workspaces/school-work/SignalRTesting/SignalRTesting/Shared/SignalRTesting.Shared.csproj": {
-              "projectPath": "/workspaces/school-work/SignalRTesting/SignalRTesting/Shared/SignalRTesting.Shared.csproj"
+            "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\SignalRTesting.Shared.csproj": {
+              "projectPath": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\SignalRTesting.Shared.csproj"
             }
           }
         }
@@ -2689,7 +2697,7 @@
           "Microsoft.NET.Sdk.WebAssembly.Pack": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[8.0.6, )",
+            "version": "[8.0.5, )",
             "autoReferenced": true
           }
         },
@@ -2707,7 +2715,7 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-            "version": "[6.0.31, 6.0.31]"
+            "version": "[6.0.30, 6.0.30]"
           }
         ],
         "frameworkReferences": {
@@ -2715,7 +2723,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.301/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {
