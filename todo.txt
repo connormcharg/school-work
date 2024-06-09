@@ -1,0 +1,31 @@
+Server:
+ - new connections: either game id (join existing) or no game id (create a new game)
+ - setup game: send all important data to each client in game
+ - making moves: move valid or not, update data to each client accordingly
+ - class to encompass database access
+ - spectators list for a game to view it without making moves
+
+Client:
+ - login/sign up, account management
+ - new game/join game page
+ - leaderboard page
+ - matchmaking (looking for game)
+
+AI:
+ - centralised service to handle all computer players at once and emulate them as other signalR clients
+ - replicate python AI 
+ - find data to train AI on
+ - begin training of AI and how to store model data for a point in time in the training process
+
+Data Analytics:
+ - every time a move is made, hash the game state into a single value and add it to / update the database
+ - record win/loss for each game and every move made for a certain game
+
+Data Storage:
+ - SQL relational database
+ - tables: Accounts, Active Games, Archived Games, leaderboard, chat log
+ - hashing algorithm for gamestate to return a single value (possibly one long binary string)
+ - look for an online tablebase store / api
+ - populate my own tablebase from an existing one
+ - relationships: each game includes the players that played in it, every message in the chat log includes a gameid
+ - looking into stored procedures to run certain aspects of logic in the SQL server itself

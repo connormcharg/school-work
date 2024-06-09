@@ -104,6 +104,10 @@
 
     private void SetGameListener()
     {
+        if (hubConnection == null)
+        {
+            return;
+        }
         hubConnection.On<string[][]>("RenderBoard", (board) =>
         {
             _board = board;

@@ -1,7 +1,7 @@
 {
   "entryAssembly": "SignalRTesting.Client",
   "resources": {
-    "hash": "sha256-6gNjrO0+mTFSNRczbzoSMTUCYNHqGiUHGvEN/L50pE4=",
+    "hash": "sha256-S2SU+N1Z/E2tUfDgPFVBdUeut7k3x1kAqUeMQVSYHhM=",
     "runtime": {
       "dotnet.6.0.31.xm05onuvyw.js": "sha256-k3r5KPTTMlxe9KmBUGXolEPkii6jv/+oC1SOmed3LVc=",
       "dotnet.timezones.blat": "sha256-noxiDysKmbcNb8gHnNG6cYvM6Ies6JlarpF1lK0YTtY=",
@@ -210,12 +210,12 @@
       "mscorlib.dll": "sha256-er6cLjOyu1s02HPaReJi0KkBwOSQyQ0/T8lVwYrQmwE=",
       "netstandard.dll": "sha256-UjAkjmlOWOKd1d6UaAYFH6rO8pqwuoCKrs8+TW10Xvk=",
       "System.Private.CoreLib.dll": "sha256-uAJxx8FtA3E57cEa87ZsxFWqQmHkAYyH5WNbmii0koQ=",
-      "SignalRTesting.Shared.dll": "sha256-mv/H19IFTxUzMFqja63k9qZQTyU1IEha7kEHpsz4Z/c=",
-      "SignalRTesting.Client.dll": "sha256-qhtKHcjUWO1oWMvtppJUC1AhVW+QG3w9mETbQnHjG2o="
+      "SignalRTesting.Shared.dll": "sha256-f1dvfJeBKWENkO9Y5WujZHZbT1QV48wGRoMb85mlcWU=",
+      "SignalRTesting.Client.dll": "sha256-rMr6wgNsQWKBIWgMvDSrqTX8/HmUvb0TqZbwk/52sAs="
     },
     "pdb": {
-      "SignalRTesting.Shared.pdb": "sha256-nSGnKOac2NKPyRffXvvw4AO++l44bS0Aw7ZNpXaq66A=",
-      "SignalRTesting.Client.pdb": "sha256-JjyFYlXGuYRS0nkg5T8IYUTpPP+9bKS9DYYH3HCp5dM="
+      "SignalRTesting.Shared.pdb": "sha256-zrIBJyf5QsM7ox24YLAxacdmZYvpGqtQBm6JesY+QDg=",
+      "SignalRTesting.Client.pdb": "sha256-rOxsA9cpkL6wba5dENglMjr9jgnyqpiGer5cC4NUXa8="
     },
     "runtimeAssets": {
       "dotnet.wasm": {
