@@ -1,0 +1,65 @@
+﻿@page "/chess"
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.SignalR.Client
+
+<div style="position: relative;">
+    <img src="images/green-board.png" style="width: 512px; height: 512px; position: relative;" />
+    @if (board != null)
+    {
+        @for (int i = 0; i < board.Count; i++)
+        {
+            for (int j = 0; j < board[i].Count; j++)
+            {
+                @if (board[i][j] != "--")
+                {
+                    <img src="images/@(board[i][j]).png"
+                         style="position: absolute; left: @(j * 64)px; top: @(i * 64)px; width: 64px; height: 64px" />
+                }
+            }
+        }
+    }
+</div>
+
+<button @onclick="MakeMove">Make a Move</button>
+
+@code {
+    private HubConnection hubConnection;
+    private List<List<string>> board;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ConnectToHub();
+        await hubConnection.SendAsync("GetBoardState");
+        Console.WriteLine(board != null);
+    }
+
+    private async Task ConnectToHub()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/chess"))
+            .Build();
+
+        hubConnection.On<List<List<string>>>("ReceiveMove", (_board) =>
+        {
+            board = _board;
+            StateHasChanged();
+        });
+
+        hubConnection.On<List<List<string>>>("ReceiveBoardState", (_board) =>
+        {
+            board = _board;
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task MakeMove()
+    {
+        if (hubConnection != null)
+        {
+            // Example move from e2 to e4
+            await hubConnection.SendAsync("SendMove", 6, 4, 4, 4);
+        }
+    }
+}

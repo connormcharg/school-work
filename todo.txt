@@ -30,3 +30,4 @@ Data Storage:
  - relationships: each game includes the players that played in it, every message in the chat log includes a gameid
  - looking into stored procedures to run certain aspects of logic in the SQL server itself
 
+REWRITE CHESSENGINE TO WORK MORE EFFICIENTLY
