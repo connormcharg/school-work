@@ -1,0 +1,21 @@
+on website, someone goes to lobby page
+	they should be connected to the lobby hub
+	they should be sent a list of all possible games
+	they should be able to connect to any of the games
+	they should be able to create a new game if they wish
+
+creating new game
+	specify a new game name or auto generate one
+	change parameters such as choosing to start as a certain colour
+	should the game be put open to other players or should an AI player join the game
+	when game is full, start button should be allowed and player can start game
+	this will remove them from the lobby hub and connect them to the game hub
+
+connecting to a game
+	check if still available and check if not full
+	add client to game hub and disconnect from lobby hub
+
+playing the game
+	board is displayed with correct orientation
+	moves can be sent to the server if it is their turn
+	board is updated after each successful move
