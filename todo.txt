@@ -31,5 +31,3 @@ Data Storage:
  - looking into stored procedures to run certain aspects of logic in the SQL server itself
 
 REWRITE CHESSENGINE TO WORK MORE EFFICIENTLY
-
-AND MAKE IT ACTUALLY WORK CAUSE PINS DONT EXIST RN
