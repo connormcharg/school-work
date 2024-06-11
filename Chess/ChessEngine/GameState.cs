@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -362,10 +363,10 @@ namespace ChessEngine
                         pawnPromotion = true;
                     }
                     moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c }, board, pawnPromotion: pawnPromotion));
-                }
-                if (r == startRow && board[r + 2 * moveAmount][c] == "--")
-                {
-                    moves.Add(new Move(new List<int> { r, c }, new List<int> { r + 2 * moveAmount, c }, board));
+                    if (r == startRow && board[r + 2 * moveAmount][c] == "--")
+                    {
+                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + 2 * moveAmount, c }, board));
+                    }
                 }
             }
             if (c - 1 >= 0)
@@ -596,8 +597,10 @@ namespace ChessEngine
                         {
                             blackKingLocation = new List<int> { endRow, endCol };
                         }
-                        checkForPinsAndChecks(out inCheck, out pins, out checks);
-                        if (!inCheck)
+                        bool _inCheck;
+                        List<List<int>> _pins, _checks;
+                        checkForPinsAndChecks(out _inCheck, out _pins, out _checks);
+                        if (!_inCheck)
                         {
                             moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
                         }
@@ -642,9 +645,16 @@ namespace ChessEngine
                     if (endRow >= 0 && endRow < 8 && endCol >= 0 && endCol < 8)
                     {
                         var endPiece = board[endRow][endCol];
-                        if (endPiece[0] == allyColour && possiblePin.Count == 0)
+                        if (endPiece[0] == allyColour && endPiece[1] != 'K')
                         {
-                            possiblePin = new List<int> { endRow, endCol, d[0], d[1] };
+                            if (possiblePin.Count == 0)
+                            {
+                                possiblePin = new List<int> { endRow, endCol, d[0], d[1] };
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                         else if (endPiece[0] == enemyColour)
                         {
