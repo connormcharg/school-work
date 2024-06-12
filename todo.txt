@@ -30,7 +30,11 @@ Data Storage:
  - relationships: each game includes the players that played in it, every message in the chat log includes a gameid
  - looking into stored procedures to run certain aspects of logic in the SQL server itself
 
-REWRITE CHESSENGINE TO WORK MORE EFFICIENTLY
+REWRITE CHESSENGINE TO WORK MORE EFFICIENTLY:
+ - make use of bit boards as a more efficient way to transport boards and positions
+ - create an OOP design which allows for modularity later on such as creating different variants more easily
 
-apparently only king can move when in check
-valid squares not being generated correctly OR pieces not generating moves correctly
+Hashing:
+ - use zobrist hashing to produce unique hash results for every possible position on a chess board
+ - put results into a transposition table, probably as part of the database
+ - use this hash value to keep track of evaluations for a given position so that they can be used again without recalculation

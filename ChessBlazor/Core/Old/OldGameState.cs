@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChessEngine
+namespace Core
 {
-    public class GameState
+    public class OldGameState
     {
         public List<List<string>> board = new List<List<string>>
         {
             new List<string> { "bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR" },
             new List<string> { "bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP" },
-            new List<string> { "--", "--", "--", "--", "--", "--", "--", "--" },          
-            new List<string> { "--", "--", "--", "--", "--", "--", "--", "--" },          
-            new List<string> { "--", "--", "--", "--", "--", "--", "--", "--" },          
-            new List<string> { "--", "--", "--", "--", "--", "--", "--", "--" },          
-            new List<string> { "wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP" },            
-            new List<string> { "wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR" }      
+            new List<string> { "--", "--", "--", "--", "--", "--", "--", "--" },
+            new List<string> { "--", "--", "--", "--", "--", "--", "--", "--" },
+            new List<string> { "--", "--", "--", "--", "--", "--", "--", "--" },
+            new List<string> { "--", "--", "--", "--", "--", "--", "--", "--" },
+            new List<string> { "wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP" },
+            new List<string> { "wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR" }
         };
-        public Dictionary<char, Func<int, int, List<Move>>> moveFunctions = new Dictionary<char, Func<int, int, List<Move>>>();
+        public Dictionary<char, Func<int, int, List<OldMove>>> moveFunctions = new Dictionary<char, Func<int, int, List<OldMove>>>();
         public bool whiteToMove = true;
-        public List<Move> moveLog = new List<Move>();
+        public List<OldMove> moveLog = new List<OldMove>();
         public List<int> whiteKingLocation = new List<int> { 7, 4 };
         public List<int> blackKingLocation = new List<int> { 0, 4 };
         public bool inCheck = false;
@@ -34,7 +33,7 @@ namespace ChessEngine
         public CastleRights currentCastlingRight = new CastleRights(true, true, true, true);
         public List<CastleRights> castleRightsLog;
 
-        public GameState()
+        public OldGameState()
         {
             this.castleRightsLog = new List<CastleRights> { new CastleRights(
                 currentCastlingRight.wks,
@@ -49,7 +48,7 @@ namespace ChessEngine
             moveFunctions.Add('K', getKingMoves);
         }
 
-        public void makeMove(Move move)
+        public void makeMove(OldMove move)
         {
             board[move.startRow][move.startCol] = "--";
             board[move.endRow][move.endCol] = move.pieceMoved;
@@ -106,7 +105,7 @@ namespace ChessEngine
                 currentCastlingRight.bqs));
         }
 
-        public void updateCastleRights(Move move)
+        public void updateCastleRights(OldMove move)
         {
             if (move.pieceMoved == "wK")
             {
@@ -152,7 +151,7 @@ namespace ChessEngine
         {
             if (moveLog.Count != 0)
             {
-                Move move = moveLog[moveLog.Count - 1];
+                OldMove move = moveLog[moveLog.Count - 1];
                 moveLog.RemoveAt(moveLog.Count - 1);
                 board[move.startRow][move.startCol] = move.pieceMoved;
                 board[move.endRow][move.endCol] = move.pieceCaptured;
@@ -199,14 +198,14 @@ namespace ChessEngine
             }
         }
 
-        public List<Move> getValidMoves()
+        public List<OldMove> getValidMoves()
         {
             CastleRights tempCastleRights = new CastleRights(
                 currentCastlingRight.wks,
                 currentCastlingRight.bks,
                 currentCastlingRight.wqs,
                 currentCastlingRight.bqs);
-            List<Move> moves = new List<Move>();
+            List<OldMove> moves = new List<OldMove>();
             checkForPinsAndChecks(out inCheck, out pins, out checks);
 
             int kRow;
@@ -308,9 +307,9 @@ namespace ChessEngine
         public bool squareUnderAttack(int row, int col)
         {
             whiteToMove = !whiteToMove;
-            List<Move> opponentMoves = getAllPossibleMoves();
+            List<OldMove> opponentMoves = getAllPossibleMoves();
             whiteToMove = !whiteToMove;
-            foreach(Move move in opponentMoves)
+            foreach (OldMove move in opponentMoves)
             {
                 if (move.endRow == row && move.endCol == col)
                 {
@@ -320,9 +319,9 @@ namespace ChessEngine
             return false;
         }
 
-        public List<Move> getAllPossibleMoves()
+        public List<OldMove> getAllPossibleMoves()
         {
-            var moves = new List<Move>();
+            var moves = new List<OldMove>();
             for (int r = 0; r < 8; r++)
             {
                 for (int c = 0; c < 8; c++)
@@ -338,9 +337,9 @@ namespace ChessEngine
             return moves;
         }
 
-        public List<Move> getPawnMoves(int r, int c)
+        public List<OldMove> getPawnMoves(int r, int c)
         {
-            var moves = new List<Move>();
+            var moves = new List<OldMove>();
             var piecePinned = false;
             var pinDirection = new List<int>();
 
@@ -369,10 +368,10 @@ namespace ChessEngine
                     {
                         pawnPromotion = true;
                     }
-                    moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c }, board, pawnPromotion: pawnPromotion));
+                    moves.Add(new OldMove(new List<int> { r, c }, new List<int> { r + moveAmount, c }, board, pawnPromotion: pawnPromotion));
                     if (r == startRow && board[r + 2 * moveAmount][c] == "--")
                     {
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + 2 * moveAmount, c }, board));
+                        moves.Add(new OldMove(new List<int> { r, c }, new List<int> { r + 2 * moveAmount, c }, board));
                     }
                 }
             }
@@ -386,11 +385,11 @@ namespace ChessEngine
                         {
                             pawnPromotion = true;
                         }
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c - 1 }, board, pawnPromotion: pawnPromotion));
+                        moves.Add(new OldMove(new List<int> { r, c }, new List<int> { r + moveAmount, c - 1 }, board, pawnPromotion: pawnPromotion));
                     }
                     if (enPassantPossible != null && enPassantPossible[0] == r + moveAmount && enPassantPossible[1] == c - 1)
                     {
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c - 1 }, board, enPassant: true));
+                        moves.Add(new OldMove(new List<int> { r, c }, new List<int> { r + moveAmount, c - 1 }, board, enPassant: true));
                     }
                 }
             }
@@ -404,20 +403,20 @@ namespace ChessEngine
                         {
                             pawnPromotion = true;
                         }
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c + 1 }, board, pawnPromotion: pawnPromotion));
+                        moves.Add(new OldMove(new List<int> { r, c }, new List<int> { r + moveAmount, c + 1 }, board, pawnPromotion: pawnPromotion));
                     }
                     if (enPassantPossible != null && enPassantPossible[0] == r + moveAmount && enPassantPossible[1] == c + 1)
                     {
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c + 1 }, board, enPassant: true));
+                        moves.Add(new OldMove(new List<int> { r, c }, new List<int> { r + moveAmount, c + 1 }, board, enPassant: true));
                     }
                 }
             }
             return moves;
         }
 
-        public List<Move> getRookMoves(int r, int c)
+        public List<OldMove> getRookMoves(int r, int c)
         {
-            var moves = new List<Move>();
+            var moves = new List<OldMove>();
             var piecePinned = false;
             var pinDirection = new List<int>();
 
@@ -436,7 +435,7 @@ namespace ChessEngine
 
             }
 
-            var directions = new List<List<int>> { 
+            var directions = new List<List<int>> {
                 new List<int> { -1, 0 }, new List<int> { 1, 0 }, new List<int> { 0, -1 }, new List<int> { 0, 1 } };
             var enemyColour = whiteToMove ? 'b' : 'w';
 
@@ -453,11 +452,11 @@ namespace ChessEngine
                         {
                             if (board[endRow][endCol] == "--")
                             {
-                                moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
+                                moves.Add(new OldMove(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
                             }
                             else if (board[endRow][endCol][0] == enemyColour)
                             {
-                                moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
+                                moves.Add(new OldMove(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
                                 break;
                             }
                             else
@@ -469,15 +468,15 @@ namespace ChessEngine
                     else
                     {
                         break;
-                    }                    
+                    }
                 }
             }
             return moves;
         }
 
-        public List<Move> getKnightMoves(int r, int c)
+        public List<OldMove> getKnightMoves(int r, int c)
         {
-            var moves = new List<Move>();
+            var moves = new List<OldMove>();
             var piecePinned = false;
             var pinDirection = new List<int>();
 
@@ -507,7 +506,7 @@ namespace ChessEngine
                     {
                         if (board[endRow][endCol] == "--" || board[endRow][endCol][0] == enemyColour)
                         {
-                            moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
+                            moves.Add(new OldMove(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
                         }
                     }
                 }
@@ -516,9 +515,9 @@ namespace ChessEngine
             return moves;
         }
 
-        public List<Move> getBishopMoves(int r, int c)
+        public List<OldMove> getBishopMoves(int r, int c)
         {
-            var moves = new List<Move>();
+            var moves = new List<OldMove>();
             var piecePinned = false;
             var pinDirection = new List<int>();
 
@@ -550,11 +549,11 @@ namespace ChessEngine
                         {
                             if (board[endRow][endCol] == "--")
                             {
-                                moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
+                                moves.Add(new OldMove(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
                             }
                             else if (board[endRow][endCol][0] == enemyColour)
                             {
-                                moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
+                                moves.Add(new OldMove(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
                                 break;
                             }
                             else
@@ -572,17 +571,17 @@ namespace ChessEngine
             return moves;
         }
 
-        public List<Move> getQueenMoves(int r, int c)
+        public List<OldMove> getQueenMoves(int r, int c)
         {
-            var moves = new List<Move>();
+            var moves = new List<OldMove>();
             moves.AddRange(getRookMoves(r, c));
             moves.AddRange(getBishopMoves(r, c));
             return moves;
         }
 
-        public List<Move> getKingMoves(int r, int c)
+        public List<OldMove> getKingMoves(int r, int c)
         {
-            var moves = new List<Move>();
+            var moves = new List<OldMove>();
             var rowMoves = new List<int> { -1, -1, -1, 0, 0, 1, 1, 1 };
             var colMoves = new List<int> { -1, 0, 1, -1, 1, -1, 0, 1 };
             var allyColour = whiteToMove ? 'w' : 'b';
@@ -609,7 +608,7 @@ namespace ChessEngine
                         checkForPinsAndChecks(out _inCheck, out _pins, out _checks);
                         if (!_inCheck)
                         {
-                            moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
+                            moves.Add(new OldMove(new List<int> { r, c }, new List<int> { endRow, endCol }, board));
                         }
                         if (allyColour == 'w')
                         {
@@ -666,10 +665,10 @@ namespace ChessEngine
                         else if (endPiece[0] == enemyColour)
                         {
                             var type = endPiece[1];
-                            if ((0 <= j && j <= 3 && type == 'R') || 
+                            if ((0 <= j && j <= 3 && type == 'R') ||
                                 (4 <= j && j <= 7 && type == 'B') ||
-                                (i == 1 && type == 'P' && ((enemyColour == 'b' && 4 <= j && j <= 5) || (enemyColour == 'w' && 6 <= j && j<= 7))) ||
-                                (type == 'Q') || 
+                                (i == 1 && type == 'P' && ((enemyColour == 'b' && 4 <= j && j <= 5) || (enemyColour == 'w' && 6 <= j && j <= 7))) ||
+                                (type == 'Q') ||
                                 (i == 1 && type == 'K'))
                             {
                                 if (possiblePin.Count == 0)
@@ -721,13 +720,13 @@ namespace ChessEngine
             _checks = checks;
         }
 
-        public List<Move> getCastleMoves(int r, int c)
+        public List<OldMove> getCastleMoves(int r, int c)
         {
             if (squareUnderAttack(r, c))
             {
-                return new List<Move>();
+                return new List<OldMove>();
             }
-            var moves = new List<Move>();
+            var moves = new List<OldMove>();
             if ((whiteToMove && currentCastlingRight.wks) || (!whiteToMove && currentCastlingRight.bks))
             {
                 moves.AddRange(getKingsideCastleMoves(r, c));
@@ -739,27 +738,27 @@ namespace ChessEngine
             return moves;
         }
 
-        public List<Move> getKingsideCastleMoves(int r, int c)
+        public List<OldMove> getKingsideCastleMoves(int r, int c)
         {
-            var moves = new List<Move>();
-            if (board[r][c + 1] == "--" && board[r][c+2] == "--")
+            var moves = new List<OldMove>();
+            if (board[r][c + 1] == "--" && board[r][c + 2] == "--")
             {
                 if (!squareUnderAttack(r, c + 1) && !squareUnderAttack(r, c + 2))
                 {
-                    moves.Add(new Move(new List<int> { r, c }, new List<int> { r, c + 2 }, board, isCastleMove: true));
+                    moves.Add(new OldMove(new List<int> { r, c }, new List<int> { r, c + 2 }, board, isCastleMove: true));
                 }
             }
             return moves;
         }
 
-        public List<Move> getQueensideCastleMoves(int r, int c)
+        public List<OldMove> getQueensideCastleMoves(int r, int c)
         {
-            var moves = new List<Move>();
+            var moves = new List<OldMove>();
             if (board[r][c - 1] == "--" && board[r][c - 2] == "--" && board[r][c - 3] == "--")
             {
                 if (!squareUnderAttack(r, c - 1) && !squareUnderAttack(r, c - 2))
                 {
-                    moves.Add(new Move(new List<int> { r, c }, new List<int> { r, c - 2 }, board, isCastleMove: true));
+                    moves.Add(new OldMove(new List<int> { r, c }, new List<int> { r, c - 2 }, board, isCastleMove: true));
                 }
             }
             return moves;

@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessBlazor.Client", "Chess
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessBlazor.Shared", "ChessBlazor\Shared\ChessBlazor.Shared.csproj", "{C50BB2AF-5DAF-4296-829B-402446C0C6FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{55557EFD-7FFA-4730-9A1C-38759795576D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{55557EFD-7FFA-4730-9A1C-38759795576D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{BFCCAA58-E8B5-4AB6-A162-6D3907AB8180}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTesting", "Testing\ConsoleTesting.csproj", "{BFCCAA58-E8B5-4AB6-A162-6D3907AB8180}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
