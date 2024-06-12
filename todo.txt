@@ -31,3 +31,5 @@ Data Storage:
  - looking into stored procedures to run certain aspects of logic in the SQL server itself
 
 REWRITE CHESSENGINE TO WORK MORE EFFICIENTLY
+
+apparently only king can move when in check
