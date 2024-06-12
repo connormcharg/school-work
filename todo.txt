@@ -33,4 +33,4 @@ Data Storage:
 REWRITE CHESSENGINE TO WORK MORE EFFICIENTLY
 
 apparently only king can move when in check
-valid squares not being generated correctly
+valid squares not being generated correctly OR pieces not generating moves correctly
