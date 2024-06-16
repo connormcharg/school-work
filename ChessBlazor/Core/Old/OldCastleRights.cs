@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Core
 {
-    public class CastleRights
+    public class OldCastleRights
     {
         public bool wks, bks, wqs, bqs;
 
-        public CastleRights(bool wks, bool bks, bool wqs, bool bqs)
+        public OldCastleRights(bool wks, bool bks, bool wqs, bool bqs)
         {
             this.wks = wks;
             this.bks = bks;
