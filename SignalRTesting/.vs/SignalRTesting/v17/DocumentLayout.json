@@ -1,21 +1,21 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\CODE\\C#\\SignalRTesting\\",
+  "WorkspaceRootPath": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\code\\c#\\signalrtesting\\signalrtesting\\client\\pages\\game.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\pages\\game.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\pages\\game.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{878A7426-B448-4421-BAA4-4E7A8AFFE7D5}|SignalRTesting\\Server\\SignalRTesting.Server.csproj|c:\\users\\conno\\onedrive\\documents\\github\\code\\c#\\signalrtesting\\signalrtesting\\server\\hubs\\gamehub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{878A7426-B448-4421-BAA4-4E7A8AFFE7D5}|SignalRTesting\\Server\\SignalRTesting.Server.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\server\\hubs\\gamehub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{878A7426-B448-4421-BAA4-4E7A8AFFE7D5}|SignalRTesting\\Server\\SignalRTesting.Server.csproj|solutionrelative:signalrtesting\\server\\hubs\\gamehub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|c:\\users\\conno\\onedrive\\documents\\github\\code\\c#\\signalrtesting\\signalrtesting\\shared\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\shared\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|solutionrelative:signalrtesting\\shared\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|c:\\users\\conno\\onedrive\\documents\\github\\code\\c#\\signalrtesting\\signalrtesting\\shared\\igameclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\shared\\igameclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|solutionrelative:signalrtesting\\shared\\igameclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -44,9 +44,9 @@
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "IGameClient.cs",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\CODE\\C#\\SignalRTesting\\SignalRTesting\\Shared\\IGameClient.cs",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\IGameClient.cs",
               "RelativeDocumentMoniker": "SignalRTesting\\Shared\\IGameClient.cs",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\CODE\\C#\\SignalRTesting\\SignalRTesting\\Shared\\IGameClient.cs",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\IGameClient.cs",
               "RelativeToolTip": "SignalRTesting\\Shared\\IGameClient.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -56,9 +56,9 @@
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Game.cs",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\CODE\\C#\\SignalRTesting\\SignalRTesting\\Shared\\Game.cs",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\Game.cs",
               "RelativeDocumentMoniker": "SignalRTesting\\Shared\\Game.cs",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\CODE\\C#\\SignalRTesting\\SignalRTesting\\Shared\\Game.cs",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\Game.cs",
               "RelativeToolTip": "SignalRTesting\\Shared\\Game.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAADYAAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -68,9 +68,9 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "GameHub.cs",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\CODE\\C#\\SignalRTesting\\SignalRTesting\\Server\\Hubs\\GameHub.cs",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Server\\Hubs\\GameHub.cs",
               "RelativeDocumentMoniker": "SignalRTesting\\Server\\Hubs\\GameHub.cs",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\CODE\\C#\\SignalRTesting\\SignalRTesting\\Server\\Hubs\\GameHub.cs",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Server\\Hubs\\GameHub.cs",
               "RelativeToolTip": "SignalRTesting\\Server\\Hubs\\GameHub.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAG8AAABBAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -80,9 +80,9 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Game.razor",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\CODE\\C#\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Game.razor",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Game.razor",
               "RelativeDocumentMoniker": "SignalRTesting\\Client\\Pages\\Game.razor",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\CODE\\C#\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Game.razor",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Game.razor",
               "RelativeToolTip": "SignalRTesting\\Client\\Pages\\Game.razor",
               "ViewState": "AQIAAAAAAAAA8uP3PCHpvwwAAAAQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
