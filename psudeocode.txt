@@ -1,0 +1,162 @@
+MakeMove:
+ - takes a move as a parameter
+ - sets start square to empty
+ - sets end square to piece moved
+ - adds move to move log
+ - updates king location
+ - changes turn
+ - if pawn promotion then carry out extra logic (option list opens)
+ - if en passant then start row, end col is set to empty too
+ - update possible enpassant list or clear it
+ - add current en passant list to log
+ - if castle move, then swap necessary pieces
+ - update castle rights & add them to log
+
+UndoMove:
+ - if there is a move in the move log
+ - pop last move from move log
+ - start square = piece moved
+ - end square = piece captured
+ - changes turn
+ - updates king position
+ - if enpassant, then undo it as well
+ - pop last item from enpassant log and set current en passant to the last value in the log
+ - pop castlerights and set current to final value in list
+ - if castle move, then swap necessary pieces
+ - set stalemate and checkmate to false to undo the game finishing
+
+UpdateCastleRights:
+ - takes move as a parameter
+ - if rook or king moved, check which side and remove castling right(s) as necessary
+
+GetValidMoves:
+ - save current castling rights
+ - check for pins and checks
+ - save king position for relevant turn
+ - if in check:
+  - if more than one check, get king moves as king has to move
+  - else get all possible moves
+   - get the check from the checks array
+   - if piece checking is a knight then set only valid square to be the square of the knight
+   - else add each square in the line from the king towards the checking piece to an array until the checking piece is reached
+  - for each possible move, if the end square of the move is not in valid squares then remove it from moves (go through moves backwards)
+ - else get all possible moves including castle moves
+ - if no moves availiable, then if in check -> checkmate, otherwise stalemate
+ - else stalemate, checkmate = false
+ - restore original castle rights and return moves
+
+InCheck:
+ - check if the square containing the king is under attack
+
+SquareUnderAttack:
+ - switch turn
+ - get all possible moves
+ - switch turn back again
+ - if a move in opponent possible moves contains a move attacking the square provided, return true
+ - return false
+
+GetAllPossibleMoves:
+ - for each square, if piece is colour x and it is x's turn, 
+   then extend the moves list with the output from the get moves function for that piece
+ - return moves
+
+# pin: (end_row, end_col, direction[0], direction[1])
+# check: (end_row, end_col, direction[0], direction[1])
+CheckForPinsAndChecks:
+ - set in check to be false, pins, checks = [], []
+ - set enemy/ally colour, king location for whomever turn it is
+ - directions = ((-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1))
+ - for each direction
+  - possible pin = ()
+  - for i = 1 to 8
+   - save end row, end col using king location + direction * id
+   - end piece = board[r][c]
+   - if end piece col == ally col and end piece is not a king then break if possible pin != () else save possible pin
+   - else if end piece col == enemy col then
+    - if piece is orthogonally away from king and piece is rook or
+    - piece is diagonally away from king and piece is bishop or
+    - i == 1, piece is pawn and direction is one of the two allowed diagonals for that pawn or
+    - piece is queen or
+    - piece is king and i == 1
+     - if possible pin = () then in check and add check to checks, break
+     - else add possible pin to pins, break
+    - else, break
+ - knight directions = ((-2, -1), (-2, 1), (-1, 2), (1, 2), (2, -1), (2, 1), (-1, -2), (1, -2))
+ - for each direction out from king, find end row and end col
+  - if end row and end col are on board, if end piece is enemy and piece is a knight, then set check to be true and add check to checks
+ - return in check, check, pins
+
+# Ensure that if the piece is queen, then only remove it on a check for queen moves once
+PiecePinned:
+ - direction = ()
+ - for each pin, if pin location is the row and column being checked,
+  - remove pin from list
+  - return true, direction from pin
+
+GetPawnMoves:
+ - find piece pinned information
+ - set move amount, start row, enemy colour and king row and col
+ - if square infront of pawn is empty
+  - if piece isnt pinned or pin direction is forwards for the pawn
+   - add single move forwards
+   - if start row is start row and square 2 infront is empty
+    - add 2 move advance
+  - if capture to left not off the board
+   - if not pinned or pin direction is equal to take direction
+    - if piece in that position is enemy
+     - add move to moves
+    - if taking square is the current enpassant possible
+     - if king not on same row or king on same row but making enpassant move wont place king in check
+      - add move to moves
+  - repeat steps for right hand take and right hand side enpassant
+
+GetRookMoves:
+ - find piece pinned information
+ - define directions, enemy colour
+ - for each direction, for i in range 1, 8
+  - define end row, col
+  - if end row, col inside bounds of board
+   - if not pinned or pin direction is move direction or pin direction is move direction inverse
+    - get end square
+    - if end square is empty, then add move
+    - if end square is enemy colour, then add move
+    - else, break
+  - else, break
+
+GetKnightMoves:
+ - get piece pinned information
+ - define moveset, ally colour
+ - for each move in moveset
+  - define end row, col
+  - if end row, col in bounds
+   - if not pinned
+    - if end piece not ally colour
+     - add move
+
+GetBishopMoves:
+ - see rook moves but alter the directions
+
+GetQueenMoves:
+ - get bishop and rook moves and combine them
+
+GetKingMoves:
+ - define directions, ally colour
+ - for each direction
+  - find end row, col
+  - if end row, col in bounds
+   - if end piece is not ally colour
+    - update king location
+    - run check for pins and checks
+    - if not in check
+     - add move to moves
+    - reset king location
+
+GetCastleMoves:
+ - if king square is under attack, then return no moves
+ - if ally king has kingside castle rights
+  - if row, col + 1 row, col + 2 are both empty and both squares are not under attack
+   - add move with castle move flag
+ - if ally king has queenside castle rights
+  - if row, col - 1 row, col - 2 row, col - 3 are all empty and col - 1 and col - 2 are not under attack
+   - add move with castle move flag
+ 
