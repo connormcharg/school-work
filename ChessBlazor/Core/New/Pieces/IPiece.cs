@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Core.New
 {
-    public class Pawn : IPiece
+    public interface IPiece
     {
+        public bool isWhite { get; }
+        
+        public string ToString(); // wp, bq ect...
     }
 }

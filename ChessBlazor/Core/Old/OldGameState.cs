@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core
+﻿namespace Core
 {
     public class OldGameState
     {
@@ -30,12 +24,12 @@ namespace Core
         public bool checkMate = false;
         public bool staleMate = false;
         public List<int>? enPassantPossible = null;
-        public CastleRights currentCastlingRight = new CastleRights(true, true, true, true);
-        public List<CastleRights> castleRightsLog;
+        public OldCastleRights currentCastlingRight = new OldCastleRights(true, true, true, true);
+        public List<OldCastleRights> castleRightsLog;
 
         public OldGameState()
         {
-            this.castleRightsLog = new List<CastleRights> { new CastleRights(
+            this.castleRightsLog = new List<OldCastleRights> { new OldCastleRights(
                 currentCastlingRight.wks,
                 currentCastlingRight.bks,
                 currentCastlingRight.wqs,
@@ -98,7 +92,7 @@ namespace Core
             }
 
             updateCastleRights(move);
-            castleRightsLog.Add(new CastleRights(
+            castleRightsLog.Add(new OldCastleRights(
                 currentCastlingRight.wks,
                 currentCastlingRight.bks,
                 currentCastlingRight.wqs,
@@ -180,7 +174,7 @@ namespace Core
 
                 castleRightsLog.RemoveAt(castleRightsLog.Count - 1);
                 var newRights = castleRightsLog[castleRightsLog.Count - 1];
-                currentCastlingRight = new CastleRights(newRights.wks, newRights.bks, newRights.wqs, newRights.bqs);
+                currentCastlingRight = new OldCastleRights(newRights.wks, newRights.bks, newRights.wqs, newRights.bqs);
 
                 if (move.isCastleMove)
                 {
@@ -200,7 +194,7 @@ namespace Core
 
         public List<OldMove> getValidMoves()
         {
-            CastleRights tempCastleRights = new CastleRights(
+            OldCastleRights tempCastleRights = new OldCastleRights(
                 currentCastlingRight.wks,
                 currentCastlingRight.bks,
                 currentCastlingRight.wqs,
