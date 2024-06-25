@@ -1,4 +1,5 @@
 ﻿@page "/board"
+@inject IJSRuntime JS
 
 <h3>Board</h3>
 
@@ -8,10 +9,12 @@
         <div class="row">
             @for (int j = 0; j < 8; j++)
             {
-                <div class="square @((i+j) % 2 == 0 ? "dark" : "light")" @onclick="() => OnSquareClick(i, j)">
+                int I = i;
+                int J = j;
+                <div class="square @((i+j) % 2 == 0 ? "dark" : "light")" @onclick="() => OnSquareClick(J, I)" id="square-@(I)-@(J)">
                     @if (_board[j][i] != "--")
                     {
-                        <img src="images/@(_board[j][i]).png" class="piece"/>
+                        <img src="images/@(_board[j][i]).png" class="piece" draggable="true" id="piece-@(I)-@(J)" />
                     }
                 </div>
             }
@@ -49,5 +52,28 @@
             _board[selectedRow][selectedCol] = "--";
             selectedPiece = null;
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("initializeChessBoard");
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnPieceMoved(string pieceId, string targetSquareId)
+    {
+        var piecePosition = pieceId.Split('-');
+        var targetPosition = targetSquareId.Split('-');
+        int oldRow = int.Parse(piecePosition[1]);
+        int oldCol = int.Parse(piecePosition[2]);
+        int newRow = int.Parse(targetPosition[1]);
+        int newCol = int.Parse(targetPosition[2]);
+
+        _board[newRow][newCol] = _board[oldRow][oldCol];
+        _board[oldRow][oldCol] = "";
+        StateHasChanged();
     }
 }

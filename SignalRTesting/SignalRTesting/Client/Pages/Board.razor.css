@@ -1,12 +1,15 @@
 ﻿#chessboard {
+    --square-size: 4em;
+    --piece-size: 3.5em;
     display: grid;
-    grid-template-columns: repeat(8, 4em);
-    grid-template-rows: repeat(8, 4em);
+    grid-template-columns: repeat(8, var(--square-size));
+    grid-template-rows: repeat(8, var(--square-size));
+    gap: 0;
 }
 
 .square {
-    width: 4em;
-    height: 4em;
+    width: var(--square-size);
+    height: var(--square-size);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,6 +24,10 @@
 }
 
 .piece {
-    width: 3.5em;
-    height: 3.5em;
+    width: var(--piece-size);
+    height: var(--piece-size);
+}
+
+.square.dragover {
+    border: 2px dashed #000;
 }

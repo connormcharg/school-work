@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\pages\\game.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\pages\\game.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\wwwroot\\js\\chessboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\wwwroot\\js\\chessboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{878A7426-B448-4421-BAA4-4E7A8AFFE7D5}|SignalRTesting\\Server\\SignalRTesting.Server.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\server\\hubs\\gamehub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{878A7426-B448-4421-BAA4-4E7A8AFFE7D5}|SignalRTesting\\Server\\SignalRTesting.Server.csproj|solutionrelative:signalrtesting\\server\\hubs\\gamehub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\pages\\board.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\pages\\board.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\shared\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|solutionrelative:signalrtesting\\shared\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\pages\\board.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\pages\\board.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\shared\\igameclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5A7C1758-84CE-4CAD-B559-4E4C758A38E8}|SignalRTesting\\Shared\\SignalRTesting.Shared.csproj|solutionrelative:signalrtesting\\shared\\igameclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,51 +42,54 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "chessboard.js",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\wwwroot\\js\\chessboard.js",
+              "RelativeDocumentMoniker": "SignalRTesting\\Client\\wwwroot\\js\\chessboard.js",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\wwwroot\\js\\chessboard.js",
+              "RelativeToolTip": "SignalRTesting\\Client\\wwwroot\\js\\chessboard.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAALAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-06-21T16:12:12.788Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "IGameClient.cs",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\IGameClient.cs",
-              "RelativeDocumentMoniker": "SignalRTesting\\Shared\\IGameClient.cs",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\IGameClient.cs",
-              "RelativeToolTip": "SignalRTesting\\Shared\\IGameClient.cs",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Program.cs",
+              "RelativeDocumentMoniker": "SignalRTesting\\Client\\Program.cs",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Program.cs",
+              "RelativeToolTip": "SignalRTesting\\Client\\Program.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T19:25:01.177Z"
+              "WhenOpened": "2024-06-21T15:52:29.819Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Game.cs",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\Game.cs",
-              "RelativeDocumentMoniker": "SignalRTesting\\Shared\\Game.cs",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Shared\\Game.cs",
-              "RelativeToolTip": "SignalRTesting\\Shared\\Game.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAADYAAAAvAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T17:57:27.053Z"
+              "Title": "Board.razor.css",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Board.razor.css",
+              "RelativeDocumentMoniker": "SignalRTesting\\Client\\Pages\\Board.razor.css",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Board.razor.css",
+              "RelativeToolTip": "SignalRTesting\\Client\\Pages\\Board.razor.css",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAAB8AAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-06-21T15:37:40.483Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "GameHub.cs",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Server\\Hubs\\GameHub.cs",
-              "RelativeDocumentMoniker": "SignalRTesting\\Server\\Hubs\\GameHub.cs",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Server\\Hubs\\GameHub.cs",
-              "RelativeToolTip": "SignalRTesting\\Server\\Hubs\\GameHub.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAG8AAABBAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T14:10:37.515Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Game.razor",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Game.razor",
-              "RelativeDocumentMoniker": "SignalRTesting\\Client\\Pages\\Game.razor",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Game.razor",
-              "RelativeToolTip": "SignalRTesting\\Client\\Pages\\Game.razor",
-              "ViewState": "AQIAAAAAAAAA8uP3PCHpvwwAAAAQAAAA",
+              "Title": "Board.razor",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Board.razor",
+              "RelativeDocumentMoniker": "SignalRTesting\\Client\\Pages\\Board.razor",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Board.razor",
+              "RelativeToolTip": "SignalRTesting\\Client\\Pages\\Board.razor",
+              "ViewState": "AQIAADwAAAAAAAAAAAAAAE8AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-05-29T14:03:55.832Z",
+              "WhenOpened": "2024-06-21T15:37:38.408Z",
               "EditorCaption": ""
             }
           ]
