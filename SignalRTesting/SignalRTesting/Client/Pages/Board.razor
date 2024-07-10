@@ -1,79 +1,21 @@
 ﻿@page "/board"
-@inject IJSRuntime JS
 
-<h3>Board</h3>
+@using SignalRTesting.Client.Shared
 
-<div id="chessboard">
-    @for (int i = 0; i < 8; i++)
-    {
-        <div class="row">
-            @for (int j = 0; j < 8; j++)
-            {
-                int I = i;
-                int J = j;
-                <div class="square @((i+j) % 2 == 0 ? "dark" : "light")" @onclick="() => OnSquareClick(J, I)" id="square-@(I)-@(J)">
-                    @if (_board[j][i] != "--")
-                    {
-                        <img src="images/@(_board[j][i]).png" class="piece" draggable="true" id="piece-@(I)-@(J)" />
-                    }
-                </div>
-            }
-        </div>
-    }
-</div>
+<h3>Chess Board</h3>
 
+<ChessBoard InitialBoard="@InitialBoard" />
 
 @code {
-    private string[][] _board = new string[][]
+    private string[,] InitialBoard = new string[8, 8]
     {
-        new string[] { "bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR" },
-        new string[] { "bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP" },
-        new string[] { "--", "--", "--", "--", "--", "--", "--", "--" },
-        new string[] { "--", "--", "--", "--", "--", "--", "--", "--" },
-        new string[] { "--", "--", "--", "--", "--", "--", "--", "--" },
-        new string[] { "--", "--", "--", "--", "--", "--", "--", "--" },
-        new string[] { "wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP" },
-        new string[] { "wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR" }
+        { "bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR" },
+        { "bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP" },
+        { "--", "--", "--", "--", "--", "--", "--", "--" },
+        { "--", "--", "--", "--", "--", "--", "--", "--" },
+        { "--", "--", "--", "--", "--", "--", "--", "--" },
+        { "--", "--", "--", "--", "--", "--", "--", "--" },
+        { "wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP" },
+        { "wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR" }
     };
-    private (int row, int col)? selectedPiece = null;
-
-    private void OnSquareClick(int row, int col)
-    {
-        Console.WriteLine(row);
-        Console.WriteLine(col);
-        if (selectedPiece is null && _board[row][col] != "--")
-        {
-            selectedPiece = (row, col);
-        }
-        else if (selectedPiece is not null)
-        {
-            var (selectedRow, selectedCol) = selectedPiece.Value;
-            _board[row][col] = _board[selectedRow][selectedCol];
-            _board[selectedRow][selectedCol] = "--";
-            selectedPiece = null;
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JS.InvokeVoidAsync("initializeChessBoard");
-        }
-    }
-
-    [JSInvokable]
-    public async Task OnPieceMoved(string pieceId, string targetSquareId)
-    {
-        var piecePosition = pieceId.Split('-');
-        var targetPosition = targetSquareId.Split('-');
-        int oldRow = int.Parse(piecePosition[1]);
-        int oldCol = int.Parse(piecePosition[2]);
-        int newRow = int.Parse(targetPosition[1]);
-        int newCol = int.Parse(targetPosition[2]);
-
-        _board[newRow][newCol] = _board[oldRow][oldCol];
-        _board[oldRow][oldCol] = "";
-        StateHasChanged();
-    }
 }

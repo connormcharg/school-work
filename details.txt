@@ -19,3 +19,10 @@ playing the game
 	board is displayed with correct orientation
 	moves can be sent to the server if it is their turn
 	board is updated after each successful move
+
+
+
+ELO:
+
+expected = 1 / (10^[(B - A) / 400] + 1)
+Elo change = K × (score - expected)

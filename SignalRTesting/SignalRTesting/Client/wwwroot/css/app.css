@@ -59,6 +59,72 @@ a, .btn-link {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
+
+/* THIS IS MY OWN CSS */
+
+.chess-board {
+    display: flex;
+    flex-direction: column;
+    width: 550px;
+    height: 550px;
+    /*transform: rotate(180deg);*/
+    background-color: #ddd;
+}
+
+.chess-row {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+.chess-square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+    pointer-events: all;
+    /*transform: rotate(180deg);*/
+}
+
+.chess-square.white {
+    background-color: #f0d9b5;
+}
+
+.chess-square.black {
+    background-color: #b58863;
+}
+
+.chess-piece {
+    width: 85%;
+    height: 85%;
+    pointer-events: all;
+}
+
+.rank-label, .file-label {
+    display: flex;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-weight: bold;
+}
+
+.rank-label {
+    align-self: center;
+}
+
+.label-square {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 64px;
+}
+
+.prevent-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
