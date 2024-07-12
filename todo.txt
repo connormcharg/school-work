@@ -38,3 +38,8 @@ Hashing:
  - use zobrist hashing to produce unique hash results for every possible position on a chess board
  - put results into a transposition table, probably as part of the database
  - use this hash value to keep track of evaluations for a given position so that they can be used again without recalculation
+
+
+
+https://stackoverflow.com/questions/74856694/i-need-a-simple-example-of-a-login-page-in-blazor-server-app-without-to-see-or-a
+https://www.syncfusion.com/blogs/post/easy-steps-create-a-blazor-server-app-with-authentication

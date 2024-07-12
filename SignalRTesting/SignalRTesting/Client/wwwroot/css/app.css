@@ -86,7 +86,7 @@ a, .btn-link {
     align-items: center;
     width: 64px;
     height: 64px;
-    pointer-events: all;
+    /*pointer-events: all;*/
     /*transform: rotate(180deg);*/
 }
 
@@ -102,6 +102,7 @@ a, .btn-link {
     width: 85%;
     height: 85%;
     pointer-events: all;
+    cursor: grabbing;
 }
 
 .rank-label, .file-label {
