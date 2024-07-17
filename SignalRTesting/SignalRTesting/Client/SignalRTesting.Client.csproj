@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Shared\SignalRTesting.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\js\" />
-  </ItemGroup>
-
 </Project>

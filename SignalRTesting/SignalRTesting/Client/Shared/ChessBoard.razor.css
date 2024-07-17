@@ -1,0 +1,77 @@
+﻿.chess-board {
+    display: flex;
+    flex-direction: column;
+    width: 40em;
+    height: 40em;
+    background-color: #ddd;
+}
+
+    .chess-board.blackplayer {
+        transform: rotate(180deg);
+    }
+
+.chess-row {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+.chess-square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 4.8em;
+    height: 4.8em;
+}
+
+    .chess-square.white {
+        background-color: #f0d9b5;
+    }
+
+    .chess-square.black {
+        background-color: #b58863;
+    }
+
+    .chess-square.blackplayer {
+        transform: rotate(180deg);
+    }
+
+.chess-piece {
+    width: 85%;
+    height: 85%;
+    pointer-events: all;
+    cursor: grabbing;
+}
+
+.rank-label, .file-label {
+    display: flex;
+    justify-content: center;
+    width: 1.3em;
+    height: 1.3em;
+    font-weight: bold;
+}
+
+    .rank-label.blackplayer, .file-label.blackplayer {
+        transform: rotate(180deg);
+    }
+
+.rank-label {
+    align-self: center;
+}
+
+.label-square {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 4.8em;
+}
+
+    .label-square.blackplayer {
+        transform: rotate(180deg);
+    }
+
+* {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}

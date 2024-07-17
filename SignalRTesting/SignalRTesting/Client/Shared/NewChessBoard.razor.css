@@ -1,0 +1,85 @@
+﻿.chess-board {
+    display: flex;
+    flex-wrap: wrap;
+    width: 42em;
+    height: 42em;
+    background-color: #ddd;
+    box-sizing: unset;
+}
+
+.chess-grid {
+    order: 1;
+    align-self: flex-start;
+}
+
+    .chess-grid.black {
+        transform: rotate(180deg);
+    }
+
+.chess-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.chess-square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 5em;
+    height: 5em;
+}
+
+    .chess-square.white {
+        background-color: #f0d9b5;
+    }
+
+    .chess-square.black {
+        background-color: #b58863
+    }
+
+.chess-piece {
+    width: 85%;
+    height: 85%;
+}
+
+    .chess-piece.black {
+        transform: rotate(180deg);
+    }
+
+.chess-ranks {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    align-self: flex-start;
+    order: 2;
+}
+
+.chess-files {
+    display: flex;
+    flex-direction: row;
+    order: 3;
+    align-self: flex-end;
+}
+
+.chess-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+    .chess-label.rank {
+        width: 2em;
+        height: 5em;
+    }
+
+    .chess-label.file {
+        width: 5em;
+        height: 2em;
+    }
+
+* {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
