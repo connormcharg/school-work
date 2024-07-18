@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Shared\SignalRTesting.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\js\NewChessBoard.js" />
+  </ItemGroup>
+
 </Project>

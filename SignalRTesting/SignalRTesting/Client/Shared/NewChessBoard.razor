@@ -1,4 +1,7 @@
-﻿<div class="chess-board border rounded">
+﻿@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<div class="chess-board border rounded">
     <div class="chess-grid @(IsWhite ? "" : "black")">
         @for (int r = 0; r < 8; r++)
         {
@@ -8,7 +11,8 @@
                     var R = r;
                     var C = c;
                     var piece = Board[R, C];
-                    <div id="@(R)-@(C)" class="chess-square @(IsWhiteSquare(R, C) ? "white" : "black")">
+                    <div id="@(R)-@(C)" class="chess-square @(IsWhiteSquare(R, C) ? "white" : "black")" 
+                        draggable="@(IsDraggable(R, C) ? "true" : "false")">
                         <img src="@GetPieceImage(piece)" class="chess-piece @(IsWhite ? "" : "black")" draggable="false" />
                     </div>
                 }
@@ -38,15 +42,66 @@
     public string[,] InitialBoard { get; set; } = new string[8, 8];
 
     public bool IsWhite = true;
+    public string[,] Board = new string[8, 8];
 
-    private string[,] Board = new string[8, 8];
-    private int? DragStartRow = null;
-    private int? DragStartCol = null;
+    private DotNetObjectReference<NewChessBoard>? objectReference;
+
+    [JSInvokable]
+    public async Task MovePieceAsync(string originId, string targetId)
+    {
+        int? startRow = null, startCol = null, endRow = null, endCol = null;
+        startRow = int.Parse(originId.Split('-')[0]);
+        startCol = int.Parse(originId.Split('-')[1]);
+        endRow = int.Parse(targetId.Split('-')[0]);
+        endCol = int.Parse(targetId.Split('-')[1]);
+
+        if (startRow is null || startCol is null || endRow is null || endCol is null)
+        {
+            return;
+        }
+
+        string pieceMoved = Board[(int)startRow, (int)startCol];
+        if (pieceMoved == "--")
+        {
+            return;
+        }
+        Board[(int)startRow, (int)startCol] = "--";
+        Board[(int)endRow, (int)endCol] = pieceMoved;
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+
+        return;
+    }
+
+    [JSInvokable]
+    public async Task<bool> IsSquareEmpty(string id)
+    {
+        var row = int.Parse(id.Split('-')[0]);
+        var col = int.Parse(id.Split('-')[1]);
+        return Board[row, col] == "--";
+    }
 
     private Dictionary<int, char> ColToFile = new Dictionary<int, char>
     {
         {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}
     };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            objectReference = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("initialiseChessBoard", objectReference);
+        }
+    }
+
+    public void Dispose()
+    {
+        objectReference?.Dispose();
+    }
 
     protected override void OnInitialized()
     {
@@ -67,6 +122,11 @@
     private bool IsWhiteSquare(int row, int col)
     {
         return (row + col) % 2 == 0;
+    }
+
+    private bool IsDraggable(int row, int col)
+    {
+        return Board[row, col] != "--";
     }
 
     private string GetPieceImage(string piece)

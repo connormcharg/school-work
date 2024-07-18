@@ -83,3 +83,11 @@
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
 }
+
+.highlight {
+    filter: brightness(50%);
+}
+
+.selected {
+    border: 2px solid #00a8a8;
+}
