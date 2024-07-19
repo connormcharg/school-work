@@ -1,7 +1,7 @@
-﻿function initialiseChessBoard(dotnetObjectRef) {
+﻿export function initialiseChessBoard(dotnetObjectRef) {
     const squares = document.querySelectorAll(".chess-square");
     let draggedImage = null;
-    let originID = "";
+    let originId = "";
     let selectedSquare = null;
 
     squares.forEach(square => {
@@ -33,7 +33,6 @@
                 // Move the piece (You'll need to implement `movePieceInBoardArray`)
                 dotnetObjectRef.invokeMethodAsync("MovePieceAsync", originId, targetId)
                     .then(data => {
-                        console.log("piece moved");
                     }).catch(error => {
                         console.log(error);
                     })
@@ -50,7 +49,6 @@
                     // Move the piece
                     dotnetObjectRef.invokeMethodAsync("MovePieceAsync", selectedSquare.id, targetId)
                         .then(data => {
-                            console.log("piece moved via click");
                             updateUI(); // Update the UI to reflect the new board state
                         }).catch(error => {
                             console.error(error);
@@ -83,20 +81,20 @@
     });
 };
 
-function showDotsOnEmptySquares() {
+export function showDotsOnEmptySquares() {
     // Implementation depends on how you're marking empty squares and how you want to show dots
 }
 
-function movePieceInBoardArray(originId, targetId) {
+export function movePieceInBoardArray(originId, targetId) {
     // Parse the origin and target IDs to get row and column
     // Update your Board array accordingly
     // Trigger state change if necessary
 }
 
-function updateUI() {
+export function updateUI() {
     // Update the UI based on the new state of the Board array
 }
 
-function removeDotsFromEmptySquares() {
+export function removeDotsFromEmptySquares() {
     // Remove dots from empty squares
 }

@@ -1,42 +1,72 @@
 ﻿<div class="chess-board border rounded">
-    @for (int row = 0; row < 8; row++)
-    {
-        <div class="chess-row">
-            @for (int col = 0; col < 8; col++)
-            {
-                var ROW = row;
-                var COL = col;
-                var piece = Board[ROW, COL];
-                <div class="chess-square @(IsWhiteSquare(ROW, COL) ? "white" : "black") prevent-select"
-                     @onclick="() => OnSquareClick(ROW, COL)"
-                     @ondragover="OnDragOver"
-                     @ondragover:preventDefault="true"
-                     @ondrop="(e) => OnDrop(e, ROW, COL)"
-                     @ondragstart="(e) => OnDragStart(e, ROW, COL)">
-                    <img src="@GetPieceImage(piece)" class="chess-piece prevent-select"
-                        draggable="@(string.IsNullOrEmpty(piece) ? "false" : "true")"/>
-                </div>
-            }
-            <div class="rank-label">@(8 - row)</div>
-        </div>
-    }
-    <div class="chess-row">
-        @for (char file = 'a'; file <= 'h'; file++)
+    <div class="chess-grid @(IsWhite ? "" : "black")">
+        @for (int r = 0; r < 8; r++)
         {
-            <div class="label-square">
-                <div class="file-label">@file</div>
+            @for (int c = 0; c < 8; c++)
+            {
+                var R = r;
+                var C = c;
+                var piece = Board[R, C];
+                @if (piece != "--")
+                {
+                    <div class="chess-piece @(piece.ToLower()) square-@(R)-@(C)" style=""></div>
+                }
+            }
+        }
+        <div class="hover-square" style="visibility: hidden;">
+            <svg viewBox="0 0 100 100">
+                <rect x="0" y="0" width="100" height="100" stroke="rgba(255, 255, 255, 0.65)" stroke-width="10" fill="none"></rect>
+            </svg>
+        </div>
+        <div id="prev-move-start" class="highlight" style="visibility: hidden;"></div>
+        <div id="prev-move-end" class="highlght" style="visibility: hidden;"></div>
+        <div id="curr-move-start" class="highlight" style="visibility: hidden;"></div>
+    </div>
+    <div class="chess-ranks">
+        @for (int k = 0; k < 8; k++)
+        {
+            <div class="chess-label rank">
+                <text class="chess-label-text">@GetRank(k)</text>
             </div>
         }
     </div>
+    <div class="chess-files">
+        @for (int k = 0; k < 8; k++)
+        {
+            <div class="chess-label file">
+                <text class="chess-label-text">@GetFile(k)</text>
+            </div>
+        }
+    </div>
+
 </div>
+
 
 @code {
     [Parameter]
     public string[,] InitialBoard { get; set; } = new string[8, 8];
 
-    private string[,] Board = new string[8, 8];
-    private int? DragStartRow = null;
-    private int? DragStartCol = null;
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = default!;
+    private IJSObjectReference? _jsModule;
+
+    public bool IsWhite = true;
+    public string[,] Board = new string[8, 8];
+    private Dictionary<int, char> ColToFile = new Dictionary<int, char>
+    {
+        {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _jsModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/ChessBoard.js");
+            await _jsModule.InvokeVoidAsync("initialise");
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     protected override void OnInitialized()
     {
@@ -45,12 +75,11 @@
 
     private void InitializeBoard()
     {
-        // Copy the initial board setup to the board
-        for (int row = 0; row < 8; row++)
+        for (int i = 0; i < 8; i++)
         {
-            for (int col = 0; col < 8; col++)
+            for (int j = 0; j < 8; j++)
             {
-                Board[row, col] = InitialBoard[row, col];
+                Board[i, j] = InitialBoard[i, j];
             }
         }
     }
@@ -62,50 +91,29 @@
 
     private string GetPieceImage(string piece)
     {
-        return $"images/{piece}.png"; // Assumes you have images named like 'bR.png', 'wP.png', etc.
+        return $"images/old/{piece}.png";
     }
 
-    private void OnSquareClick(int row, int col)
+    private string GetTransformStyle(int r, int c)
     {
-        if (DragStartRow.HasValue && DragStartCol.HasValue)
+        return $"transform: translate({c}00%, {r}00%);";
+    }
+
+    private int GetRank(int row)
+    {
+        if (IsWhite)
         {
-            MovePiece(DragStartRow.Value, DragStartCol.Value, row, col);
-            DragStartRow = null;
-            DragStartCol = null;
+            return 8 - row;
         }
-        else
+        return row + 1;
+    }
+
+    private string GetFile(int col)
+    {
+        if (IsWhite)
         {
-            DragStartRow = row;
-            DragStartCol = col;
+            return ColToFile[col].ToString().ToLower();
         }
-    }
-
-    private void OnDragStart(DragEventArgs e, int row, int col)
-    {
-        DragStartRow = row;
-        DragStartCol = col;
-    }
-
-    private void OnDragOver(DragEventArgs e)
-    {
-
-        return;
-    }
-
-    private void OnDrop(DragEventArgs e, int row, int col)
-    {
-        if (DragStartRow.HasValue && DragStartCol.HasValue)
-        {
-            MovePiece(DragStartRow.Value, DragStartCol.Value, row, col);
-            DragStartRow = null;
-            DragStartCol = null;
-        }
-    }
-
-    private void MovePiece(int startRow, int startCol, int endRow, int endCol)
-    {
-        var piece = Board[startRow, startCol];
-        Board[startRow, startCol] =  "--";
-        Board[endRow, endCol] = piece;
+        return ColToFile[7 - col].ToString().ToLower();
     }
 }

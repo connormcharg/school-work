@@ -1,5 +1,4 @@
-﻿@inject IJSRuntime JSRuntime
-@implements IDisposable
+﻿@implements IDisposable
 
 <div class="chess-board border rounded">
     <div class="chess-grid @(IsWhite ? "" : "black")">
@@ -40,6 +39,10 @@
 @code {
     [Parameter]
     public string[,] InitialBoard { get; set; } = new string[8, 8];
+
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = default!;
+    private IJSObjectReference? _jsModule;
 
     public bool IsWhite = true;
     public string[,] Board = new string[8, 8];
@@ -93,9 +96,11 @@
     {
         if (firstRender)
         {
+            _jsModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/NewChessBoard.js");
             objectReference = DotNetObjectReference.Create(this);
-            await JSRuntime.InvokeVoidAsync("initialiseChessBoard", objectReference);
+            await _jsModule.InvokeVoidAsync("initialiseChessBoard", objectReference);
         }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     public void Dispose()
@@ -131,7 +136,7 @@
 
     private string GetPieceImage(string piece)
     {
-        return $"images/{piece}.png";
+        return $"images/old/{piece}.png";
     }
 
     private int GetRank(int row)

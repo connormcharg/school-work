@@ -1,10 +1,11 @@
-﻿@page "/board"
+﻿@page "/new-board"
 
 @using SignalRTesting.Client.Shared
 
 <h3>Chess Board</h3>
 
-<ChessBoard InitialBoard="@InitialBoard" />
+@* <ChessBoard InitialBoard="@InitialBoard" /> *@
+<NewChessBoard InitialBoard="@InitialBoard" />
 
 @code {
     private string[,] InitialBoard = new string[8, 8]
