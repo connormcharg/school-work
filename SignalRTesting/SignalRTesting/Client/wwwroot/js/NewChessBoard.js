@@ -1,100 +1,173 @@
-﻿export function initialiseChessBoard(dotnetObjectRef) {
-    const squares = document.querySelectorAll(".chess-square");
-    let draggedImage = null;
-    let originId = "";
-    let selectedSquare = null;
+﻿export async function handleBoard(dotnetRef) {
+    let selectedPiece = null;
+    let selectedPieceInitialRowCol = null;
+    let offset = 0;
+    let percentX = 0;
+    let percentY = 0;
+    let state = 1;
 
-    squares.forEach(square => {
-        square.addEventListener('dragstart', function (e) {
-            draggedImage = this.querySelector('img'); // Assuming each square might contain an image
-            if (draggedImage) {
-                e.dataTransfer.setDragImage(draggedImage, 0, 0);
-            }
-            originId = this.id; // Assuming the id is in the format 'r-c'
-            selectedSquare = this;
-            selectedSquare.classList.add('selected');
-            // Show dots on empty squares (You'll need to define `showDotsOnEmptySquares`)
-            showDotsOnEmptySquares();
-        });
+    const grid = document.querySelector(".chess-grid");
+    const gridRect = grid.getBoundingClientRect();
+    const hoverSquare = document.querySelector(".hover-square");
+    const prevMoveSquareStart = document.querySelector("#prev-move-start");
+    const prevMoveSquareEnd = document.querySelector("#prev-move-end");
+    const currMoveSquare = document.querySelector("#curr-move");
+    const clamp = (value) => Math.max(-50, Math.min(value, 800));
 
-        square.addEventListener('dragover', function (e) {
-            e.preventDefault(); // Necessary to allow dropping
-            this.classList.add('highlight'); // Add highlighting class
-        });
+    async function noSelectedNoDragging() {
+        if (selectedPiece) {
+            selectedPiece.classList.remove("dragging");
+            removeSquareClass(selectedPiece);
+            selectedPiece.classList.add(`square-${selectedPieceInitialRowCol[0]}-${selectedPieceInitialRowCol[1]}`);
+            selectedPiece.style = "";
+        };
+        selectedPiece = null;
+        selectedPieceInitialRowCol = null;
+        offset = 0;
+        percentX = 0;
+        percentY = 0;
+        state = 1;
+        currMoveSquare.style = "visibility: hidden;";
+        hoverSquare.style = "visibility: hidden;";
+        await dotnetRef.invokeMethodAsync("ReloadBoard");
+    };
+    function selectedDraggingFirstTime(e, p) {
+        selectedDragging(e, p);
+        state = 2;        
+    };
+    function selectedNoDragging() {
+        state = 3;
+        selectedPiece.classList.remove("dragging");
+        removeSquareClass(selectedPiece);
+        selectedPiece.classList.add(`square-${selectedPieceInitialRowCol[0]}-${selectedPieceInitialRowCol[1]}`);
+        selectedPiece.style = "";
+        hoverSquare.style = "visibility: hidden;";
+    };
+    function selectedDragging(e, p) {
+        selectedPiece = p;
+        selectedPieceInitialRowCol = getRowColFromSquareClass(getSquareClass(selectedPiece));
+        offset = selectedPiece.getBoundingClientRect().width / 2;
+        state = 4;
+        removeSquareClass(currMoveSquare);
+        currMoveSquare.classList.add(`square-${selectedPieceInitialRowCol[0]}-${selectedPieceInitialRowCol[1]}`);
+        currMoveSquare.style = "";
+        update(e);
+    };
 
-        square.addEventListener('dragleave', function (e) {
-            this.classList.remove('highlight'); // Remove highlighting class
-        });
+    async function isMoveValid(s, e) {
+        // actually implement logic
+        return await dotnetRef.invokeMethodAsync("IsMoveValid", s, e);
+    };
+    async function makeMove(s, e) {
+        return await dotnetRef.invokeMethodAsync("MakeMoveAsync", s, e);
+    };
+    function makeMoveAnimate(s, e) {
 
-        square.addEventListener('drop', function (e) {
-            e.preventDefault();
-            const targetId = this.id;
-            if (draggedImage && originId !== targetId) {
-                // Move the piece (You'll need to implement `movePieceInBoardArray`)
-                dotnetObjectRef.invokeMethodAsync("MovePieceAsync", originId, targetId)
-                    .then(data => {
-                    }).catch(error => {
-                        console.log(error);
-                    })
-                // Assuming you have a method to update the UI based on the board array
-                updateUI();
-            }
-        });
+    };
+    function getSquareClass(element) {
+        let regex = /^square-\d-\d$/;
+        let classList = Array.from(element.classList);
+        return classList.find(className => regex.test(className));
+    };
+    function removeSquareClass(element) {
+        let squareClass = getSquareClass(element);
+        if (squareClass) {
+            element.classList.remove(squareClass);
+        };
+    };
+    function getRowColFromSquareClass(squareClass) {
+        let parts = squareClass.split("-");
+        return [Number(parts[1]), Number(parts[2])];
+    };
+    function getIndexFromPercent(percent) {
+        return Math.trunc((percent + 50) / 100);
+    };
+    function getRowColFromMouseXY(x, y) {
+        return [
+            Math.trunc(((y - gridRect.top) / gridRect.height) * 8),
+            Math.trunc(((x - gridRect.left) / gridRect.width) * 8),
+        ];
+    };
+    function arraysEqual(a, b) {
+        if (a === b) return true;
+        if (a === null || b == null) return false;
+        if (a.length !== b.length) return false;
+        return a.every((val, idx) => val === b[idx]);
+    };
+    function update(e) {
+        if (state === 2 || state === 4) {
+            percentX = clamp(((e.clientX - gridRect.left - offset) / gridRect.width) * 800);
+            percentY = clamp(((e.clientY - gridRect.top - offset) / gridRect.height) * 800);
+            selectedPiece.style.transform = `translate(${percentX}%, ${percentY}%)`;
+            selectedPiece.classList.add("dragging");
 
-        square.addEventListener('click', function (e) {
-            if (selectedSquare) {
-                // If a square is already selected, attempt to move the piece
-                const targetId = this.id;
-                if (selectedSquare !== this && selectedSquare.querySelector('img')) {
-                    // Move the piece
-                    dotnetObjectRef.invokeMethodAsync("MovePieceAsync", selectedSquare.id, targetId)
-                        .then(data => {
-                            updateUI(); // Update the UI to reflect the new board state
-                        }).catch(error => {
-                            console.error(error);
-                        });
-                }
-                // Deselect the square after attempting to move
-                selectedSquare.classList.remove('selected');
-                selectedSquare = null;
-            } else {
-                dotnetObjectRef.invokeMethodAsync("IsSquareEmpty", this.id)
-                    .then(empty => {
-                        if (!empty) {
-                            selectedSquare = this;
-                            // Optionally, add some visual indication that the square is selected
-                            this.classList.add('selected');
-                        }
-                    });
-            }
-        });
+            removeSquareClass(hoverSquare);
+            hoverSquare.classList.add(`square-${getIndexFromPercent(percentY)}-${getIndexFromPercent(percentX)}`);
+            hoverSquare.style = "";
+        };
+    };
 
-        square.addEventListener('dragend', function (e) {
-            // Clean up: remove all highlights and dots
-            squares.forEach(sq => sq.classList.remove('highlight'));
-            removeDotsFromEmptySquares(); // You'll need to define this
-            if (selectedSquare) {
-                selectedSquare.classList.remove('selected'); // Remove visual indication of selection
-                selectedSquare = null;
-            }
+    document.querySelectorAll(".chess-piece").forEach(piece => {
+        piece.addEventListener("mousedown", function (e) {
+            if (e.button === 0) {
+                if (state === 1) {
+                    selectedDraggingFirstTime(e, piece);
+                } else if (state === 3 && piece !== selectedPiece) {
+                    selectedDraggingFirstTime(e, piece);
+                } else if (state === 3 && piece === selectedPiece) {
+                    selectedDragging(e, piece);
+                };
+            };
         });
     });
+    grid.addEventListener("mousedown", async function (e) {
+        if (e.button === 0) {
+            if (state === 3 && await isMoveValid(
+                selectedPieceInitialRowCol,
+                getRowColFromMouseXY(e.clientX, e.clientY)
+            )) {
+                await makeMove(
+                    selectedPieceInitialRowCol,
+                    getRowColFromMouseXY(e.clientX, e.clientY)
+                );
+                await noSelectedNoDragging();
+            } else if (state === 3) {
+                await noSelectedNoDragging();
+            };
+        };
+    });
+    grid.addEventListener("mouseup", async function (e) {
+        if (e.button === 0) {
+            if (state === 2 && arraysEqual(selectedPieceInitialRowCol,
+                [getIndexFromPercent(percentY), getIndexFromPercent(percentX)])) {
+                selectedNoDragging();
+            } else if (state === 2 && await isMoveValid(
+                selectedPieceInitialRowCol,
+                [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]
+            )) {
+                await makeMove(
+                    selectedPieceInitialRowCol,
+                    [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]);
+                await noSelectedNoDragging();
+            } else if (state === 2) {
+                selectedNoDragging();
+            } else if (state === 4 && arraysEqual(selectedPieceInitialRowCol,
+                [getIndexFromPercent(percentY), getIndexFromPercent(percentX)])) {
+                await noSelectedNoDragging();
+            } else if (state === 4 && await isMoveValid(
+                selectedPieceInitialRowCol,
+                [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]
+            )) {
+                await makeMove(
+                    selectedPieceInitialRowCol,
+                    [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]);
+                await noSelectedNoDragging();
+            } else if (state === 4) {
+                selectedNoDragging();
+            };
+        };
+    });
+    grid.addEventListener("mousemove", function (e) {
+        update(e);
+    });
 };
-
-export function showDotsOnEmptySquares() {
-    // Implementation depends on how you're marking empty squares and how you want to show dots
-}
-
-export function movePieceInBoardArray(originId, targetId) {
-    // Parse the origin and target IDs to get row and column
-    // Update your Board array accordingly
-    // Trigger state change if necessary
-}
-
-export function updateUI() {
-    // Update the UI based on the new state of the Board array
-}
-
-export function removeDotsFromEmptySquares() {
-    // Remove dots from empty squares
-}

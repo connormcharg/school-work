@@ -1,28 +1,34 @@
 ﻿@implements IDisposable
 
 <div class="chess-board border rounded">
-    <div class="chess-grid @(IsWhite ? "" : "black")">
+    <div class="chess-grid">
         @for (int r = 0; r < 8; r++)
         {
-            <div class="chess-row">
-                @for (int c = 0; c < 8; c++)
+            @for (int c = 0; c < 8; c++)
+            {
+                var R = r;
+                var C = c;
+                var piece = GetPiece(R, C);
+                @if (piece != "--")
                 {
-                    var R = r;
-                    var C = c;
-                    var piece = Board[R, C];
-                    <div id="@(R)-@(C)" class="chess-square @(IsWhiteSquare(R, C) ? "white" : "black")" 
-                        draggable="@(IsDraggable(R, C) ? "true" : "false")">
-                        <img src="@GetPieceImage(piece)" class="chess-piece @(IsWhite ? "" : "black")" draggable="false" />
-                    </div>
+                    <div class="chess-piece @(piece.ToLower()) square-@(R)-@(C)" style=""></div>
                 }
-            </div>
+            }
         }
+        <div class="hover-square" style="visibility: hidden;">
+            <svg viewBox="0 0 100 100">
+                <rect x="0" y="0" width="100" height="100" stroke="rgba(255, 255, 255, 0.65)" stroke-width="10" fill="none"></rect>
+            </svg>
+        </div>
+        <div id="prev-move-start" class="highlight" style="visibility: hidden;"></div>
+        <div id="prev-move-end" class="highlight" style="visibility: hidden;"></div>
+        <div id="curr-move" class="highlight" style="visibility: hidden;"></div>
     </div>
     <div class="chess-ranks">
         @for (int k = 0; k < 8; k++)
         {
             <div class="chess-label rank">
-                @GetRank(k)
+                <text class="chess-label-text">@GetRank(k)</text>
             </div>
         }
     </div>
@@ -30,10 +36,11 @@
         @for (int k = 0; k < 8; k++)
         {
             <div class="chess-label file">
-                @GetFile(k)
+                <text class="chess-label-text">@GetFile(k)</text>
             </div>
         }
     </div>
+
 </div>
 
 @code {
@@ -42,51 +49,26 @@
 
     [Inject]
     private IJSRuntime JSRuntime { get; set; } = default!;
-    private IJSObjectReference? _jsModule;
+    private IJSObjectReference? JS;
+    private DotNetObjectReference<NewChessBoard>? Dotnet;
 
     public bool IsWhite = true;
     public string[,] Board = new string[8, 8];
-
-    private DotNetObjectReference<NewChessBoard>? objectReference;
-
-    [JSInvokable]
-    public async Task MovePieceAsync(string originId, string targetId)
+    public string[,] ReverseBoard
     {
-        int? startRow = null, startCol = null, endRow = null, endCol = null;
-        startRow = int.Parse(originId.Split('-')[0]);
-        startCol = int.Parse(originId.Split('-')[1]);
-        endRow = int.Parse(targetId.Split('-')[0]);
-        endCol = int.Parse(targetId.Split('-')[1]);
-
-        if (startRow is null || startCol is null || endRow is null || endCol is null)
+        get
         {
-            return;
+            string[,] reversedBoard = new string[8, 8];
+            for (int r = 0; r < 8; r++)
+            {
+                for (int c = 0; c < 8; c++)
+                {
+                    reversedBoard[r, c] = Board[7 - r, 7 - c];
+                }
+            }
+            return reversedBoard;
         }
-
-        string pieceMoved = Board[(int)startRow, (int)startCol];
-        if (pieceMoved == "--")
-        {
-            return;
-        }
-        Board[(int)startRow, (int)startCol] = "--";
-        Board[(int)endRow, (int)endCol] = pieceMoved;
-
-        await InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
-
-        return;
     }
-
-    [JSInvokable]
-    public async Task<bool> IsSquareEmpty(string id)
-    {
-        var row = int.Parse(id.Split('-')[0]);
-        var col = int.Parse(id.Split('-')[1]);
-        return Board[row, col] == "--";
-    }
-
     private Dictionary<int, char> ColToFile = new Dictionary<int, char>
     {
         {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}
@@ -96,24 +78,22 @@
     {
         if (firstRender)
         {
-            _jsModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/NewChessBoard.js");
-            objectReference = DotNetObjectReference.Create(this);
-            await _jsModule.InvokeVoidAsync("initialiseChessBoard", objectReference);
+            Dotnet = DotNetObjectReference.Create(this);
+            JS ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/NewChessBoard.js");
+            await JS.InvokeVoidAsync("handleBoard", Dotnet);
         }
-        await base.OnAfterRenderAsync(firstRender);
-    }
 
-    public void Dispose()
-    {
-        objectReference?.Dispose();
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     protected override void OnInitialized()
     {
-        InitializeBoard();
+        SetupBoard();
+
+        base.OnInitialized();
     }
 
-    private void InitializeBoard()
+    private void SetupBoard()
     {
         for (int i = 0; i < 8; i++)
         {
@@ -124,19 +104,14 @@
         }
     }
 
+    public void Dispose()
+    {
+        Dotnet?.Dispose();
+    }
+
     private bool IsWhiteSquare(int row, int col)
     {
         return (row + col) % 2 == 0;
-    }
-
-    private bool IsDraggable(int row, int col)
-    {
-        return Board[row, col] != "--";
-    }
-
-    private string GetPieceImage(string piece)
-    {
-        return $"images/old/{piece}.png";
     }
 
     private int GetRank(int row)
@@ -155,5 +130,57 @@
             return ColToFile[col].ToString().ToLower();
         }
         return ColToFile[7 - col].ToString().ToLower();
+    }
+
+    private string GetPiece(int row, int col)
+    {
+        if (IsWhite)
+        {
+            return Board[row, col];
+        }
+        return ReverseBoard[row, col];
+    }
+
+    [JSInvokable]
+    public async Task<bool> MakeMoveAsync(int[] start, int[] end)
+    {
+        if (IsWhite)
+        {
+            string pieceMoved = Board[start[0], start[1]];
+            Board[start[0], start[1]] = "--";
+            Board[end[0], end[1]] = pieceMoved;
+        }
+        else
+        {
+            string pieceMoved = Board[7 - start[0], 7 - start[1]];
+            Board[7 - start[0], 7 - start[1]] = "--";
+            Board[7 - end[0], 7 - end[1]] = pieceMoved;
+        }
+
+        return true;
+    }
+
+    [JSInvokable]
+    public async Task<bool> IsMoveValid(int[] start, int[] end)
+    {
+        if (IsWhite)
+        {
+            string x = Board[end[0], end[1]];
+            return (x == "--");
+        }
+        else
+        {
+            string x = Board[7 - end[0], 7 - end[1]];
+            return (x == "--");
+        }
+    }
+
+    [JSInvokable]
+    public async Task ReloadBoard()
+    {
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
     }
 }

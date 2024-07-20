@@ -3,20 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\shared\\chessboard.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\shared\\chessboard.razor.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\shared\\newchessboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\shared\\newchessboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\wwwroot\\js\\chessboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\wwwroot\\js\\chessboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\shared\\chessboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\shared\\chessboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\pages\\board.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\pages\\board.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|c:\\users\\conno\\onedrive\\documents\\github\\school-work\\signalrtesting\\signalrtesting\\client\\wwwroot\\js\\newchessboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{211C6998-43C1-4BE8-A1BF-9856E4470293}|SignalRTesting\\Client\\SignalRTesting.Client.csproj|solutionrelative:signalrtesting\\client\\wwwroot\\js\\newchessboard.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -43,53 +35,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ChessBoard.razor.css",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Shared\\ChessBoard.razor.css",
-              "RelativeDocumentMoniker": "SignalRTesting\\Client\\Shared\\ChessBoard.razor.css",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Shared\\ChessBoard.razor.css",
-              "RelativeToolTip": "SignalRTesting\\Client\\Shared\\ChessBoard.razor.css",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAF0AAAAPAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2024-07-19T21:39:21.615Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ChessBoard.razor",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Shared\\ChessBoard.razor",
-              "RelativeDocumentMoniker": "SignalRTesting\\Client\\Shared\\ChessBoard.razor",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Shared\\ChessBoard.razor",
-              "RelativeToolTip": "SignalRTesting\\Client\\Shared\\ChessBoard.razor",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABAAAAAlAAAA",
+              "Title": "NewChessBoard.razor",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Shared\\NewChessBoard.razor",
+              "RelativeDocumentMoniker": "SignalRTesting\\Client\\Shared\\NewChessBoard.razor",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Shared\\NewChessBoard.razor",
+              "RelativeToolTip": "SignalRTesting\\Client\\Shared\\NewChessBoard.razor",
+              "ViewState": "AQIAAKgAAAAAAAAAAAAAADYAAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-07-19T20:47:50.803Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Board.razor",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Board.razor",
-              "RelativeDocumentMoniker": "SignalRTesting\\Client\\Pages\\Board.razor",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\Pages\\Board.razor",
-              "RelativeToolTip": "SignalRTesting\\Client\\Pages\\Board.razor",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-07-19T18:27:57.944Z",
+              "WhenOpened": "2024-07-20T13:01:50.308Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ChessBoard.js",
-              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\wwwroot\\js\\ChessBoard.js",
-              "RelativeDocumentMoniker": "SignalRTesting\\Client\\wwwroot\\js\\ChessBoard.js",
-              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\wwwroot\\js\\ChessBoard.js",
-              "RelativeToolTip": "SignalRTesting\\Client\\wwwroot\\js\\ChessBoard.js",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAADIAAAA+AAAA",
+              "Title": "NewChessBoard.js",
+              "DocumentMoniker": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\wwwroot\\js\\NewChessBoard.js",
+              "RelativeDocumentMoniker": "SignalRTesting\\Client\\wwwroot\\js\\NewChessBoard.js",
+              "ToolTip": "C:\\Users\\conno\\OneDrive\\Documents\\GitHub\\school-work\\SignalRTesting\\SignalRTesting\\Client\\wwwroot\\js\\NewChessBoard.js",
+              "RelativeToolTip": "SignalRTesting\\Client\\wwwroot\\js\\NewChessBoard.js",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAAD4AAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2024-07-19T17:17:23.192Z",
+              "WhenOpened": "2024-07-20T13:01:38.208Z",
               "EditorCaption": ""
             }
           ]

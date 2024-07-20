@@ -1,8 +1,15 @@
-﻿.chess-board {
+﻿* {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    --chess-grid-size: calc(90*8px);
+}
+
+.chess-board {
     display: flex;
     flex-wrap: wrap;
-    width: 42em;
-    height: 42em;
+    width: calc(var(--chess-grid-size)*1.05);
+    height: calc(var(--chess-grid-size)*1.05);
     background-color: rgba(0, 0, 0, 0.7);
     box-sizing: unset;
 }
@@ -13,14 +20,10 @@
     background-image: url('/images/new/blue-board.png');
     background-size: cover;
     background-position: center;
-    width: 40em;
-    height: 40em;
+    width: var(--chess-grid-size);
+    height: var(--chess-grid-size);
     position: relative;
 }
-
-    .chess-grid.black {
-        transform: rotate(180deg);
-    }
 
 .chess-piece {
     background-size: 100%;
@@ -67,19 +70,19 @@
 }
 
     .chess-label.rank {
-        width: 2em;
-        height: 5em;
+        width: calc(var(--chess-grid-size) * 0.05);
+        height: calc(var(--chess-grid-size) / 8);
     }
 
     .chess-label.file {
-        width: 5em;
-        height: 2em;
+        width: calc(var(--chess-grid-size) / 8);
+        height: calc(var(--chess-grid-size) * 0.05);
     }
 
 .chess-label-text {
     fill: hsla(0, 0%, 100%, .5);
     color: hsla(0, 0%, 100%, .5);
-    font-size: 14pt;
+    font-size: calc(var(--chess-grid-size) * 0.0284);
 }
 
 .hover-square {
@@ -104,12 +107,6 @@
     top: 0;
     background-color: rgb(0, 165, 255);
     opacity: 0.5;
-}
-
-* {
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
 }
 
 .br {

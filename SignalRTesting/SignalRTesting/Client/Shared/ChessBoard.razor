@@ -1,12 +1,12 @@
 ﻿<div class="chess-board border rounded">
-    <div class="chess-grid @(IsWhite ? "" : "black")">
+    <div class="chess-grid">
         @for (int r = 0; r < 8; r++)
         {
             @for (int c = 0; c < 8; c++)
             {
                 var R = r;
                 var C = c;
-                var piece = Board[R, C];
+                var piece = GetPiece(R, C);
                 @if (piece != "--")
                 {
                     <div class="chess-piece @(piece.ToLower()) square-@(R)-@(C)" style=""></div>
@@ -19,7 +19,7 @@
             </svg>
         </div>
         <div id="prev-move-start" class="highlight" style="visibility: hidden;"></div>
-        <div id="prev-move-end" class="highlght" style="visibility: hidden;"></div>
+        <div id="prev-move-end" class="highlight" style="visibility: hidden;"></div>
         <div id="curr-move-start" class="highlight" style="visibility: hidden;"></div>
     </div>
     <div class="chess-ranks">
@@ -50,8 +50,25 @@
     private IJSRuntime JSRuntime { get; set; } = default!;
     private IJSObjectReference? _jsModule;
 
-    public bool IsWhite = true;
+    public bool IsWhite = false;
     public string[,] Board = new string[8, 8];
+    public string[,] ReverseBoard
+    {
+        get
+        {
+            string[,] reversedBoard = new string[8, 8];
+
+            for (int r = 0; r < 8; r++)
+            {
+                for (int c = 0; c < 8; c++)
+                {
+                    reversedBoard[r, c] = Board[8 - 1 - r, 8 - 1 - c];
+                }
+            }
+
+            return reversedBoard;
+        }
+    }
     private Dictionary<int, char> ColToFile = new Dictionary<int, char>
     {
         {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}
@@ -89,16 +106,6 @@
         return (row + col) % 2 == 0;
     }
 
-    private string GetPieceImage(string piece)
-    {
-        return $"images/old/{piece}.png";
-    }
-
-    private string GetTransformStyle(int r, int c)
-    {
-        return $"transform: translate({c}00%, {r}00%);";
-    }
-
     private int GetRank(int row)
     {
         if (IsWhite)
@@ -115,5 +122,14 @@
             return ColToFile[col].ToString().ToLower();
         }
         return ColToFile[7 - col].ToString().ToLower();
+    }
+
+    private string GetPiece(int row, int col)
+    {
+        if (IsWhite)
+        {
+            return Board[row, col];
+        }
+        return ReverseBoard[row, col];
     }
 }
