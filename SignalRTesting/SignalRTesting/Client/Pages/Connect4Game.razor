@@ -1,0 +1,196 @@
+﻿@page "/connect4game"
+@inject HttpClient Http
+@using Microsoft.AspNetCore.SignalR.Client
+@implements IAsyncDisposable
+@using SignalRTesting.Shared
+@inject NavigationManager Navigation
+
+<style>
+    td{
+        width: 40px;
+        height: 40px;
+    }
+    .white-cell{
+        background-color: lightgrey;
+    }
+    .red-cell{
+        background-color: red;
+    }
+    .yellow-cell {
+        background-color: yellow;
+    }
+    .orange-cell {
+        background-color: orangered;
+    }
+    table{
+        border-collapse: separate;
+        border: 2px solid;
+    }
+</style>
+
+<PageTitle>Game</PageTitle>
+
+
+<div class="game-board">
+    @if (_board != null)
+    {
+        <table>
+            @for (int i = 0; i < _board?.Count(); i++)
+            {
+                <tr>
+                    @for (int j = 0; j < _board?[0].Count(); j++)
+                    {
+                        var J = j;
+                        <td id="@j" class="@(_board?[i][j])-cell" @onclick="() => HandleClick(J)"></td>
+                    }
+                </tr>
+            }
+        </table>
+    }
+</div>
+
+
+<h3>connected = @IsConnected</h3>
+<h3>colour = @_colour</h3>
+<h3>message = @_message</h3>
+<h3>yourTurn = @_yourTurn</h3>
+<h3>showButtons = @_showButtons</h3>
+<h3>player1Name = @(_player1 != null ? _player1.Name : null)</h3>
+<h3>player2Name = @(_player2 != null ? _player2.Name : null)</h3>
+
+<div class="form-group">
+    <label>
+        Email:
+        <input @bind="email" />
+    </label>
+</div>
+<div class="form-group">
+    <label>
+        Name:
+        <input @bind="name" />
+    </label>
+</div>
+<button @onclick="UpdateUser" disabled="@(!IsConnected)">UpdateUser</button>
+
+@code {
+    public string[][]? _board;
+    public string? _colour;
+    public string? _message;
+    public bool? _yourTurn;
+    public Player? _player1;
+    public Player? _player2;
+    public bool? _showButtons;
+
+    private HubConnection? hubConnection;
+    private bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+
+    private string? email;
+    private string? name;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await StartHubConnection();
+    }
+
+    private async Task StartHubConnection()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/gamehub"))
+            .Build();
+
+        SetGameListener();
+
+        await hubConnection.StartAsync();
+    }
+
+    private void SetGameListener()
+    {
+        if (hubConnection == null)
+        {
+            return;
+        }
+        hubConnection.On<string[][]>("RenderBoard", (board) =>
+        {
+            _board = board;
+            StateHasChanged();
+        });
+        hubConnection.On<string>("Colour", (colour) =>
+        {
+            _colour = colour;
+            StateHasChanged();
+        });
+        hubConnection.On<string>("Turn", (player) =>
+        {
+            if (player == _colour)
+            {
+                _message = $"You're up. What's your move?";
+                _yourTurn = true;
+                _showButtons = false;
+            }
+            else
+            {
+                _message = $"{player} is thinking...";
+                _yourTurn = false;
+                _showButtons = false;
+            }
+            StateHasChanged();
+        });
+        hubConnection.On<Player, Player>("RollCall", (p1, p2) =>
+        {
+            _player1 = p1;
+            _player2 = p2;
+            StateHasChanged();
+        });
+        hubConnection.On<bool>("Concede", async (x) =>
+        {
+            _message = $"Your opponent conceded. You win";
+            _yourTurn = false;
+            _showButtons = true;
+            await hubConnection.DisposeAsync();
+            StateHasChanged();
+        });
+        hubConnection.On<string, string[][]>("Victory", async (player, board) =>
+        {
+            _yourTurn = false;
+            if (player == _colour)
+            {
+                _message = "You win!";
+            }
+            else
+            {
+                _message = "You lose!";
+            }
+            _board = board;
+            _showButtons = true;
+            _player1 = null;
+            _player2 = null;
+            _colour = null;
+            await hubConnection.DisposeAsync();
+            StateHasChanged();
+        });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+
+    public async Task UpdateUser()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("UpdateUser", email, name);
+        }
+    }
+
+    private async void HandleClick(int col)
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("ColumnClick", col);
+        }
+    }
+}
