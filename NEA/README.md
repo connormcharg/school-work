@@ -1,4 +1,4 @@
-#So Far:
+# So Far:
 
 I have been able to create a functioning system for a simpler game (connect-4) where multiple clients (in my case these are just separate tabs)
 are able to connect to the same "hub" which then allows them to play a game against eachother.
