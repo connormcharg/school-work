@@ -18,6 +18,7 @@ namespace SignalRTesting
             builder.Services.AddSignalR();
             builder.Services.AddSingleton<IGameRepository, GameRepository>();
             builder.Services.AddSingleton<Random>();
+            builder.Services.AddSingleton<IChessGameRepository, ChessGameRepository>();
 
             var app = builder.Build();
 
@@ -46,8 +47,8 @@ namespace SignalRTesting
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapHub<GameHub>("/gamehub");
+                endpoints.MapHub<ChessGameHub>("/chessgamehub");
             });
-
 
             app.MapRazorPages();
             app.MapControllers();
