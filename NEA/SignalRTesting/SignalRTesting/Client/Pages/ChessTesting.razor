@@ -9,11 +9,14 @@
 
 @if (_board != null)
 {
-    @foreach (string s in StringifyBoard())
+    @* @foreach (string s in StringifyBoard())
     {
         <h3>@s</h3>
-    }
+    } *@
+    <NewChessBoard InitialBoard="@InitialBoard"></NewChessBoard>
 }
+
+
 
 <h3>connected = @IsConnected</h3>
 <h3>colour = @_colour</h3>
@@ -81,6 +84,7 @@
     private int? er = 0;
     private int? ec = 0;
 
+    private string[,]? InitialBoard => ConvertBoard();
 
     protected override async Task OnInitializedAsync()
     {
@@ -188,6 +192,10 @@
     public List<string> StringifyBoard()
     {
         var r = new List<string>();
+        if (_board == null)
+        {
+            return r;
+        }
         for (int i = 0; i < _board.Count(); i++)
         {
             string temp = "";
@@ -196,6 +204,19 @@
                 temp += _board[i][j];
             }
             r.Add(temp);
+        }
+        return r;
+    }
+
+    public string[,] ConvertBoard()
+    {
+        var r = new string[8, 8];
+        for (int i = 0; i < _board.Count(); i++)
+        {
+            for (int j = 0; j < _board[i].Count(); j++)
+            {
+                r[i, j] = _board[i][j];
+            }
         }
         return r;
     }
