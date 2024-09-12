@@ -20,6 +20,8 @@ namespace CheckAndMate
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveWebAssemblyComponents();
+            builder.Services.AddControllers();
+            builder.Services.AddSignalR();
 
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
@@ -68,6 +70,9 @@ namespace CheckAndMate
 
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
+
+            app.MapControllers();
+            /*app.MapHub<GameHub>("/chesshub");*/
 
             app.Run();
         }

@@ -31,8 +31,7 @@ namespace CheckAndMate.Services
                 new KeyValuePair<string, string>("from", $"CheckAndMate <chess@{_domain}>"),
                 new KeyValuePair<string, string>("to", toEmail),
                 new KeyValuePair<string, string>("subject", subject),
-                new KeyValuePair<string, string>("template", "email confirmation"),
-                new KeyValuePair<string, string>("v:confirmation_link", message)
+                new KeyValuePair<string, string>("text", message)
             });
 
             var authValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($"api:{_apiKey}"));

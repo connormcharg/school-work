@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
 @using CheckAndMate.Data
+@using Microsoft.AspNetCore.Components.Forms
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
@@ -14,19 +15,28 @@
 <h3>Profile</h3>
 <StatusMessage />
 
+<style>
+    .custom-file-input {
+        padding-top: 2.1rem !important;
+        padding-left: 1rem !important;
+        padding-bottom: 1.9rem !important;
+        padding-right: 1rem !important;
+    }
+</style>
+
 <div class="row">
     <div class="col-md-6">
         <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
+            @* <DataAnnotationsValidator /> *@
+            @* <ValidationSummary class="text-danger" role="alert" /> *@
             <div class="form-floating mb-3">
                 <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
                 <label for="username" class="form-label">Username</label>
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
-                <label for="phone-number" class="form-label">Phone number</label>
-                <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+                <InputText @bind-Value="Input.Nickname" class="form-control" placeholder="Please enter your nickname." />
+                <label for="nickname" class="form-label">Nickname</label>
+                <ValidationMessage For="() => Input.Nickname" class="text-danger" />
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </EditForm>
@@ -36,7 +46,9 @@
 @code {
     private ApplicationUser user = default!;
     private string? username;
-    private string? phoneNumber;
+    private string? nickname;
+    private EditContext? editContext;
+    private ValidationMessageStore? validationMessageStore;
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -48,30 +60,50 @@
     {
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
         username = await UserManager.GetUserNameAsync(user);
-        phoneNumber = await UserManager.GetPhoneNumberAsync(user);
+        nickname = user.Nickname;
 
-        Input.PhoneNumber ??= phoneNumber;
+        Input.Nickname ??= nickname;
+
+        editContext = new EditContext(Input);
+        validationMessageStore = new ValidationMessageStore(editContext);
+
+        editContext.OnFieldChanged += (sender, args) =>
+        {
+            validationMessageStore.Clear(args.FieldIdentifier);
+        };
     }
 
     private async Task OnValidSubmitAsync()
     {
-        if (Input.PhoneNumber != phoneNumber)
+        validationMessageStore.Clear(); // Clear previous validation messages
+        bool isUpdated = false; // Track whether updates were made
+
+        // Validate Nickname (ensure it's not empty or whitespace)
+        if (Input.Nickname != nickname)
         {
-            var setPhoneResult = await UserManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-            if (!setPhoneResult.Succeeded)
+            user.Nickname = Input.Nickname;
+            var updateResult = await UserManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
             {
-                RedirectManager.RedirectToCurrentPageWithStatus("Error: Failed to set phone number.", HttpContext);
+                validationMessageStore.Add(editContext.Field("Input.Nickname"), "Error: Failed to update nickname.");
+                return; // Exit the method if there is an error
             }
+            isUpdated = true;
         }
 
-        await SignInManager.RefreshSignInAsync(user);
-        RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
+        // If any updates were successful, refresh the sign-in session
+        if (isUpdated)
+        {
+            await SignInManager.RefreshSignInAsync(user);
+            RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
+        }
+
+        editContext.NotifyValidationStateChanged();
     }
 
     private sealed class InputModel
     {
-        [Phone]
-        [Display(Name = "Phone number")]
-        public string? PhoneNumber { get; set; }
+        [Display(Name = "Nickname")]
+        public string? Nickname { get; set; }
     }
 }
