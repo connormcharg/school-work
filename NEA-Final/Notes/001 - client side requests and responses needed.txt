@@ -1,0 +1,28 @@
+start game:
+ - an endpoint that accepts data containing all relevant info for starting game
+ - endpoint that tells the client the url for the game and adds them to the game as a player
+
+join/watch game:
+ - api that allows a list of public in progress or joinable games to be requested
+ - endpoint that allows game code to be entered to gain access to private game
+ - endpoint that allows a game to be joined either as a player or as a spectator
+ - api that allows details about a specific game to be requested
+
+ 
+playing a game:
+ - access to a live chat / game log that shares messages about players, spectators, elo, ...
+ - api that gives access to the players' info and time remaining
+ - api that gives access to a code that can be used on the above menu
+ - access to a live updating list of all the moves made in order so they can be displayed
+ - endpoint that allows for players to make requests for pausing, resigning, or offering draws
+ - api that will return a suggested move if you are playing against a CPU player
+ - access to a live updating game board with indication of whose turn it is
+
+watching a game:
+ - access tp a live chat / game log that shares messages about players, spectators, elo, ... (view only)
+ - api that gives access to the players' info and time remaining 
+ - access to a live updating list of all the moves made in order so they can be displayed
+ - access to a live updating game board with indication of whose turn it is
+
+watching a game (in the past):
+ - an api that provides the game state containing all of the moves made in order and information on the players 

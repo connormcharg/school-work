@@ -1,0 +1,89 @@
+BACKEND:
+
+CHESS SERVICE:
+ - game repository
+ - creating games
+ - retrieving games
+ - disposing / archiving games
+
+
+TIMER SERVICE:
+
+
+ENGINE SERVICE:
+
+
+CHESS HUB:
+ - board
+    - push board on update to all clients
+    - receive move attempts from clients
+ - move log
+    - push move log on update to all clients
+ - timers
+    - push timer values out on each tick (every second or half a second)
+ - chat / game log
+    - push chat / game messages out to all clients
+    - receive chat messages from clients
+
+
+CHESS CONTROLLER:
+ - start game request with settings
+    - receive settings for a new game and create one
+    - return a link for the page to go to for the game once it is created
+ - getting a list of public games in progress or waiting to start
+    - receiving a request for all the games
+    - returning a collection of all the games with their names and statuses
+ - getting game details for a given code
+    - receiving a game id / code from a client
+    - returning all info about a game
+ - retrieving the private game code for a game
+    - receiving a request from a player already in a game
+    - returning a code that other players can use to join said game
+ - getting info on players
+    - receiving a request using a game id
+    - returning info on both players and which colour they each are
+ - getting old games to view after the fact
+
+
+GAME:
+ - gamestate
+   - board
+   - move log
+   - turn
+   - check / checkmate / stalemate status
+   - castle rights
+ - code / id
+ - connection info / player info
+ - chat / game log
+ - timers
+
+
+GAME HANDLER:
+ - make moves
+ - update castle rights NEED TO ADD THE INITIAL CASTLING RIGHTS
+ - undo moves
+ - find valid moves
+
+
+MOVE:
+ - start, end
+ - piece moved
+ - piece captured
+ - is en passant
+ - is pawn promotion
+ - is castle
+ - move id
+
+
+MOVE HANDLER:
+ - get chess notation
+    - get rank and file
+ - equality checks between moves
+
+
+
+
+
+
+
+
