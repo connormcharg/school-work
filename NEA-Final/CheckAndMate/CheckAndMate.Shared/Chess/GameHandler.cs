@@ -25,7 +25,7 @@ namespace CheckAndMate.Shared.Chess
 
         public static List<Move> FindValidMoves(Game game)
         {
-
+            return new List<Move>();
         }
 
     }
