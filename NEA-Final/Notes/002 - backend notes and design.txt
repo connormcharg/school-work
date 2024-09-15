@@ -8,7 +8,8 @@ CHESS SERVICE:
 
 
 TIMER SERVICE:
-
+ - loop through each of the games in the games repository, update the times in the gamestate for each one
+ 
 
 ENGINE SERVICE:
 

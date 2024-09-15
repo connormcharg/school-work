@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckAndMate", "CheckAndMat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckAndMate.Client", "CheckAndMate\CheckAndMate.Client\CheckAndMate.Client.csproj", "{0C1342D1-3343-49BE-94EB-97A37D3BB670}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckAndMate.Shared", "CheckAndMate.Shared\CheckAndMate.Shared.csproj", "{45B89AA1-1A63-462F-B3E0-9D9E6C29D003}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckAndMate.Shared", "CheckAndMate.Shared\CheckAndMate.Shared.csproj", "{45B89AA1-1A63-462F-B3E0-9D9E6C29D003}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

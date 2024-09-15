@@ -18,8 +18,4 @@
     <ProjectReference Include="..\..\CheckAndMate.Shared\CheckAndMate.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

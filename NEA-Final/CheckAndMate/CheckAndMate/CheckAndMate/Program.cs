@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
+using CheckAndMate.Services;
+using CheckAndMate.Hubs;
 
 namespace CheckAndMate
 {
@@ -47,6 +49,8 @@ namespace CheckAndMate
                 .AddDefaultTokenProviders();
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+            builder.Services.AddSingleton<ChessService>();
+            builder.Services.AddHostedService<TimerService>();
 
             var app = builder.Build();
 
@@ -72,7 +76,7 @@ namespace CheckAndMate
             app.MapAdditionalIdentityEndpoints();
 
             app.MapControllers();
-            /*app.MapHub<GameHub>("/chesshub");*/
+            app.MapHub<ChessHub>("/chesshub");
 
             app.Run();
         }

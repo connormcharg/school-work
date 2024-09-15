@@ -12,9 +12,8 @@ namespace CheckAndMate.Shared.Chess
     {
         public GameState gameState { get; set; }
         public string id { get; set; }
-        public List<ConnectionInfo> connections { get; set; }
+        /*public List<ConnectionInfo> connections { get; set; }*/
         public List<IMessage> messages { get; set; }
-        
         public GameSettings settings { get; set; }
 
         public Game(GameSettings Settings)
