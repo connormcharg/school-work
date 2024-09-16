@@ -1,5 +1,4 @@
 using CheckAndMate.Client;
-using CheckAndMate.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -25,7 +24,6 @@ namespace CheckAndMate.Client
                     .WithUrl(navigationManager.ToAbsoluteUri("/chesshub"))
                     .Build();
             });
-            builder.Services.AddScoped<ChessClientService>();
 
             await builder.Build().RunAsync();
         }

@@ -13,49 +13,100 @@ namespace CheckAndMate.Hubs
             _chessService = chessService;
         }
 
-        public async Task SendGame(string gameId, Game game)
+        public async Task JoinGameAsPlayer(string gameId)
         {
-            await Clients.Group(gameId).SendAsync("ReceiveGame", game);
-        }
+            var game = _chessService.GetGame(gameId);
+            
+            if (game == null)
+            {
+                return;
+            }
+            if (game.playerConnections.Count >= 2)
+            {
+                return;
+            }
+            
+            game.playerConnections.Add(Context.ConnectionId);
+            _chessService.UpdateGame(gameId, game);
 
-        public async Task JoinGame(string gameId)
-        {
             await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
         }
 
-        public async Task LeaveGame(string gameId)
+        public async Task LeaveGameAsPlayer()
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameId);
-        }
+            var game = _chessService.GetAllGames().
+                FirstOrDefault(g => g.playerConnections.Contains(Context.ConnectionId));
 
-        public async Task SendMove(string gameId, Move move)
-        {
-            var game = _chessService.GetGame(gameId);
             if (game == null)
             {
                 return;
             }
 
-            var validMoves = GameHandler.FindValidMoves(game);
+            game.playerConnections.Remove(Context.ConnectionId);
 
-            if (validMoves == null)
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, game.id);
+        }
+
+        public async Task JoinGameAsWatcher(string gameId)
+        {
+            var game = _chessService.GetGame(gameId);
+
+            if (game == null)
+            {
+                return;
+            }
+            if (!game.settings.isWatchable)
             {
                 return;
             }
 
-            var valid = false;
-            foreach(var m in validMoves)
+            game.watcherConnections.Add(Context.ConnectionId);
+            _chessService.UpdateGame(gameId, game);
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+        }
+
+        public async Task LeaveGameAsWatcher()
+        {
+            var game = _chessService.GetAllGames().
+                FirstOrDefault(g => g.watcherConnections.Contains(Context.ConnectionId));
+
+            if (game == null)
             {
-                if (MoveHandler.MovesEqual(m, move))
+                return;
+            }
+
+            game.watcherConnections.Remove(Context.ConnectionId);
+
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, game.id);
+        }
+
+        public async Task SendMove(Move move)
+        {
+            var game = _chessService.GetAllGames().
+                FirstOrDefault(g => g.playerConnections.Contains(Context.ConnectionId));
+
+            if (game == null)
+            {
+                return;
+            }
+
+            bool updated = false;
+
+            var moves = GameHandler.FindValidMoves(game);
+
+            foreach (Move m in moves)
+            {
+                if (MoveHandler.Equals(m, move))
                 {
-                    valid = true;
                     GameHandler.MakeMove(game, m);
+                    updated = true;
                 }
             }
 
-            if (valid)
+            if (updated)
             {
-                _chessService.UpdateGame(gameId, game);
+                _chessService.UpdateGame(game.id, game);
             }
         }
     }

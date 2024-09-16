@@ -28,6 +28,7 @@ namespace CheckAndMate.Services
 
         public async void UpdateGame(string gameId, Game game)
         {
+            game.currentValidMoves = GameHandler.FindValidMoves(game);
             _games[gameId] = game;
             await _hubContext.Clients.Group(gameId).SendAsync("ReceiveGame", _games[gameId]);
         }
