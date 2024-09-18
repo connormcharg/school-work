@@ -3,107 +3,97 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
 @using CheckAndMate.Data
+@using CheckAndMate.Services
 @using Microsoft.AspNetCore.Components.Forms
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
+@inject UserService UserService
 
 <PageTitle>Profile</PageTitle>
 
 <h3>Profile</h3>
 <StatusMessage />
 
-<style>
-    .custom-file-input {
-        padding-top: 2.1rem !important;
-        padding-left: 1rem !important;
-        padding-bottom: 1.9rem !important;
-        padding-right: 1rem !important;
-    }
-</style>
-
-<div class="row">
-    <div class="col-md-6">
-        <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
-            @* <DataAnnotationsValidator /> *@
-            @* <ValidationSummary class="text-danger" role="alert" /> *@
-            <div class="form-floating mb-3">
-                <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
-                <label for="username" class="form-label">Username</label>
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Nickname" class="form-control" placeholder="Please enter your nickname." />
-                <label for="nickname" class="form-label">Nickname</label>
-                <ValidationMessage For="() => Input.Nickname" class="text-danger" />
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </EditForm>
+@if (Input == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6">
+            <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+                <div class="form-floating mb-3">
+                    <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
+                    <label for="username" class="form-label">Username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.Nickname" class="form-control" placeholder="Please enter your nickname." />
+                    <label for="nickname" class="form-label">Nickname</label>
+                    <ValidationMessage For="() => Input.Nickname" class="text-danger" />
+                </div>
+                @* <button type="button" class="w-100 btn btn-secondary mb-3" title="Regenerate Nickname">
+                    Regenerate Nickname &#x21bb;
+                </button> *@
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            </EditForm>
+        </div>
     </div>
-</div>
+}
 
 @code {
     private ApplicationUser user = default!;
     private string? username;
     private string? nickname;
-    private EditContext? editContext;
-    private ValidationMessageStore? validationMessageStore;
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    private InputModel? Input { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("Component Loaded");
+
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
         username = await UserManager.GetUserNameAsync(user);
         nickname = user.Nickname;
 
         Input.Nickname ??= nickname;
-
-        editContext = new EditContext(Input);
-        validationMessageStore = new ValidationMessageStore(editContext);
-
-        editContext.OnFieldChanged += (sender, args) =>
-        {
-            validationMessageStore.Clear(args.FieldIdentifier);
-        };
     }
 
     private async Task OnValidSubmitAsync()
     {
-        validationMessageStore.Clear(); // Clear previous validation messages
-        bool isUpdated = false; // Track whether updates were made
+        bool isTaken = await UserService.IsNicknameTaken(Input.Nickname);
 
-        // Validate Nickname (ensure it's not empty or whitespace)
+        if (isTaken && Input.Nickname != nickname)
+        {
+            RedirectManager.RedirectToCurrentPageWithStatus("Error: Nickname taken.", HttpContext);
+        }
+
         if (Input.Nickname != nickname)
         {
             user.Nickname = Input.Nickname;
             var updateResult = await UserManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
-                validationMessageStore.Add(editContext.Field("Input.Nickname"), "Error: Failed to update nickname.");
-                return; // Exit the method if there is an error
+                RedirectManager.RedirectToCurrentPageWithStatus("Error: Failed to set nickname.", HttpContext);
             }
-            isUpdated = true;
         }
 
-        // If any updates were successful, refresh the sign-in session
-        if (isUpdated)
-        {
-            await SignInManager.RefreshSignInAsync(user);
-            RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
-        }
-
-        editContext.NotifyValidationStateChanged();
+        await SignInManager.RefreshSignInAsync(user);
+        RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
     }
 
-    private sealed class InputModel
+    private class InputModel
     {
         [Display(Name = "Nickname")]
-        public string? Nickname { get; set; }
+        public string Nickname { get; set; }
     }
 }

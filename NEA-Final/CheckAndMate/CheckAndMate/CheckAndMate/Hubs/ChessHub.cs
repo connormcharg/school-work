@@ -1,16 +1,35 @@
 ﻿using CheckAndMate.Services;
 using CheckAndMate.Shared.Chess;
 using Microsoft.AspNetCore.SignalR;
+using System.Collections.Concurrent;
 
 namespace CheckAndMate.Hubs
 {
     public class ChessHub : Hub
     {
         private readonly ChessService _chessService;
+        private readonly ConnectionMappingService _connectionMappingService;
 
-        public ChessHub(ChessService chessService)
+        public ChessHub(ChessService chessService, ConnectionMappingService connectionMappingService)
         {
             _chessService = chessService;
+            _connectionMappingService = connectionMappingService;
+        }
+
+        public override Task OnConnectedAsync()
+        {
+            var httpContext = Context.GetHttpContext();
+            if (httpContext != null)
+            {
+                _connectionMappingService.AddConnection(Context.ConnectionId, httpContext);
+            }
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception? exception)
+        {
+            _connectionMappingService.RemoveConnection(Context.ConnectionId);
+            return base.OnDisconnectedAsync(exception);
         }
 
         public async Task JoinGameAsPlayer(string gameId)

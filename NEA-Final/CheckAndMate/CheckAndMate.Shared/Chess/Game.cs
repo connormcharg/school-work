@@ -23,6 +23,9 @@ namespace CheckAndMate.Shared.Chess
             settings = Settings;
             gameState = new GameState();
             currentValidMoves = GameHandler.FindValidMoves(this);
+            playerConnections = new List<string>();
+            watcherConnections = new List<string>();
+            messages = new List<IMessage>();
         }
     }
 }

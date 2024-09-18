@@ -33,9 +33,8 @@ namespace CheckAndMate.Services
             await _hubContext.Clients.Group(gameId).SendAsync("ReceiveGame", _games[gameId]);
         }
 
-        public bool CreateGame(GameSettings gameSettings)
+        public bool AddGame(Game game)
         {
-            var game = new Game(gameSettings);
             return _games.TryAdd(game.id, game);
         }
 

@@ -1,6 +1,8 @@
 ﻿@page "/counter"
 @rendermode InteractiveWebAssembly
 
+@using CheckAndMate.Shared.Utilities
+
 <PageTitle>Counter</PageTitle>
 
 <h1>Counter</h1>
@@ -9,11 +11,15 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
+<p>guid: @currentGuid</p>
+
 @code {
     private int currentCount = 0;
+    private string currentGuid = "";
 
     private void IncrementCount()
     {
         currentCount++;
+        currentGuid = Util.GetNewId();
     }
 }
