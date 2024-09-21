@@ -1,0 +1,414 @@
+﻿* {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    --chess-grid-size: calc(90*8px);
+}
+
+.chess-board {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(var(--chess-grid-size)*1.05);
+    height: calc(var(--chess-grid-size)*1.05);
+    background-color: rgba(0, 0, 0, 0.7);
+    box-sizing: unset;
+}
+
+.chess-grid {
+    order: 1;
+    align-self: flex-start;
+    background-image: url('/images/new/blue-board.png');
+    background-size: cover;
+    background-position: center;
+    width: var(--chess-grid-size);
+    height: var(--chess-grid-size);
+    position: relative;
+}
+
+.chess-piece {
+    background-size: 100%;
+    width: 12.5%;
+    height: 12.5%;
+    position: absolute;
+    will-change: transform;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+    cursor: grab;
+    z-index: 2;
+}
+
+.chess-piece.nograb{
+    cursor: default;
+}
+
+.dragging {
+    z-index: 10;
+    cursor: grabbing;
+}
+
+.chess-ranks {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    align-self: flex-start;
+    order: 2;
+}
+
+.chess-files {
+    display: flex;
+    flex-direction: row;
+    order: 3;
+    align-self: flex-end;
+}
+
+.chess-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+    .chess-label.rank {
+        width: calc(var(--chess-grid-size) * 0.05);
+        height: calc(var(--chess-grid-size) / 8);
+    }
+
+    .chess-label.file {
+        width: calc(var(--chess-grid-size) / 8);
+        height: calc(var(--chess-grid-size) * 0.05);
+    }
+
+.chess-label-text {
+    fill: hsla(0, 0%, 100%, .5);
+    color: hsla(0, 0%, 100%, .5);
+    font-size: calc(var(--chess-grid-size) * 0.0284);
+}
+
+.hover-square {
+    background: none;
+    width: 12.5%;
+    height: 12.5%;
+    position: absolute;
+    will-change: transform;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.highlight {
+    width: 12.5%;
+    height: 12.5%;
+    position: absolute;
+    will-change: transform;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+    background-color: rgb(0, 165, 255);
+    opacity: 0.5;
+}
+
+.br {
+    background-image: url('/images/new/br.png');
+}
+
+.bn {
+    background-image: url('/images/new/bn.png');
+}
+
+.bb {
+    background-image: url('/images/new/bb.png');
+}
+
+.bq {
+    background-image: url('/images/new/bq.png');
+}
+
+.bk {
+    background-image: url('/images/new/bk.png');
+}
+
+.bp {
+    background-image: url('/images/new/bp.png');
+}
+
+.wr {
+    background-image: url('/images/new/wr.png');
+}
+
+.wn {
+    background-image: url('/images/new/wn.png');
+}
+
+.wb {
+    background-image: url('/images/new/wb.png');
+}
+
+.wq {
+    background-image: url('/images/new/wq.png');
+}
+
+.wk {
+    background-image: url('/images/new/wk.png');
+}
+
+.wp {
+    background-image: url('/images/new/wp.png');
+}
+
+.square-0-0 {
+    transform: translate(0%, 0%);
+}
+
+.square-0-1 {
+    transform: translate(100%, 0%);
+}
+
+.square-0-2 {
+    transform: translate(200%, 0%);
+}
+
+.square-0-3 {
+    transform: translate(300%, 0%);
+}
+
+.square-0-4 {
+    transform: translate(400%, 0%);
+}
+
+.square-0-5 {
+    transform: translate(500%, 0%);
+}
+
+.square-0-6 {
+    transform: translate(600%, 0%);
+}
+
+.square-0-7 {
+    transform: translate(700%, 0%);
+}
+
+.square-1-0 {
+    transform: translate(0%, 100%);
+}
+
+.square-1-1 {
+    transform: translate(100%, 100%);
+}
+
+.square-1-2 {
+    transform: translate(200%, 100%);
+}
+
+.square-1-3 {
+    transform: translate(300%, 100%);
+}
+
+.square-1-4 {
+    transform: translate(400%, 100%);
+}
+
+.square-1-5 {
+    transform: translate(500%, 100%);
+}
+
+.square-1-6 {
+    transform: translate(600%, 100%);
+}
+
+.square-1-7 {
+    transform: translate(700%, 100%);
+}
+
+.square-2-0 {
+    transform: translate(0%, 200%);
+}
+
+.square-2-1 {
+    transform: translate(100%, 200%);
+}
+
+.square-2-2 {
+    transform: translate(200%, 200%);
+}
+
+.square-2-3 {
+    transform: translate(300%, 200%);
+}
+
+.square-2-4 {
+    transform: translate(400%, 200%);
+}
+
+.square-2-5 {
+    transform: translate(500%, 200%);
+}
+
+.square-2-6 {
+    transform: translate(600%, 200%);
+}
+
+.square-2-7 {
+    transform: translate(700%, 200%);
+}
+
+.square-3-0 {
+    transform: translate(0%, 300%);
+}
+
+.square-3-1 {
+    transform: translate(100%, 300%);
+}
+
+.square-3-2 {
+    transform: translate(200%, 300%);
+}
+
+.square-3-3 {
+    transform: translate(300%, 300%);
+}
+
+.square-3-4 {
+    transform: translate(400%, 300%);
+}
+
+.square-3-5 {
+    transform: translate(500%, 300%);
+}
+
+.square-3-6 {
+    transform: translate(600%, 300%);
+}
+
+.square-3-7 {
+    transform: translate(700%, 300%);
+}
+
+.square-4-0 {
+    transform: translate(0%, 400%);
+}
+
+.square-4-1 {
+    transform: translate(100%, 400%);
+}
+
+.square-4-2 {
+    transform: translate(200%, 400%);
+}
+
+.square-4-3 {
+    transform: translate(300%, 400%);
+}
+
+.square-4-4 {
+    transform: translate(400%, 400%);
+}
+
+.square-4-5 {
+    transform: translate(500%, 400%);
+}
+
+.square-4-6 {
+    transform: translate(600%, 400%);
+}
+
+.square-4-7 {
+    transform: translate(700%, 400%);
+}
+
+.square-5-0 {
+    transform: translate(0%, 500%);
+}
+
+.square-5-1 {
+    transform: translate(100%, 500%);
+}
+
+.square-5-2 {
+    transform: translate(200%, 500%);
+}
+
+.square-5-3 {
+    transform: translate(300%, 500%);
+}
+
+.square-5-4 {
+    transform: translate(400%, 500%);
+}
+
+.square-5-5 {
+    transform: translate(500%, 500%);
+}
+
+.square-5-6 {
+    transform: translate(600%, 500%);
+}
+
+.square-5-7 {
+    transform: translate(700%, 500%);
+}
+
+.square-6-0 {
+    transform: translate(0%, 600%);
+}
+
+.square-6-1 {
+    transform: translate(100%, 600%);
+}
+
+.square-6-2 {
+    transform: translate(200%, 600%);
+}
+
+.square-6-3 {
+    transform: translate(300%, 600%);
+}
+
+.square-6-4 {
+    transform: translate(400%, 600%);
+}
+
+.square-6-5 {
+    transform: translate(500%, 600%);
+}
+
+.square-6-6 {
+    transform: translate(600%, 600%);
+}
+
+.square-6-7 {
+    transform: translate(700%, 600%);
+}
+
+.square-7-0 {
+    transform: translate(0%, 700%);
+}
+
+.square-7-1 {
+    transform: translate(100%, 700%);
+}
+
+.square-7-2 {
+    transform: translate(200%, 700%);
+}
+
+.square-7-3 {
+    transform: translate(300%, 700%);
+}
+
+.square-7-4 {
+    transform: translate(400%, 700%);
+}
+
+.square-7-5 {
+    transform: translate(500%, 700%);
+}
+
+.square-7-6 {
+    transform: translate(600%, 700%);
+}
+
+.square-7-7 {
+    transform: translate(700%, 700%);
+}

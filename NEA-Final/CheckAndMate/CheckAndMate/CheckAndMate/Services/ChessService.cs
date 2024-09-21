@@ -1,6 +1,7 @@
 ﻿using CheckAndMate.Hubs;
 using CheckAndMate.Shared.Chess;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace CheckAndMate.Services
 {
@@ -26,11 +27,12 @@ namespace CheckAndMate.Services
             return allGames;
         }
 
-        public async void UpdateGame(string gameId, Game game)
+        public async Task UpdateGame(string gameId, Game game)
         {
             game.currentValidMoves = GameHandler.FindValidMoves(game);
             _games[gameId] = game;
-            await _hubContext.Clients.Group(gameId).SendAsync("ReceiveGame", _games[gameId]);
+            var json = JsonConvert.SerializeObject(_games[gameId]);
+            await _hubContext.Clients.Group(gameId).SendAsync("ReceiveGame", json);
         }
 
         public bool AddGame(Game game)

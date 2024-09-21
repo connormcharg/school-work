@@ -8,7 +8,10 @@ namespace CheckAndMate.Shared.Chess
 {
     public class CastleRights
     {
-        public bool wks, bks, wqs, bqs;
+        public bool wks { get; set; }
+        public bool bks { get; set; }
+        public bool wqs { get; set; }
+        public bool bqs { get; set; }
 
         public CastleRights(bool wks, bool bks, bool wqs, bool bqs)
         {

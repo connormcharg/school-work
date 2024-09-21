@@ -1,4 +1,6 @@
 using CheckAndMate.Client;
+using CheckAndMate.Client.Services;
+using CheckAndMate.Shared.Chess;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -22,8 +24,15 @@ namespace CheckAndMate.Client
                 var navigationManager = sp.GetRequiredService<NavigationManager>();
                 return new HubConnectionBuilder()
                     .WithUrl(navigationManager.ToAbsoluteUri("/chesshub"))
+                    .ConfigureLogging(logging =>
+                    {
+                        logging.SetMinimumLevel(LogLevel.Information);
+                    })
                     .Build();
             });
+
+            builder.Services.AddScoped<ChessHubService>();
+            builder.Services.AddScoped<ChessControllerService>();
 
             await builder.Build().RunAsync();
         }

@@ -1,0 +1,188 @@
+﻿@implements IDisposable
+
+<div class="chess-board border rounded">
+    <div class="chess-grid">
+        @for (int r = 0; r < 8; r++)
+        {
+            @for (int c = 0; c < 8; c++)
+            {
+                var R = r;
+                var C = c;
+                var piece = GetPiece(R, C);
+                @if (piece != "--")
+                {
+                    <div class="chess-piece @(isInteractive ? "" : "nograb") @(piece.ToLower()) square-@(R)-@(C)" style=""></div>
+                }
+            }
+        }
+        <div class="hover-square" style="visibility: hidden;">
+            <svg viewBox="0 0 100 100">
+                <rect x="0" y="0" width="100" height="100" stroke="rgba(255, 255, 255, 0.65)" stroke-width="10" fill="none"></rect>
+            </svg>
+        </div>
+        <div id="prev-move-start" class="highlight" style="visibility: hidden;"></div>
+        <div id="prev-move-end" class="highlight" style="visibility: hidden;"></div>
+        <div id="curr-move" class="highlight" style="visibility: hidden;"></div>
+    </div>
+    <div class="chess-ranks">
+        @for (int k = 0; k < 8; k++)
+        {
+            <div class="chess-label rank">
+                <text class="chess-label-text">@GetRank(k)</text>
+            </div>
+        }
+    </div>
+    <div class="chess-files">
+        @for (int k = 0; k < 8; k++)
+        {
+            <div class="chess-label file">
+                <text class="chess-label-text">@GetFile(k)</text>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool isInteractive { get; set; }
+    [Parameter]
+    public List<List<string>>? board { get; set; }
+    public List<List<string>>? reverseBoard
+    {
+        get
+        {
+            if (board == null)
+            {
+                return null;
+            }
+            List<List<string>> reversed = new();
+            for (int r = 0; r < 8; r++)
+            {
+                var reversedRow = new List<string>();
+                for (int c = 0; c < 8; c++)
+                {
+                    reversedRow.Add(board[7 - r][7 - c]);
+                }
+                reversed.Add(reversedRow);
+            }
+            return reversed;
+        }
+    }
+    [Parameter]
+    public bool isWhite { get; set; }
+
+    [Inject]
+    private IJSRuntime jsRuntime { get; set; } = default!;
+    private IJSObjectReference? js;
+    private DotNetObjectReference<ChessBoard>? dotnet;
+
+    public event Func<List<int>, List<int>, Task<bool>>? OnMoveValidCheck;
+    public event Func<List<int>, List<int>, Task<bool>>? OnMakeMove;
+    private Dictionary<int, char> colToFile = new Dictionary<int, char>
+    {
+        {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && isInteractive)
+        {
+            dotnet = DotNetObjectReference.Create(this);
+            js ??= await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/ChessBoard.js");
+            await js.InvokeVoidAsync("handleBoard", dotnet);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private string GetPiece(int r, int c)
+    {
+        if (board == null)
+        {
+            throw new Exception("BOARD WAS NULL");
+        }
+        if (isWhite)
+        {
+            return board[r][c];
+        }
+        if (reverseBoard == null)
+        {
+            throw new Exception("REVERSE BOARD WAS NULL");
+        }
+        return reverseBoard[r][c];
+    }
+
+    private int GetRank(int row)
+    {
+        if (isWhite)
+        {
+            return 8 - row;
+        }
+        return row + 1;
+    }
+
+    private string GetFile(int col)
+    {
+        if (isWhite)
+        {
+            return colToFile[col].ToString().ToLower();
+        }
+        return colToFile[7 - col].ToString().ToLower();
+    }
+
+    [JSInvokable]
+    public async Task ReloadBoard()
+    {
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    [JSInvokable]
+    public async Task<bool> IsMoveValid(int[] start, int[] end)
+    {
+        var startList = start.ToList();
+        var endList = end.ToList();
+
+        if (!isWhite)
+        {
+            startList[0] = 7 - startList[0];
+            startList[1] = 7 - startList[1];
+            endList[0] = 7 - endList[0];
+            endList[1] = 7 - endList[1];
+        }
+
+        if (OnMoveValidCheck != null)
+        {
+            return await OnMoveValidCheck.Invoke(startList, endList);
+        }
+
+        return false;
+    }
+
+    [JSInvokable]
+    public async Task MakeMoveAsync(int[] start, int[] end)
+    {
+        var startList = start.ToList();
+        var endList = end.ToList();
+
+        if (!isWhite)
+        {
+            startList[0] = 7 - startList[0];
+            startList[1] = 7 - startList[1];
+            endList[0] = 7 - endList[0];
+            endList[1] = 7 - endList[1];
+        }
+
+        if (OnMakeMove != null)
+        {
+            await OnMakeMove.Invoke(startList, endList);
+        }
+    }
+
+    public void Dispose()
+    {
+        dotnet?.Dispose();
+    }
+}

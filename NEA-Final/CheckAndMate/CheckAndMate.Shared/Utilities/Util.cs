@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CheckAndMate.Shared.Chess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -102,6 +103,39 @@ namespace CheckAndMate.Shared.Utilities
             }
 
             return newList;
+        }
+
+        public static void Shuffle<T>(IList<T> list)
+        {
+            int n = list.Count;
+            Random rng = new Random();
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n+1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
+
+        public static bool IsPlayerWhite(Game game, bool isHost)
+        {
+            if (game.players.Count == 1)
+            {
+                return !game.players[0].isWhite;
+            }
+            if (game.settings.isStartingWhite)
+            {
+                return isHost;
+            }
+            var rng = new Random();
+            var r = rng.Next(0, 2);
+            if (r == 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

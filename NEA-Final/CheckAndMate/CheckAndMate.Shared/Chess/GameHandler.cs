@@ -167,7 +167,13 @@ namespace CheckAndMate.Shared.Chess
                 game.gameState.currentCastlingRight.wqs,
                 game.gameState.currentCastlingRight.bqs);
             List<Move> moves = new List<Move>();
-            CheckForPinsAndChecks(game, out game.gameState.inCheck, out game.gameState.pins, out game.gameState.checks);
+            bool inCheck;
+            var pins = new List<List<int>>();
+            var checks = new List<List<int>>();
+            CheckForPinsAndChecks(game, out inCheck, out pins, out checks);
+            game.gameState.inCheck = inCheck;
+            game.gameState.pins = pins;
+            game.gameState.checks = checks;
 
             int kRow;
             int kCol;
@@ -435,10 +441,10 @@ namespace CheckAndMate.Shared.Chess
                     {
                         pawnPromotion = true;
                     }
-                    moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c }, game.gameState.board, pawnPromotion: pawnPromotion));
+                    moves.Add(new Move(r, c, r + moveAmount, c, game.gameState.board, pawnPromotion: pawnPromotion));
                     if (r == startRow && game.gameState.board[r + 2 * moveAmount][c] == "--")
                     {
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + 2 * moveAmount, c }, game.gameState.board));
+                        moves.Add(new Move(r, c, r + 2 * moveAmount, c, game.gameState.board));
                     }
                 }
             }
@@ -452,11 +458,11 @@ namespace CheckAndMate.Shared.Chess
                         {
                             pawnPromotion = true;
                         }
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c - 1 }, game.gameState.board, pawnPromotion: pawnPromotion));
+                        moves.Add(new Move(r, c, r + moveAmount, c - 1, game.gameState.board, pawnPromotion: pawnPromotion));
                     }
                     if (game.gameState.enPassantPossible != null && game.gameState.enPassantPossible[0] == r + moveAmount && game.gameState.enPassantPossible[1] == c - 1)
                     {
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c - 1 }, game.gameState.board, enPassant: true));
+                        moves.Add(new Move(r, c, r + moveAmount, c - 1, game.gameState.board, enPassant: true));
                     }
                 }
             }
@@ -470,11 +476,11 @@ namespace CheckAndMate.Shared.Chess
                         {
                             pawnPromotion = true;
                         }
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c + 1 }, game.gameState.board, pawnPromotion: pawnPromotion));
+                        moves.Add(new Move(r, c, r + moveAmount, c + 1, game.gameState.board, pawnPromotion: pawnPromotion));
                     }
                     if (game.gameState.enPassantPossible != null && game.gameState.enPassantPossible[0] == r + moveAmount && game.gameState.enPassantPossible[1] == c + 1)
                     {
-                        moves.Add(new Move(new List<int> { r, c }, new List<int> { r + moveAmount, c + 1 }, game.gameState.board, enPassant: true));
+                        moves.Add(new Move(r, c, r + moveAmount, c + 1, game.gameState.board, enPassant: true));
                     }
                 }
             }
@@ -519,11 +525,11 @@ namespace CheckAndMate.Shared.Chess
                         {
                             if (game.gameState.board[endRow][endCol] == "--")
                             {
-                                moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, game.gameState.board));
+                                moves.Add(new Move(r, c, endRow, endCol, game.gameState.board));
                             }
                             else if (game.gameState.board[endRow][endCol][0] == enemyColour)
                             {
-                                moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, game.gameState.board));
+                                moves.Add(new Move(r, c, endRow, endCol, game.gameState.board));
                                 break;
                             }
                             else
@@ -573,7 +579,7 @@ namespace CheckAndMate.Shared.Chess
                     {
                         if (game.gameState.board[endRow][endCol] == "--" || game.gameState.board[endRow][endCol][0] == enemyColour)
                         {
-                            moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, game.gameState.board));
+                            moves.Add(new Move(r, c, endRow, endCol, game.gameState.board));
                         }
                     }
                 }
@@ -616,11 +622,11 @@ namespace CheckAndMate.Shared.Chess
                         {
                             if (game.gameState.board[endRow][endCol] == "--")
                             {
-                                moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, game.gameState.board));
+                                moves.Add(new Move(r, c, endRow, endCol, game.gameState.board));
                             }
                             else if (game.gameState.board[endRow][endCol][0] == enemyColour)
                             {
-                                moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, game.gameState.board));
+                                moves.Add(new Move(r, c, endRow, endCol, game.gameState.board));
                                 break;
                             }
                             else
@@ -675,7 +681,7 @@ namespace CheckAndMate.Shared.Chess
                         CheckForPinsAndChecks(game, out _inCheck, out _pins, out _checks);
                         if (!_inCheck)
                         {
-                            moves.Add(new Move(new List<int> { r, c }, new List<int> { endRow, endCol }, game.gameState.board));
+                            moves.Add(new Move(r, c, endRow, endCol, game.gameState.board));
                         }
                         if (allyColour == 'w')
                         {
@@ -716,7 +722,7 @@ namespace CheckAndMate.Shared.Chess
             {
                 if (!SquareUnderAttack(game, r, c + 1) && !SquareUnderAttack(game, r, c + 2))
                 {
-                    moves.Add(new Move(new List<int> { r, c }, new List<int> { r, c + 2 }, game.gameState.board, isCastleMove: true));
+                    moves.Add(new Move(r, c, r, c + 2, game.gameState.board, isCastleMove: true));
                 }
             }
             return moves;
@@ -729,7 +735,7 @@ namespace CheckAndMate.Shared.Chess
             {
                 if (!SquareUnderAttack(game, r, c - 1) && !SquareUnderAttack(game, r, c - 2))
                 {
-                    moves.Add(new Move(new List<int> { r, c }, new List<int> { r, c - 2 }, game.gameState.board, isCastleMove: true));
+                    moves.Add(new Move(r, c, r, c - 2, game.gameState.board, isCastleMove: true));
                 }
             }
             return moves;

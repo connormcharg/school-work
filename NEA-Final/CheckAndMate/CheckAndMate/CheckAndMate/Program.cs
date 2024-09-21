@@ -23,7 +23,10 @@ namespace CheckAndMate
             builder.Services.AddRazorComponents()
                 .AddInteractiveWebAssemblyComponents();
             builder.Services.AddControllers();
-            builder.Services.AddSignalR();
+            builder.Services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
 
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();

@@ -1,0 +1,162 @@
+﻿@page "/gametest"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@using CheckAndMate.Shared.Chess
+@using CheckAndMate.Client.Components
+@using Newtonsoft.Json
+@inject CheckAndMate.Client.Services.ChessHubService ChessHubService
+@inject CheckAndMate.Client.Services.ChessControllerService ChessControllerService
+
+<PageTitle>GameTest</PageTitle>
+
+<h3>GameTest</h3>
+
+<p>gameId: @gameId</p>
+<input type="text" @bind-value=@gameIdInput />
+<h3>connected = @ChessHubService.IsConnected</h3>
+<button @onclick=@StartGame>Start Game</button>
+<button @onclick=@JoinGame>Join Game</button>
+<p>board:
+    @if (board == null)
+    {
+        <em>NO BOARD YET</em>
+    }
+    else
+    {
+        <ChessBoard @ref=chessBoard board=@board isInteractive="@true" isWhite="@isWhite"></ChessBoard>
+    }
+</p>
+
+
+@code {
+    private string gameId = "";
+    private string gameIdInput = "";
+    private int startRow;
+    private int endRow;
+    private int startCol;
+    private int endCol;
+    private bool isWhite;
+    private List<List<string>> board = default!;
+    private Game currentGame = default!;
+    private ChessBoard chessBoard = default!;
+    private bool eventsAdded = false;
+
+    // Hub Connection
+
+    protected override async Task OnInitializedAsync()
+    {
+        ChessHubService.OnGameReceived += OnGameReceived;
+        await ChessHubService.StartAsync();
+
+        await base.OnInitializedAsync();
+    }
+
+    private async void OnGameReceived(string gameJson)
+    {
+        Game? game = JsonConvert.DeserializeObject<Game>(gameJson);
+
+        if (game == null)
+        {
+            return;
+        }
+
+        currentGame = game;
+        gameId = game.id;
+        board = game.gameState.board;
+        string connectionId = ChessHubService.GetConnectionId();
+        var player = currentGame.players.FirstOrDefault(p => p.connectionId == connectionId);
+        if (player != null)
+        {
+            isWhite = player.isWhite;
+        }
+        StateHasChanged();
+        await chessBoard.ReloadBoard();
+
+        if (!eventsAdded)
+        {
+            chessBoard.OnMakeMove += MakeMove;
+            chessBoard.OnMoveValidCheck += IsMoveValid;
+            eventsAdded = true;
+        }
+    }
+
+    private async Task JoinGame()
+    {
+        if (gameIdInput != "")
+        {
+            await ChessHubService.JoinGameAsPlayerAsync(gameIdInput);
+            return;
+        }
+        if (gameId != "")
+        {
+            await ChessHubService.JoinGameAsPlayerAsync(gameId);
+            return;
+        }
+    }
+
+    public async Task<bool> MakeMove(List<int> start, List<int> end)
+    {
+        try
+        {
+            var sr = start[0];
+            var sc = start[1];
+            var er = end[0];
+            var ec = end[1];
+            var pm = currentGame.gameState.board[sr][sc];
+            var pc = currentGame.gameState.board[er][ec];
+            Move newMove = new Move(sr, sc, er, ec, pm, pc);
+            string moveJson = JsonConvert.SerializeObject(newMove);
+            await ChessHubService.SendMoveAsync(moveJson);
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    // Controller Connection
+
+    private async Task StartGame()
+    {
+        string? r = await ChessControllerService.StartGameAsync(
+            new GameSettings(false, true, false, true, false, false, "Testing!!"));
+
+        if (r != null)
+        {
+            gameId = r;
+        }
+
+        StateHasChanged();
+    }
+
+    // Other Methods
+
+    public void Dispose()
+    {
+        ChessHubService.OnGameReceived -= OnGameReceived;
+    }
+
+    public List<string> DisplayBoard()
+    {
+        var r = new List<string>();
+        if (board == null)
+        {
+            return r;
+        }
+        for (int i = 0; i < board.Count(); i++)
+        {
+            string temp = "";
+            for (int j = 0; j < board[i].Count(); j++)
+            {
+                temp += board[i][j];
+            }
+            r.Add(temp);
+        }
+        return r;
+    }
+
+    public async Task<bool> IsMoveValid(List<int> start, List<int> end)
+    {
+        return true;
+    }
+}

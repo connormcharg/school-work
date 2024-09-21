@@ -9,7 +9,7 @@ using System.Formats.Asn1;
 namespace CheckAndMate.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/chess")]
     public class ChessController : ControllerBase
     {
         private readonly ChessService _chessService;
@@ -86,7 +86,7 @@ namespace CheckAndMate.Controllers
 
             if (result)
             {
-                return CreatedAtAction(nameof(GetGameDetails), new { id = newId });
+                return CreatedAtAction(nameof(StartGame), new { id = newId });
             }
             else
             {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CheckAndMate.Shared.Connections;
 using CheckAndMate.Shared.Messages;
 
 namespace CheckAndMate.Shared.Chess
@@ -13,7 +12,7 @@ namespace CheckAndMate.Shared.Chess
         public GameState gameState { get; set; }
         public List<Move> currentValidMoves { get; set; }
         public string id { get; set; }
-        public List<string> playerConnections { get; set; }
+        public List<Player> players { get; set; }
         public List<string> watcherConnections { get; set; }
         public List<IMessage> messages { get; set; }
         public GameSettings settings { get; set; }
@@ -23,7 +22,7 @@ namespace CheckAndMate.Shared.Chess
             settings = Settings;
             gameState = new GameState();
             currentValidMoves = GameHandler.FindValidMoves(this);
-            playerConnections = new List<string>();
+            players = new List<Player>();
             watcherConnections = new List<string>();
             messages = new List<IMessage>();
         }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using CheckAndMate.Shared.Utilities;
@@ -77,6 +79,8 @@ namespace CheckAndMate.Shared.Chess
         private const int STALEMATE = 0;
         private const int DEPTH = 4;
 
+        private Move? nextMove = null;
+
         public ChessEngine()
         {
             piecePositionScores = new Dictionary<string, List<List<double>>>
@@ -94,6 +98,88 @@ namespace CheckAndMate.Shared.Chess
             };
         }
 
+        public void FindBestMove(Game game, List<Move> validMoves, Queue<Move> returnQueue)
+        {
+            nextMove = null;
+            Util.Shuffle(validMoves);
+            returnQueue.Enqueue(nextMove);
+        }
 
+        private Double FindMoveNegaMaxAlphaBeta(Game game, List<Move> validMoves, int depth, double alpha, double beta, int turnMultiplier)
+        {
+            if (depth == 0)
+            {
+                return turnMultiplier * ScoreBoard(game);
+            }
+            Double maxScore = -CHECKMATE;
+            foreach (Move m in validMoves)
+            {
+                GameHandler.MakeMove(game, m);
+                var nextMoves = GameHandler.FindValidMoves(game);
+                double score = -FindMoveNegaMaxAlphaBeta(game, nextMoves, depth - 1, -beta, -alpha, -turnMultiplier);
+                if (score > maxScore)
+                {
+                    maxScore = score;
+                    if (depth == DEPTH)
+                    {
+                        nextMove = m;
+                    }
+                }
+                GameHandler.UndoMove(game);
+                if (maxScore > alpha)
+                {
+                    alpha = maxScore;
+                }
+                if (alpha >= beta)
+                {
+                    break;
+                }
+            }
+            return maxScore;
+        }
+
+        private Double ScoreBoard(Game game)
+        {
+            if (game.gameState.checkMate)
+            {
+                if (game.gameState.whiteToMove)
+                {
+                    return -CHECKMATE;
+                }
+                else
+                {
+                    return CHECKMATE;
+                }
+            }
+            else if (game.gameState.staleMate)
+            {
+                return STALEMATE;
+            }
+            double score = 0;
+            for (int row = 0; row < game.gameState.board.Count; row++)
+            {
+                for (int col = 0; row < game.gameState.board[row].Count; col++)
+                {
+                    string piece = game.gameState.board[row][col];
+                    if (piece != "--")
+                    {
+                        double piecePositionScore = 0;
+                        if (piece[1].ToString() != "K")
+                        {
+                            piecePositionScore = piecePositionScores[piece][row][col];
+                        }
+                        if (piece[0].ToString() == "w")
+                        {
+                            score += pieceScores[piece[1].ToString()] + piecePositionScore;
+                        }
+                        if (piece[0].ToString() == "b")
+                        {
+                            score -= pieceScores[piece[1].ToString()] + piecePositionScore;
+                        }
+                    }
+                }
+            }
+            return score;
+        }
     }
 }
