@@ -1,0 +1,103 @@
+﻿@page "/chess/start"
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Start a Game!</h1>
+        </div>
+
+        <!-- Left Section: Game Settings -->
+        <div class="col-md-5">
+            <div class="card game-settings-card">
+                <div class="card-body">
+                    <form>
+                        <!-- Game Title (Text Input) -->
+                        <div class="mb-3">
+                            <label for="gameTitle" class="form-label">Game title</label>
+                            <input type="text" class="form-control" id="gameTitle" placeholder="Enter game title">
+                        </div>
+
+                        <!-- Single/Multiplayer Dropdown -->
+                        <div class="mb-3">
+                            <label for="gameMode" class="form-label">Single/Multiplayer?</label>
+                            <select class="form-select" id="gameMode">
+                                <option selected>Select mode</option>
+                                <option value="1">Single Player</option>
+                                <option value="2">Multiplayer</option>
+                            </select>
+                        </div>
+
+                        <!-- Starting Colour Dropdown -->
+                        <div class="mb-3">
+                            <label for="startingColor" class="form-label">Starting Colour?</label>
+                            <select class="form-select" id="startingColor">
+                                <option selected>Select color</option>
+                                <option value="white">White</option>
+                                <option value="black">Black</option>
+                            </select>
+                        </div>
+
+                        <!-- Time Controls Dropdown -->
+                        <div class="mb-3">
+                            <label for="timeControls" class="form-label">Time controls?</label>
+                            <select class="form-select" id="timeControls">
+                                <option selected>Select time control</option>
+                                <option value="blitz">Blitz</option>
+                                <option value="rapid">Rapid</option>
+                                <option value="classical">Classical</option>
+                            </select>
+                        </div>
+
+                        <!-- Public/Private Dropdown -->
+                        <div class="mb-3">
+                            <label for="privacy" class="form-label">Public/Private?</label>
+                            <select class="form-select" id="privacy">
+                                <option selected>Select visibility</option>
+                                <option value="public">Public</option>
+                                <option value="private">Private</option>
+                            </select>
+                        </div>
+
+                        <!-- Rated Dropdown -->
+                        <div class="mb-3">
+                            <label for="rated" class="form-label">Rated?</label>
+                            <select class="form-select" id="rated">
+                                <option selected>Is it rated?</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <!-- Watchable Dropdown -->
+                        <div class="mb-3">
+                            <label for="watchable" class="form-label">Watchable?</label>
+                            <select class="form-select" id="watchable">
+                                <option selected>Can it be watched?</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <!-- Start Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-outline-dark start-btn">START</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section: Static Game Board Image -->
+        <div class="col-md-5">
+            <div class="card game-board-card">
+                <div class="card-body">
+                    <img src="images/static-game-board.png" alt="Game Board" class="img-fluid game-board-img">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

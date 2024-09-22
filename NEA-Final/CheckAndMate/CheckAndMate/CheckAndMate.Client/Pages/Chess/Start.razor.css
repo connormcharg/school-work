@@ -1,0 +1,50 @@
+﻿/* Container Styling */
+.container {
+    margin-bottom: 50px; /* Adds a gap at the bottom of the page */
+}
+
+/* Game Settings Card */
+.game-settings-card {
+    border: 2px solid #343a40;
+    background-color: #ffffff;
+    border-radius: 15px;
+    margin-bottom: 15px; /* Additional margin for spacing */
+}
+
+.form-select, .form-control {
+    font-family: 'Cursive', sans-serif;
+    font-size: 1.25rem;
+}
+
+.form-label {
+    font-family: 'Cursive', sans-serif;
+    font-size: 1.5rem;
+}
+
+/* Start Button */
+.start-btn {
+    font-family: 'Cursive', sans-serif;
+    font-size: 1.5rem;
+}
+
+/* Game Board Card */
+.game-board-card {
+    border: 2px solid #343a40;
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px; /* Additional margin for spacing */
+}
+
+h1, h5 {
+    font-family: 'Cursive', sans-serif;
+}
+
+/* Game Board Image Styling */
+.game-board-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

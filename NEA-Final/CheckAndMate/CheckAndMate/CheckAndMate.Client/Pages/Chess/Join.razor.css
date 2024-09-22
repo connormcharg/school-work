@@ -1,0 +1,81 @@
+﻿/* Container Styling */
+.container {
+    color: #000; /* Dark text */
+}
+
+/* Public Games Card */
+.public-games-card {
+    border: 2px solid #343a40;
+    background-color: #fff; /* Light background */
+    border-radius: 15px;
+    padding: 15px;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.list-group-item {
+    background-color: #f8f9fa; /* Lighter background for list items */
+    border: none;
+    color: #000;
+}
+
+.card-title {
+    font-family: 'Cursive', sans-serif;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Game Details Card */
+.game-details-card {
+    border: 2px solid #343a40;
+    background-color: #fff; /* Light background */
+    border-radius: 15px;
+    padding: 15px;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+/* Form Controls */
+.form-control {
+    font-family: 'Cursive', sans-serif;
+    background-color: #f8f9fa; /* Lighter background */
+    border: 1px solid #ccc; /* Light border */
+    color: #000;
+    height: calc(1.5em + 0.75rem + 2px); /* Align with button height */
+}
+
+.code-submit-btn {
+    margin-left: 10px; /* Space between input and button */
+    font-family: 'Cursive', sans-serif;
+    font-size: 1.25rem;
+    background-color: #e0e0e0; /* Light button background */
+    border: 1px solid #ccc; /* Light border */
+    color: #000;
+    height: calc(1.5em + 0.75rem + 2px); /* Match the height of the input */
+    line-height: 1.5; /* Center text vertically */
+}
+
+/* Button Styling */
+.refresh-btn, .join-btn, .watch-btn {
+    font-family: 'Cursive', sans-serif;
+    font-size: 1.25rem;
+    margin: 5px;
+    background-color: #e0e0e0; /* Light button background */
+    border: 1px solid #ccc; /* Light border */
+    color: #000;
+}
+
+/* Headings */
+h1 {
+    font-family: 'Cursive', sans-serif;
+    font-size: 2.5rem;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+h5 {
+    font-family: 'Cursive', sans-serif;
+    font-size: 1.5rem;
+    color: #000;
+    margin-bottom: 15px;
+}

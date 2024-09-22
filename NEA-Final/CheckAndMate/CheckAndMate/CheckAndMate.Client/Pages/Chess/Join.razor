@@ -1,0 +1,48 @@
+﻿@page "/chess/join"
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Join/Watch a Game!</h1>
+        </div>
+
+        <!-- Left Section: Public Games List -->
+        <div class="col-md-5">
+            <div class="card public-games-card">
+                <div class="card-body">
+                    <h5 class="card-title">List of public games either in progress or waiting to start</h5>
+                    <ul class="list-group">
+                        <!-- Example Items -->
+                        <li class="list-group-item">Game 1</li>
+                        <li class="list-group-item">Game 2</li>
+                        <li class="list-group-item">Game 3</li>
+                    </ul>
+                    <button class="btn btn-outline-dark refresh-btn">Refresh</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section: Game Details and Actions -->
+        <div class="col-md-5">
+            <div class="card game-details-card">
+                <div class="card-body">
+                    <h5 class="card-title">Game details view that populates if you click on a game in the list on the left or if you enter a code below</h5>
+
+                    <div class="mb-3 d-flex align-items-center">
+                        <input type="text" class="form-control" id="gameCode" placeholder="Enter game code">
+                        <button class="btn btn-outline-dark code-submit-btn">✔</button>
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-outline-dark join-btn">Join</button>
+                        <button class="btn btn-outline-dark watch-btn">Watch</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

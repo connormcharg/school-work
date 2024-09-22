@@ -1,0 +1,18 @@
+﻿@page "/chess/play/{gameId?}"
+
+@inject NavigationManager Navigation
+
+<h3>Play</h3>
+
+@code {
+    [Parameter]
+    public string? gameId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrEmpty(gameId))
+        {
+            Navigation.NavigateTo("/chess");
+        }
+    }
+}

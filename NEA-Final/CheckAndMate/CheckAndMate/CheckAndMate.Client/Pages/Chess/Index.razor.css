@@ -1,0 +1,32 @@
+﻿.option-card {
+    margin: 20px auto;
+    border: 2px solid #343a40;
+    background-color: #ffffff;
+    border-radius: 15px;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+    .option-card:hover {
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    }
+
+h1 {
+    font-family: 'Cursive', sans-serif;
+    color: #343a40;
+}
+
+.card-body {
+    display: grid;
+}
+
+.card-title {
+    font-family: 'Cursive', sans-serif;
+    font-size: 1.5rem;
+    color: #343a40;
+    align-self: center;
+}

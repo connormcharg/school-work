@@ -1,0 +1,39 @@
+﻿@page "/chess"
+@rendermode InteractiveWebAssembly
+@inject NavigationManager Navigation
+
+<div class="container text-center mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h1 class="display-4">Play Chess!</h1>
+        </div>
+        <div class="col-md-4">
+            <div class="card option-card" @onclick=GotoStart>
+                <div class="card-body">
+                    <h5 class="card-title">Start a Game!</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card option-card" @onclick=GotoJoin>
+                <div class="card-body">
+                    <h5 class="card-title">Join/Watch a Game!</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private void GotoStart()
+    {
+        Navigation.NavigateTo("/chess/start");
+    }
+
+    private void GotoJoin()
+    {
+        Navigation.NavigateTo("/chess/join");
+    }
+
+}
