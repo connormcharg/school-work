@@ -53,9 +53,10 @@ namespace CheckAndMate
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
             builder.Services.AddSingleton<ChessService>();
-            builder.Services.AddHostedService<TimerService>();
-            builder.Services.AddScoped<UserService>();
             builder.Services.AddSingleton<ConnectionMappingService>();
+            builder.Services.AddHostedService<TimerService>();
+            builder.Services.AddHostedService<EngineService>();
+            builder.Services.AddScoped<UserService>();
 
             var app = builder.Build();
 

@@ -119,7 +119,7 @@
     private async Task StartGame()
     {
         string? r = await ChessControllerService.StartGameAsync(
-            new GameSettings(false, true, false, true, false, false, "Testing!!"));
+            new GameSettings(true, true, false, true, false, false, "Testing!!"));
 
         if (r != null)
         {

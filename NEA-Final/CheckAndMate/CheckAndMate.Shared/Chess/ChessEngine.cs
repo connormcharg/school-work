@@ -79,7 +79,7 @@ namespace CheckAndMate.Shared.Chess
         private const int STALEMATE = 0;
         private const int DEPTH = 4;
 
-        private Move? nextMove = null;
+        public Move? nextMove = null;
 
         public ChessEngine()
         {
@@ -98,11 +98,17 @@ namespace CheckAndMate.Shared.Chess
             };
         }
 
-        public void FindBestMove(Game game, List<Move> validMoves, Queue<Move> returnQueue)
+        public void FindBestMove(Game game, List<Move> validMoves)
         {
             nextMove = null;
             Util.Shuffle(validMoves);
-            returnQueue.Enqueue(nextMove);
+            FindMoveNegaMaxAlphaBeta(game, validMoves, DEPTH, -CHECKMATE, CHECKMATE, game.gameState.whiteToMove ? 1 : -1);
+        }
+
+        public void FindRandomMove(Game game, List<Move> validMoves)
+        {
+            Util.Shuffle(validMoves);
+            nextMove = validMoves[0];
         }
 
         private Double FindMoveNegaMaxAlphaBeta(Game game, List<Move> validMoves, int depth, double alpha, double beta, int turnMultiplier)
@@ -158,7 +164,7 @@ namespace CheckAndMate.Shared.Chess
             double score = 0;
             for (int row = 0; row < game.gameState.board.Count; row++)
             {
-                for (int col = 0; row < game.gameState.board[row].Count; col++)
+                for (int col = 0; col < game.gameState.board[row].Count; col++)
                 {
                     string piece = game.gameState.board[row][col];
                     if (piece != "--")

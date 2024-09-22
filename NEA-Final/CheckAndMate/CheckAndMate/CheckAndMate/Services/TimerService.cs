@@ -7,12 +7,10 @@ namespace CheckAndMate.Services
     {
         private Timer _timer;
         private readonly ChessService _chessService;
-        private readonly IHubContext<ChessHub> _hubContext;
 
-        public TimerService(ChessService chessService, IHubContext<ChessHub> hubContext)
+        public TimerService(ChessService chessService)
         {
             _chessService = chessService;
-            _hubContext = hubContext;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -41,7 +39,7 @@ namespace CheckAndMate.Services
 
                 if (updated)
                 {
-                    _chessService.UpdateGame(game.id, game);
+                    await _chessService.UpdateGame(game.id, game);
                 }
             }
         }
