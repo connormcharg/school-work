@@ -59,6 +59,11 @@ namespace CheckAndMate
             builder.Services.AddHostedService<EngineService>();
             builder.Services.AddScoped<UserService>();
 
+            builder.Services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = false;
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -84,6 +89,15 @@ namespace CheckAndMate
 
             app.MapControllers();
             app.MapHub<ChessHub>("/chesshub");
+
+            app.UseResponseCompression();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=600");
+                }
+            });
 
             app.Run();
         }
