@@ -41,9 +41,8 @@ namespace CheckAndMate
                 })
                 .AddIdentityCookies();
 
-            var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                /*options.UseSqlServer(connectionString));*/
                 options.UseNpgsql(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -58,11 +57,6 @@ namespace CheckAndMate
             builder.Services.AddHostedService<TimerService>();
             builder.Services.AddHostedService<EngineService>();
             builder.Services.AddScoped<UserService>();
-
-            builder.Services.AddResponseCompression(options =>
-            {
-                options.EnableForHttps = false;
-            });
 
             var app = builder.Build();
 
@@ -89,15 +83,6 @@ namespace CheckAndMate
 
             app.MapControllers();
             app.MapHub<ChessHub>("/chesshub");
-
-            app.UseResponseCompression();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=600");
-                }
-            });
 
             app.Run();
         }
