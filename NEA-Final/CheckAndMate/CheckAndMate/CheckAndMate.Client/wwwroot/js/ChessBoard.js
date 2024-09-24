@@ -14,11 +14,15 @@
     const currMoveSquare = document.querySelector("#curr-move");
     const clamp = (value) => Math.max(-50, Math.min(value, 800));
 
-    async function noSelectedNoDragging() {
+    async function noSelectedNoDragging(valid = false) {
         if (selectedPiece) {
-            selectedPiece.classList.remove("dragging");
             removeSquareClass(selectedPiece);
-            selectedPiece.classList.add(`square-${selectedPieceInitialRowCol[0]}-${selectedPieceInitialRowCol[1]}`);
+            if (valid) {
+                selectedPiece.classList.add(getSquareClass(hoverSquare));
+            } else {
+                selectedPiece.classList.add(`square-${selectedPieceInitialRowCol[0]}-${selectedPieceInitialRowCol[1]}`);
+            }
+            selectedPiece.classList.remove("dragging");
             selectedPiece.style = "";
         };
         selectedPiece = null;
@@ -37,9 +41,9 @@
     };
     function selectedNoDragging() {
         state = 3;
-        selectedPiece.classList.remove("dragging");
         removeSquareClass(selectedPiece);
         selectedPiece.classList.add(`square-${selectedPieceInitialRowCol[0]}-${selectedPieceInitialRowCol[1]}`);
+        selectedPiece.classList.remove("dragging");
         selectedPiece.style = "";
         hoverSquare.style = "visibility: hidden;";
     };
@@ -60,6 +64,9 @@
     async function makeMove(s, e) {
         await dotnetRef.invokeMethodAsync("MakeMoveAsync", s, e);
     };
+    async function isWhite() {
+        return await dotnetRef.invokeMethodAsync("IsWhite");
+    }
     function makeMoveAnimate(s, e) {
 
     };
@@ -106,18 +113,23 @@
         };
     };
 
-    document.querySelectorAll(".chess-piece").forEach(piece => {
-        piece.addEventListener("mousedown", function (e) {
-            if (e.button === 0) {
-                if (state === 1) {
-                    selectedDraggingFirstTime(e, piece);
-                } else if (state === 3 && piece !== selectedPiece) {
-                    selectedDraggingFirstTime(e, piece);
-                } else if (state === 3 && piece === selectedPiece) {
-                    selectedDragging(e, piece);
+    document.querySelectorAll(".chess-piece").forEach(async piece => {
+        if (!piece.classList.contains("nograb") && await isWhite() == piece.classList.contains("white")) {
+            piece.addEventListener("mousedown", function (e) {
+                if (e.button === 0) {
+                    if (state === 1) {
+                        selectedDraggingFirstTime(e, piece);
+                    } else if (state === 3 && piece !== selectedPiece) {
+                        selectedDraggingFirstTime(e, piece);
+                    } else if (state === 3 && piece === selectedPiece) {
+                        selectedDragging(e, piece);
+                    };
                 };
-            };
-        });
+            });
+        }
+        if ((piece.classList.contains("black") && await isWhite()) || (piece.classList.contains("white") && !(await isWhite()))) {
+            piece.classList.add("nograb");
+        }
     });
     grid.addEventListener("mousedown", async function (e) {
         if (e.button === 0) {
@@ -129,7 +141,7 @@
                     selectedPieceInitialRowCol,
                     getRowColFromMouseXY(e.clientX, e.clientY)
                 );
-                await noSelectedNoDragging();
+                await noSelectedNoDragging(true);
             } else if (state === 3) {
                 await noSelectedNoDragging();
             };
@@ -147,7 +159,7 @@
                 await makeMove(
                     selectedPieceInitialRowCol,
                     [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]);
-                await noSelectedNoDragging();
+                await noSelectedNoDragging(true);
             } else if (state === 2) {
                 selectedNoDragging();
             } else if (state === 4 && arraysEqual(selectedPieceInitialRowCol,
@@ -160,7 +172,7 @@
                 await makeMove(
                     selectedPieceInitialRowCol,
                     [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]);
-                await noSelectedNoDragging();
+                await noSelectedNoDragging(true);
             } else if (state === 4) {
                 selectedNoDragging();
             };

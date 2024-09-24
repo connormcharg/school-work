@@ -14,6 +14,26 @@ namespace CheckAndMate.Client.Services
             _hubConnection = hubConnection;
         }
 
+        public async Task StartAsync()
+        {
+            if (_hubConnection.State == HubConnectionState.Disconnected)
+            {
+                _hubConnection.On<string>("ReceiveGame", (game) =>
+                {
+                    OnGameReceived.Invoke(game);
+                });
+                await _hubConnection.StartAsync();
+            }            
+        }
+
+        public async Task StopAsync()
+        {
+            if (_hubConnection.State != HubConnectionState.Disconnected)
+            {
+                await _hubConnection.StopAsync();
+            }
+        }
+
         public string GetConnectionId()
         {
             if (IsConnected && _hubConnection != null && _hubConnection.ConnectionId != null)
@@ -21,16 +41,6 @@ namespace CheckAndMate.Client.Services
                 return _hubConnection.ConnectionId;
             }
             return "";
-        }
-
-        public async Task StartAsync()
-        {
-            _hubConnection.On<string>("ReceiveGame", (game) =>
-            {
-                OnGameReceived.Invoke(game);
-            });
-
-            await _hubConnection.StartAsync();
         }
 
         public async Task SendMoveAsync(string moveJson)

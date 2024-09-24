@@ -21,6 +21,14 @@ namespace CheckAndMate.Controllers
             _userService = userService;
         }
 
+        // GET: api/chess/nickname
+        [HttpGet("nickname")]
+        public IActionResult GetNickname()
+        {
+            string nickname = Util.GenerateNickname();
+            return Ok(nickname);
+        }
+
         // GET: api/chess/public
         [HttpGet("public")]
         public IActionResult GetPublicGames()

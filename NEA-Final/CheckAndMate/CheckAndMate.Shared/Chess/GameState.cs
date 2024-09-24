@@ -84,5 +84,26 @@ namespace CheckAndMate.Shared.Chess
             this.blackTimeRunning = blackTimeRunning;
             this.whiteTimeRunning = whiteTimeRunning;
         }
+
+        public GameState(GameState original)
+        {
+            board = original.board.Select(row => row.ToList()).ToList();
+            whiteToMove = original.whiteToMove;
+            moveLog = original.moveLog.Select(m => new Move(m)).ToList();
+            whiteKingLocation = new List<int>(original.whiteKingLocation);
+            blackKingLocation = new List<int>(original.blackKingLocation);
+            inCheck = original.inCheck;
+            pins = original.pins.Select(pin => new List<int>(pin)).ToList();
+            checks = original.checks.Select(check => new List<int>(check)).ToList();
+            checkMate = original.checkMate;
+            staleMate = original.staleMate;
+            enPassantPossible = original.enPassantPossible == null ? null : new List<int>(original.enPassantPossible);
+            currentCastlingRight = new CastleRights(original.currentCastlingRight);
+            castleRightsLog = original.castleRightsLog.Select(cr => new CastleRights(cr)).ToList();
+            whiteTime = original.whiteTime;
+            blackTime = original.blackTime;
+            whiteTimeRunning = original.whiteTimeRunning;
+            blackTimeRunning = original.blackTimeRunning;
+        }
     }
 }

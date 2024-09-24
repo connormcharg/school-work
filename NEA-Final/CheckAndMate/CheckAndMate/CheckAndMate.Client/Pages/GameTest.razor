@@ -5,6 +5,7 @@
 @using Newtonsoft.Json
 @inject CheckAndMate.Client.Services.ChessHubService ChessHubService
 @inject CheckAndMate.Client.Services.ChessControllerService ChessControllerService
+@implements IAsyncDisposable
 
 <PageTitle>GameTest</PageTitle>
 
@@ -50,6 +51,11 @@
         await base.OnInitializedAsync();
     }
 
+    public async ValueTask DisposeAsync()
+    {
+        await ChessHubService.StopAsync();
+    }
+
     private async void OnGameReceived(string gameJson)
     {
         Game? game = JsonConvert.DeserializeObject<Game>(gameJson);
@@ -75,6 +81,7 @@
         {
             chessBoard.OnMakeMove += MakeMove;
             chessBoard.OnMoveValidCheck += IsMoveValid;
+            chessBoard.OnIsWhiteCheck += IsWhite;
             eventsAdded = true;
         }
     }
@@ -119,7 +126,7 @@
     private async Task StartGame()
     {
         string? r = await ChessControllerService.StartGameAsync(
-            new GameSettings(false, true, false, true, false, false, "Testing!!"));
+            new GameSettings(true, true, false, true, false, false, "Testing!!"));
 
         if (r != null)
         {
@@ -157,6 +164,26 @@
 
     public async Task<bool> IsMoveValid(List<int> start, List<int> end)
     {
-        return true;
+        Move attemptedMove = new Move(start[0], start[1], end[0], end[1], currentGame.gameState.board);
+
+        foreach (var move in currentGame.currentValidMoves)
+        {
+            if (MoveHandler.MovesEqual(move, attemptedMove))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public async Task<bool> IsWhite()
+    {
+        var player = currentGame.players.FirstOrDefault(p => p.connectionId == ChessHubService.GetConnectionId());
+        if (player == null)
+        {
+            throw new Exception("player not found from context id in client");
+        }
+        return player.isWhite;
     }
 }

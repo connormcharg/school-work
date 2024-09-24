@@ -19,7 +19,7 @@ namespace CheckAndMate.Services
             _connectionMappingService = connectionMappingService;
         }
 
-        public async Task<bool> IsNicknameTaken(string nickname)
+        public bool IsNicknameTaken(string nickname)
         {
             var userWithNickname = _userManager.Users
                 .FirstOrDefault(u => u.Nickname == nickname);
@@ -27,7 +27,7 @@ namespace CheckAndMate.Services
             return userWithNickname != null;
         }
 
-        public async Task<string> GenerateUniqueNicknameAsync()
+        public string GenerateUniqueNicknameAsync()
         {
             string newNickname;
             bool isTaken;
@@ -35,34 +35,35 @@ namespace CheckAndMate.Services
             do
             {
                 newNickname = Util.GenerateNickname();
-                isTaken = await IsNicknameTaken(newNickname);
+                isTaken = IsNicknameTaken(newNickname);
             }
             while (isTaken);
 
             return newNickname;
         }
 
-        public async Task<string> GetNicknameAsync(string connectionId)
+        public async Task<string?> GetNicknameAsync(string connectionId)
         {
             var httpContext = _connectionMappingService.GetHttpContext(connectionId);
 
             if (httpContext == null)
             {
-                return "http context not found for connection id";
+                throw new Exception("httpContext was null for the given connectionId");
             }
 
             var user = await _userManager.GetUserAsync(httpContext.User);
 
             if (user == null)
             {
-                return "user not found for http context";
+                // not logged in
+                return null;
             }
 
             var nickname = user.Nickname;
 
             if (nickname == null)
             {
-                return "user has no nickname";
+                throw new Exception("nickname was null for given user");
             }
 
             return nickname;

@@ -2,7 +2,6 @@
 using CheckAndMate.Shared.Chess;
 using CheckAndMate.Shared.Utilities;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Storage.Json;
 using Newtonsoft.Json;
 
 namespace CheckAndMate.Hubs
@@ -11,11 +10,14 @@ namespace CheckAndMate.Hubs
     {
         private readonly ChessService _chessService;
         private readonly ConnectionMappingService _connectionMappingService;
+        private readonly UserService _userService;
 
-        public ChessHub(ChessService chessService, ConnectionMappingService connectionMappingService)
+        public ChessHub(ChessService chessService, ConnectionMappingService connectionMappingService, 
+            UserService userService)
         {
             _chessService = chessService;
             _connectionMappingService = connectionMappingService;
+            _userService = userService;
         }
 
         public override Task OnConnectedAsync()
@@ -28,10 +30,30 @@ namespace CheckAndMate.Hubs
             return base.OnConnectedAsync();
         }
 
-        public override Task OnDisconnectedAsync(Exception? exception)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
+            var game = _chessService.GetAllGames().
+                FirstOrDefault(g => g.watcherConnections.Contains(Context.ConnectionId) || g.players.Any(p =>
+                {
+                    return p.connectionId == Context.ConnectionId;
+                }));
+
+            if (game == null)
+            {
+                return;
+            }
+
+            if (game.watcherConnections.Contains(Context.ConnectionId))
+            {
+                await LeaveGameAsWatcher();
+            }
+            else if (game.players.Any(p => p.connectionId == Context.ConnectionId))
+            {
+                await LeaveGameAsPlayer();
+            }
+
             _connectionMappingService.RemoveConnection(Context.ConnectionId);
-            return base.OnDisconnectedAsync(exception);
+            await base.OnDisconnectedAsync(exception);
         }
 
         public async Task JoinGameAsPlayer(string gameId)
@@ -42,20 +64,42 @@ namespace CheckAndMate.Hubs
             {
                 return;
             }
-            if (game.players.Count >= 2)
+
+            var nickname = await _userService.GetNicknameAsync(Context.ConnectionId);
+            
+            if (nickname == null)
             {
                 return;
             }
 
-            await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
-            if (game.players.Count == 0)
+            if (game.players.Count >= 2)
             {
-                game.players.Add(new Player(Context.ConnectionId, Util.IsPlayerWhite(game, true), true));
+                if (game.players.Any(p => p.nickName == nickname))
+                {
+                    await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+                }
+                else
+                {
+                    return;
+                }
             }
             else
             {
-                game.players.Add(new Player(Context.ConnectionId, Util.IsPlayerWhite(game, false), false));
+                if (game.players.Count == 0)
+                {
+                    game.players.Add(new Player(Context.ConnectionId, Util.IsPlayerWhite(game, true), true, nickname));
+                }
+                else if (game.settings.isSinglePlayer)
+                {
+                    return;
+                }
+                else
+                {
+                    game.players.Add(new Player(Context.ConnectionId, Util.IsPlayerWhite(game, false), false, nickname));
+                }
+                await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
             }
+
             await _chessService.UpdateGame(gameId, game);
         }
 
@@ -138,7 +182,6 @@ namespace CheckAndMate.Hubs
                 return;
             }
 
-            bool updated = false;
             var moves = GameHandler.FindValidMoves(game);
 
             foreach (Move m in moves)
@@ -146,14 +189,10 @@ namespace CheckAndMate.Hubs
                 if (MoveHandler.MovesEqual(m, move))
                 {
                     GameHandler.MakeMove(game, m);
-                    updated = true;
                 }
             }
 
-            if (updated)
-            {
-                await _chessService.UpdateGame(game.id, game);
-            }
+            await _chessService.UpdateGame(game.id, game);
         }
     }
 }

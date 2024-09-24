@@ -14,6 +14,8 @@
 
 <PageTitle>Profile</PageTitle>
 
+<PageScript Src="./Components/Account/Pages/Manage/Index.razor.js" />
+
 <h3>Profile</h3>
 <StatusMessage />
 
@@ -33,13 +35,13 @@ else
                     <label for="username" class="form-label">Username</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Nickname" class="form-control" placeholder="Please enter your nickname." />
+                    <InputText @bind-Value="Input.Nickname" class="form-control" id="nicknameInput" placeholder="Please enter your nickname." />
                     <label for="nickname" class="form-label">Nickname</label>
                     <ValidationMessage For="() => Input.Nickname" class="text-danger" />
                 </div>
-                @* <button type="button" class="w-100 btn btn-secondary mb-3" title="Regenerate Nickname">
+                <button type="button" class="w-100 btn btn-secondary mb-3" id="regenerateNicknameButton" title="Regenerate Nickname">
                     Regenerate Nickname &#x21bb;
-                </button> *@
+                </button>
                 <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
             </EditForm>
         </div>
@@ -55,22 +57,23 @@ else
     private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromForm]
-    private InputModel? Input { get; set; } = new();
+    private InputModel Input { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Component Loaded");
-
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
         username = await UserManager.GetUserNameAsync(user);
         nickname = user.Nickname;
 
-        Input.Nickname ??= nickname;
+        if (nickname != null)
+        {
+            Input.Nickname ??= nickname;
+        }
     }
 
     private async Task OnValidSubmitAsync()
     {
-        bool isTaken = await UserService.IsNicknameTaken(Input.Nickname);
+        bool isTaken = UserService.IsNicknameTaken(Input.Nickname);
 
         if (isTaken && Input.Nickname != nickname)
         {
@@ -94,6 +97,6 @@ else
     private class InputModel
     {
         [Display(Name = "Nickname")]
-        public string Nickname { get; set; }
+        public string Nickname { get; set; } = "";
     }
 }

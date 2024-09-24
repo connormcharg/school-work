@@ -17,27 +17,29 @@ namespace CheckAndMate.Services
         
         public Game? GetGame(string gameId)
         {
-            _games.TryGetValue(gameId, out var game);
-            return game;
+            if (_games.TryGetValue(gameId, out var game))
+            {
+                return new Game(game);
+            }
+            return null;
         }
 
         public List<Game> GetAllGames()
         {
-            var allGames = _games.Values.ToList<Game>();
-            return allGames;
+            return _games.Values.Select(game => new Game(game)).ToList();
         }
 
         public async Task UpdateGame(string gameId, Game game)
         {
             game.currentValidMoves = GameHandler.FindValidMoves(game);
-            _games[gameId] = game;
+            _games[gameId] = new Game(game);
             var json = JsonConvert.SerializeObject(_games[gameId]);
             await _hubContext.Clients.Group(gameId).SendAsync("ReceiveGame", json);
         }
 
         public bool AddGame(Game game)
         {
-            return _games.TryAdd(game.id, game);
+            return _games.TryAdd(game.id, new Game(game));
         }
 
         public bool RemoveGame(string gameId, bool archive)

@@ -22,6 +22,10 @@ namespace CheckAndMate.Services
         {
             foreach (var game in _chessService.GetAllGames())
             {
+                if (game.players.Count == 0)
+                {
+                    continue;
+                }
                 if (!game.settings.isSinglePlayer)
                 {
                     continue;

@@ -11,7 +11,7 @@
                 var piece = GetPiece(R, C);
                 @if (piece != "--")
                 {
-                    <div class="chess-piece @(isInteractive ? "" : "nograb") @(piece.ToLower()) square-@(R)-@(C)" style=""></div>
+                    <div class="chess-piece @(isInteractive ? "" : "nograb") @(piece[0].ToString() == "w" ? "white" : "black") @(piece.ToLower()) square-@(R)-@(C)" style=""></div>
                 }
             }
         }
@@ -78,6 +78,7 @@
 
     public event Func<List<int>, List<int>, Task<bool>>? OnMoveValidCheck;
     public event Func<List<int>, List<int>, Task<bool>>? OnMakeMove;
+    public event Func<Task<bool>>? OnIsWhiteCheck;
     private Dictionary<int, char> colToFile = new Dictionary<int, char>
     {
         {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}
@@ -179,6 +180,16 @@
         {
             await OnMakeMove.Invoke(startList, endList);
         }
+    }
+
+    [JSInvokable]
+    public async Task<bool> IsWhite()
+    {
+        if (OnIsWhiteCheck != null)
+        {
+            return await OnIsWhiteCheck.Invoke();
+        }
+        throw new Exception("OnIsWhiteCheck not assigned a function");
     }
 
     public void Dispose()

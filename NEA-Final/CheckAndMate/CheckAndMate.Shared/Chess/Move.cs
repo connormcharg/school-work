@@ -58,5 +58,19 @@ namespace CheckAndMate.Shared.Chess
             }
             this.moveID = this.startRow * 1000 + this.startCol * 100 + this.endRow * 10 + this.endCol;
         }
+
+        public Move(Move original)
+        {
+            startRow = original.startRow;
+            startCol = original.startCol;
+            endRow = original.endRow;
+            endCol = original.endCol;
+            pieceMoved = original.pieceMoved;
+            pieceCaptured = original.pieceCaptured;
+            enPassant = original.enPassant;
+            pawnPromotion = original.pawnPromotion;
+            isCastleMove = original.isCastleMove;
+            moveID = original.moveID;
+        }
     }
 }
