@@ -73,7 +73,16 @@ else
 
     private async Task OnValidSubmitAsync()
     {
-        bool isTaken = UserService.IsNicknameTaken(Input.Nickname);
+        bool isTaken;
+
+        if (Input.Nickname == null)
+        {
+            isTaken = true;
+        }
+        else
+        {
+            isTaken = UserService.IsNicknameTaken(Input.Nickname);
+        }
 
         if (isTaken && Input.Nickname != nickname)
         {
@@ -97,6 +106,6 @@ else
     private class InputModel
     {
         [Display(Name = "Nickname")]
-        public string Nickname { get; set; } = "";
+        public string? Nickname { get; set; }
     }
 }
