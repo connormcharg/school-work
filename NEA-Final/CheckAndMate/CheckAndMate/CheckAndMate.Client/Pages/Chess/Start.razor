@@ -1,4 +1,7 @@
 ﻿@page "/start"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@using CheckAndMate.Client.Services
+@inject ChessControllerService ChessControllerService
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -20,8 +23,8 @@
                         <!-- Single/Multiplayer Dropdown -->
                         <div class="mb-3">
                             <label for="gameMode" class="form-label">Single/Multiplayer?</label>
-                            <select class="form-select" id="gameMode">
-                                <option selected>Select mode</option>
+                            <select class="form-select" id="gameMode" @bind=selectedThing>
+                                <option value="0" selected>Select mode</option>
                                 <option value="1">Single Player</option>
                                 <option value="2">Multiplayer</option>
                             </select>
@@ -97,6 +100,13 @@
     </div>
 </div>
 
-@code {
+<p>@selectedThing</p>
 
+@code {
+    public string selectedThing { get; set; } = "0";
+
+    public async Task OnStart()
+    {
+        
+    }
 }

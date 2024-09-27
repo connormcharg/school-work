@@ -11,7 +11,7 @@
                 var piece = GetPiece(R, C);
                 @if (piece != "--")
                 {
-                    <div class="chess-piece @(isInteractive ? "" : "nograb") @(piece[0].ToString() == "w" ? "white" : "black") @(piece.ToLower()) square-@(R)-@(C)" style=""></div>
+                    <div class="chess-piece @(isGrabbable(piece) ? "" : "nograb") @(piece[0].ToString() == "w" ? "white" : "black") @(piece.ToLower()) square-@(R)-@(C)" style=""></div>
                 }
             }
         }
@@ -82,7 +82,7 @@
     private Dictionary<int, char> colToFile = new Dictionary<int, char>
     {
         {0, 'A'}, {1, 'B'}, {2, 'C'}, {3, 'D'}, {4, 'E'}, {5, 'F'}, {6, 'G'}, {7, 'H'}
-    };
+    };    
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -190,6 +190,36 @@
             return await OnIsWhiteCheck.Invoke();
         }
         throw new Exception("OnIsWhiteCheck not assigned a function");
+    }
+
+    public bool isGrabbable(string p)
+    {
+        if (!isInteractive)
+        {
+            return false;
+        }
+        if (isWhite)
+        {
+            if (p[0].ToString() == "w")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (p[0].ToString() == "b")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     public void Dispose()

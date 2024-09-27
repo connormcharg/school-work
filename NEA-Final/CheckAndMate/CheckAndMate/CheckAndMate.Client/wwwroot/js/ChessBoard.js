@@ -114,7 +114,10 @@
     };
 
     document.querySelectorAll(".chess-piece").forEach(async piece => {
-        if (!piece.classList.contains("nograb") && await isWhite() == piece.classList.contains("white")) {
+        // WHEN WE CHECK FOR THE CORRECT COLOUR IT BREAKS THE EVENT FOR CLICKING ON AN ENEMY PIECE
+        // AND YOUR OWN PIECES SOMETIMES???
+        if (!piece.classList.contains("nograb")) {
+            console.log(piece.classList);
             piece.addEventListener("mousedown", function (e) {
                 if (e.button === 0) {
                     if (state === 1) {
@@ -126,9 +129,6 @@
                     };
                 };
             });
-        }
-        if ((piece.classList.contains("black") && await isWhite()) || (piece.classList.contains("white") && !(await isWhite()))) {
-            piece.classList.add("nograb");
         }
     });
     grid.addEventListener("mousedown", async function (e) {
