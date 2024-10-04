@@ -1,6 +1,6 @@
 {
     "workbench.startupEditor": "none",
-    "workbench.colorTheme": "Dracula",
+    "workbench.colorTheme": "Dracula Theme",
     "editor.fontSize": 20,
     "workbench.iconTheme": "vscode-icons",
     "explorer.confirmDragAndDrop": false,

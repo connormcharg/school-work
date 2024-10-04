@@ -113,72 +113,83 @@
         };
     };
 
-    document.querySelectorAll(".chess-piece").forEach(async piece => {
-        // WHEN WE CHECK FOR THE CORRECT COLOUR IT BREAKS THE EVENT FOR CLICKING ON AN ENEMY PIECE
-        // AND YOUR OWN PIECES SOMETIMES???
-        if (!piece.classList.contains("nograb")) {
-            console.log(piece.classList);
-            piece.addEventListener("mousedown", function (e) {
-                if (e.button === 0) {
-                    if (state === 1) {
-                        selectedDraggingFirstTime(e, piece);
-                    } else if (state === 3 && piece !== selectedPiece) {
-                        selectedDraggingFirstTime(e, piece);
-                    } else if (state === 3 && piece === selectedPiece) {
-                        selectedDragging(e, piece);
+    async function addEvents() {
+        document.querySelectorAll(".chess-piece").forEach(async piece => {
+            // WHEN WE CHECK FOR THE CORRECT COLOUR IT BREAKS THE EVENT FOR CLICKING ON AN ENEMY PIECE
+            // AND YOUR OWN PIECES SOMETIMES???
+            if (!piece.classList.contains("nograb")) {
+                console.log(piece.classList);
+                piece.addEventListener("mousedown", function (e) {
+                    if (e.button === 0) {
+                        if (state === 1) {
+                            selectedDraggingFirstTime(e, piece);
+                        } else if (state === 3 && piece !== selectedPiece) {
+                            selectedDraggingFirstTime(e, piece);
+                        } else if (state === 3 && piece === selectedPiece) {
+                            selectedDragging(e, piece);
+                        };
                     };
-                };
-            });
-        }
-    });
-    grid.addEventListener("mousedown", async function (e) {
-        if (e.button === 0) {
-            if (state === 3 && await isMoveValid(
-                selectedPieceInitialRowCol,
-                getRowColFromMouseXY(e.clientX, e.clientY)
-            )) {
-                await makeMove(
+                });
+            }
+        });
+        grid.addEventListener("mousedown", async function (e) {
+            if (e.button === 0) {
+                if (state === 3 && await isMoveValid(
                     selectedPieceInitialRowCol,
                     getRowColFromMouseXY(e.clientX, e.clientY)
-                );
-                await noSelectedNoDragging(true);
-            } else if (state === 3) {
-                await noSelectedNoDragging();
+                )) {
+                    await makeMove(
+                        selectedPieceInitialRowCol,
+                        getRowColFromMouseXY(e.clientX, e.clientY)
+                    );
+                    await noSelectedNoDragging(true);
+                } else if (state === 3) {
+                    await noSelectedNoDragging();
+                };
             };
-        };
-    });
-    grid.addEventListener("mouseup", async function (e) {
-        if (e.button === 0) {
-            if (state === 2 && arraysEqual(selectedPieceInitialRowCol,
-                [getIndexFromPercent(percentY), getIndexFromPercent(percentX)])) {
-                selectedNoDragging();
-            } else if (state === 2 && await isMoveValid(
-                selectedPieceInitialRowCol,
-                [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]
-            )) {
-                await makeMove(
+        });
+        grid.addEventListener("mouseup", async function (e) {
+            if (e.button === 0) {
+                if (state === 2 && arraysEqual(selectedPieceInitialRowCol,
+                    [getIndexFromPercent(percentY), getIndexFromPercent(percentX)])) {
+                    selectedNoDragging();
+                } else if (state === 2 && await isMoveValid(
                     selectedPieceInitialRowCol,
-                    [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]);
-                await noSelectedNoDragging(true);
-            } else if (state === 2) {
-                selectedNoDragging();
-            } else if (state === 4 && arraysEqual(selectedPieceInitialRowCol,
-                [getIndexFromPercent(percentY), getIndexFromPercent(percentX)])) {
-                await noSelectedNoDragging();
-            } else if (state === 4 && await isMoveValid(
-                selectedPieceInitialRowCol,
-                [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]
-            )) {
-                await makeMove(
+                    [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]
+                )) {
+                    await makeMove(
+                        selectedPieceInitialRowCol,
+                        [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]);
+                    await noSelectedNoDragging(true);
+                } else if (state === 2) {
+                    selectedNoDragging();
+                } else if (state === 4 && arraysEqual(selectedPieceInitialRowCol,
+                    [getIndexFromPercent(percentY), getIndexFromPercent(percentX)])) {
+                    await noSelectedNoDragging();
+                } else if (state === 4 && await isMoveValid(
                     selectedPieceInitialRowCol,
-                    [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]);
-                await noSelectedNoDragging(true);
-            } else if (state === 4) {
-                selectedNoDragging();
+                    [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]
+                )) {
+                    await makeMove(
+                        selectedPieceInitialRowCol,
+                        [getIndexFromPercent(percentY), getIndexFromPercent(percentX)]);
+                    await noSelectedNoDragging(true);
+                } else if (state === 4) {
+                    selectedNoDragging();
+                };
             };
-        };
-    });
-    grid.addEventListener("mousemove", function (e) {
-        update(e);
-    });
+        });
+        grid.addEventListener("mousemove", function (e) {
+            update(e);
+        });
+    }
+
+    function removeEvents() {
+        grid.outerHTML = grid.outerHTML;
+        document.querySelectorAll(".chess-piece").forEach(piece => {
+            piece.outerHTML = piece.outerHTML;
+        });
+    }
+
+    await addEvents();
 };
