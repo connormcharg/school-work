@@ -1,5 +1,6 @@
 ﻿using backend.Classes.Data;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,6 +44,13 @@ namespace backend.Controllers
             }
 
             return Ok(new { token });
+        }
+
+        [Authorize]
+        [HttpGet("protected")]
+        public IActionResult Protected()
+        {
+            return Ok("This is protected data");
         }
     }
 

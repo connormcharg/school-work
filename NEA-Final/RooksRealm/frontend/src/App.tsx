@@ -1,35 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import Play from './components/Play';
+import StartGame from './components/StartGame';
+import PlayGame from './components/PlayGame';
 import './App.css';
-import { useState } from 'react';
 
-function App() {
-  const [count, setCount] = useState(0);
-  function handleClick() {
-    setCount(count + 1);
-  }
-  
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <button onClick={handleClick}>
-          Clicked {count} times!
-        </button>
-      </header>
-    </div>
-  );
-}
+const App: React.FC = () => {
+    return (
+        <Router>
+            <div className="flex h-screen">
+                <Sidebar />
+                <div className="flex-1 p-6 bg-gray-300">
+                    <Routes>
+                        <Route path="/" element={<Play />} />
+                        <Route path="/start" element={<StartGame />} />
+                        <Route path="/play/:id" element={<PlayGame />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                </div>
+            </div>
+        </Router>
+    );
+};
 
 export default App;

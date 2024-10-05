@@ -24,7 +24,7 @@ namespace backend.Services
         {
             var user = userRepository.GetUserByUsername(username);
 
-            if (user == null || !VerifyPasswordHash(password, user.passwordHash))
+            if (user == null || !VerifyPasswordHash(password, user.storedHashValue))
             {
                 return "";
             }
@@ -32,10 +32,14 @@ namespace backend.Services
             return GenerateJwtToken(user);
         }
 
-        private bool VerifyPasswordHash(string password, string storedHash)
+        private bool VerifyPasswordHash(string password, string storedvalue)
         {
-            string newHash = SecurityUtilities.GetHash(password);
-            return newHash == storedHash;
+            if (string.IsNullOrEmpty(password) ||
+                string.IsNullOrEmpty(storedvalue))
+            {
+                return false;
+            }
+            return SecurityUtilities.VerifyPassword(password, storedvalue);
         }
 
         private string GenerateJwtToken(User user)

@@ -75,7 +75,10 @@
             isWhite = player.isWhite;
         }
         StateHasChanged();
-        await chessBoard.ReloadBoard();
+        if (chessBoard != null)
+        {
+            await chessBoard.ReloadBoard();
+        }
 
         if (!eventsAdded)
         {

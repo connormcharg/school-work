@@ -4,7 +4,7 @@ namespace backend.Classes.Security
 {
     public class Bcrypt
     {
-        public byte[] BcryptHash(string password, byte[]? salt = null, int cost = 10)
+        public string BcryptHash(string password, byte[]? salt = null, int cost = 10)
         {
             // Generate a random salt if not provided
             if (salt == null)
@@ -18,7 +18,30 @@ namespace backend.Classes.Security
             // Stretch the password
             byte[] hashedPassword = StretchPassword(password, saltString, cost);
 
-            return hashedPassword;
+            // Combine the salt and the hash in a single string for storage
+            string hashedPasswordString = Convert.ToBase64String(hashedPassword);
+            string storedValue = $"{Convert.ToBase64String(salt)}:{hashedPasswordString}"; // Store salt and hash as "salt:hash"
+
+            return storedValue;
+        }
+
+        public bool VerifyPassword(string password, string storedValue, int cost = 10)
+        {
+            // Split the stored value into salt and hash
+            string[] parts = storedValue.Split(':');
+            if (parts.Length != 2)
+            {
+                throw new ArgumentException("Stored value is invalid.");
+            }
+
+            // Decode the stored salt
+            byte[] salt = Convert.FromBase64String(parts[0]);
+
+            // Re-hash the input password with the stored salt
+            string recomputedHash = BcryptHash(password, salt, cost);
+
+            // Compare the recomputed hash with the stored hash
+            return storedValue == recomputedHash;
         }
 
         private byte[] StretchPassword(string password, string saltString, int cost)

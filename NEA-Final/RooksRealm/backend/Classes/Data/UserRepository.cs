@@ -86,19 +86,19 @@ namespace backend.Classes.Data
                 return false;
             }
 
-            string passwordHash = SecurityUtilities.GetHash(password);
+            string storedHashValue = SecurityUtilities.GetHash(password);
 
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "INSERT INTO tblusers (username, email, emailconfirmed, passwordhash) VALUES (@username, @email, @emailConfirmed, @passwordHash)",
+                    "INSERT INTO tblusers (username, email, emailconfirmed, storedhashvalue) VALUES (@username, @email, @emailconfirmed, @storedhashvalue)",
                     connection);
                 command.Parameters.AddWithValue("username", username);
                 command.Parameters.AddWithValue("email", email);
                 command.Parameters.AddWithValue("emailconfirmed", false);
-                command.Parameters.AddWithValue("passwordhash", passwordHash);
+                command.Parameters.AddWithValue("storedhashvalue", storedHashValue);
 
                 command.ExecuteNonQuery();
             }
@@ -114,7 +114,7 @@ namespace backend.Classes.Data
                 email = reader.GetString(reader.GetOrdinal("email")),
                 emailConfirmed = reader.GetBoolean(reader.GetOrdinal("emailconfirmed")),
                 username = reader.GetString(reader.GetOrdinal("username")),
-                passwordHash = reader.GetString(reader.GetOrdinal("passwordhash"))
+                storedHashValue = reader.GetString(reader.GetOrdinal("storedhashvalue"))
             };
         }
     }

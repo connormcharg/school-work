@@ -18,8 +18,8 @@ namespace backend
             builder.Services.AddControllers();
             builder.Services.AddSignalR();
 
-            var keyString = "z&p^%3cz5#ineEVdW!3aAj";
-            var key = Encoding.ASCII.GetBytes(keyString);
+            var keyString = "F&dA7W3FLVAcR7KPy9Jac*z5eKnS$cV#";
+            var key = Encoding.UTF8.GetBytes(keyString);
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -31,8 +31,8 @@ namespace backend
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
@@ -44,6 +44,12 @@ namespace backend
                     sp.GetRequiredService<IUserRepository>(),
                     keyString,
                     30);
+            });
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
             builder.Services.AddHttpClient();
@@ -59,6 +65,8 @@ namespace backend
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowAllOrigins");
 
             app.UseAuthentication();
             app.UseAuthorization();

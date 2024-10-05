@@ -8,7 +8,13 @@ namespace backend.Classes.Utilities
         public static string GetHash(string text)
         {
             Bcrypt bcrypt = new Bcrypt();
-            return BitConverter.ToString(bcrypt.BcryptHash(text)).Replace("-", "").ToLower();
+            return bcrypt.BcryptHash(text);
+        }
+
+        public static bool VerifyPassword(string password, string storedValue)
+        {
+            Bcrypt bcrypt = new Bcrypt();
+            return bcrypt.VerifyPassword(password, storedValue);
         }
     }
 }
