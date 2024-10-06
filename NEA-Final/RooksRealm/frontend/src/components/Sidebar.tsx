@@ -1,6 +1,5 @@
 import React from "react";
-import { HomeIcon, PlayIcon, CodeBracketIcon } from "@heroicons/react/24/solid";
-import "./Sidebar.css";
+import { PlayIcon, CodeBracketIcon } from "@heroicons/react/24/solid";
 import SidebarItem from "./SidebarItem";
 
 const Sidebar: React.FC = () => {

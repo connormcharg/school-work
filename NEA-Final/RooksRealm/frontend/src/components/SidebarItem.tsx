@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Sidebar.css";
 
 interface SidebarItemProps {
     icon: React.ElementType;
