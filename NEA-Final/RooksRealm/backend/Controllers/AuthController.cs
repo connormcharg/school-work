@@ -1,13 +1,12 @@
 ﻿using backend.Classes.Data;
 using backend.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]")] // "api/auth"
     public class AuthController : ControllerBase
     {
         private readonly IAuthenticationService authenticationService;

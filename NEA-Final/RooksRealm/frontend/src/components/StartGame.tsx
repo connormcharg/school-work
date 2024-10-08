@@ -128,7 +128,7 @@ const StartGame: React.FC = () => {
                 </div>
 
                 <div className="flex-1 flex items-center justify-center">
-                    <img src="/images/static-game-board.png" alt="Game Image" className="max-w-full max-h-full object-cover" />
+                    <img draggable="false" src="/images/static-game-board.png" alt="Game Image" className="max-w-full max-h-full object-cover" />
                 </div>
             </div>
         </div>

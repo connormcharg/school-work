@@ -53,6 +53,7 @@ namespace backend
             });
 
             builder.Services.AddHttpClient();
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddSingleton<ChessService>();

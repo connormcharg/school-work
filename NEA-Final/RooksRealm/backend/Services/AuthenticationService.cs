@@ -51,10 +51,10 @@ namespace backend.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
-                new Claim(ClaimTypes.Name, user.username)
-                // additional claims can go here
-            }),
+                    new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+                    new Claim(ClaimTypes.Name, user.username)
+                    // additional claims can go here
+                }),
                 Expires = DateTime.UtcNow.AddMinutes(jwtExpirationMinutes),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
