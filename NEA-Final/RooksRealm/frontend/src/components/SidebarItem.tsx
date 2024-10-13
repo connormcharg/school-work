@@ -5,17 +5,21 @@ interface SidebarItemProps {
     icon: React.ElementType;
     text: string;
     to: string;
+    isExpanded: boolean;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ icon: Icon, text, to}) => {
+const SidebarItem: React.FC<SidebarItemProps> = ({ icon: Icon, text, to, isExpanded }) => {
     return (
-        <li className="w-full text-center">
-            <div className="inline-flex items-center justify-center space-x-2 text-gray-300 hover:text-rose-400">
-                <Icon className="size-6 transition-colors" />
-                <Link className="transition-colors font-semibold text-xl" to={to}>{text}</Link>
-            </div>
+        <li className="flex items-center justify-center">
+            <Link
+                to={to}
+                className="flex items-center space-x-2 text-gray-300 hover:text-rose-400 transition-all duration-300"
+            >
+                <Icon className="w-6 h-6" />
+                {isExpanded && <span className="font-semibold text-xl">{text}</span>}
+            </Link>
         </li>
-    )
-}
+    );
+};
 
 export default SidebarItem;

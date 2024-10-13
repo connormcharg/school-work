@@ -1,17 +1,50 @@
-import React from "react";
-import { PlayIcon, CodeBracketIcon } from "@heroicons/react/24/solid";
+import React, { useState, useEffect } from "react";
+import { PlayIcon, CodeBracketIcon, Bars3Icon } from "@heroicons/react/24/solid";
 import SidebarItem from "./SidebarItem";
+import { Link } from "react-router-dom";
 
 const Sidebar: React.FC = () => {
+    const [isExpanded, setIsExpanded] = useState(true);
+    const [showFullTitle, setShowFullTitle] = useState(true);
+
+    const toggleSidebar = () => {
+        setIsExpanded(!isExpanded);
+    };
+
+    useEffect(() => {
+        if (!isExpanded) {
+            setShowFullTitle(false);
+        } else {
+            const timeoutId = setTimeout(() => {
+                setShowFullTitle(true);
+            }, 300);
+
+            return () => clearTimeout(timeoutId);
+        }
+    }, [isExpanded]);
+
     return (
-        <div className="flex flex-col items-center h-screen bg-gray-800 p-4 w-48">
-            <h2 className="text-2xl font-bold text-rose-400 mb-8">Rook's Realm</h2>
-            <ul>
-                <SidebarItem icon={PlayIcon} text="Play" to="/" /> 
-                <SidebarItem icon={CodeBracketIcon} text="Test" to="/test" /> 
+        <div className={`relative flex flex-col bg-gray-800 transition-width duration-300 h-screen ${isExpanded ? "w-48" : "w-16"}`}>
+            <button
+                onClick={toggleSidebar}
+                className={`text-gray-300 hover:text-rose-400 transition-all duration-300 self-start mt-4 ml-5 mb-4`}
+            >
+                <Bars3Icon className="w-6 h-6" />
+            </button>
+            
+            <Link
+                to="/"
+                className={`text-2xl font-bold text-rose-400 mt-4 mb-4 self-center transition-opacity duration-300`}
+            >
+                {showFullTitle ? "Rook's Realm" : "RR"}
+            </Link>
+
+            <ul className="flex flex-col items-center mt-4 space-y-4">
+                <SidebarItem icon={PlayIcon} text="Play" to="/" isExpanded={isExpanded} />
+                <SidebarItem icon={CodeBracketIcon} text="Test" to="/play/a" isExpanded={isExpanded} />
             </ul>
         </div>
-    )
-}
+    );
+};
 
 export default Sidebar;

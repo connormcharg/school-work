@@ -15,7 +15,7 @@ const App: React.FC = () => {
                     <Routes>
                         <Route path="/" element={<Play />} />
                         <Route path="/start" element={<StartGame />} />
-                        <Route path="/play/:id" element={<PlayGame />} />
+                        <Route path="/play/:id" element={<PlayGame boardSize={36}/>} />
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </div>

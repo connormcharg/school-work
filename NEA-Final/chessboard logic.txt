@@ -1,0 +1,19 @@
+states:
+    1: # no piece selected and no piece being dragged
+    
+    2: # piece selected and being dragged for the first time
+
+    3: # piece selected but no piece being dragged
+
+    4: # piece selected and being dragged not for the first time
+
+events:
+    for each piece:
+        mouse down:
+        
+    for grid:
+        mouse down:
+
+        mouse up:
+
+        mouse move:
