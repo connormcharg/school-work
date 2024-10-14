@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ChessBoard.css";
 
-const getRank = (index: number) => 8 - index;
-const getFile = (index: number) => String.fromCharCode(97 + index);
-const getPiece = (row: number, col: number) => "wp";
-const isGrabbable = (piece: string) => piece !== "--";
-
 interface ChessBoardProps {
     boardSize: number;
+    isWhite: boolean;
+    board: string[][];
 }
 
-const ChessBoard: React.FC<ChessBoardProps> = ({ boardSize }) => {
+const ChessBoard: React.FC<ChessBoardProps> = ({ boardSize, isWhite, board }) => {
     const boardRef = useRef<HTMLDivElement>(null);
     const [boardPixelSize, setBoardPixelSize] = useState<number>(0);
 
@@ -39,6 +36,11 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ boardSize }) => {
             }
         }
     }, [boardSize]);
+
+    const getRank = (index: number) => isWhite ? 8 - index : index + 1;
+    const getFile = (index: number) => String.fromCharCode(isWhite ? 97 + index : 97 + (7 - index));
+    const getPiece = (row: number, col: number) => isWhite ? board[row][col] : board[7 - row][7 - col];
+    const isGrabbable = (piece: string) => piece !== "--";
     
     return (
         <div
