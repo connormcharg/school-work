@@ -4,6 +4,7 @@ using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace backend
 {
@@ -16,7 +17,14 @@ namespace backend
             // Add services to the container.
 
             builder.Services.AddControllers();
-            builder.Services.AddSignalR();
+            builder.Services.AddSignalR(options =>
+            {
+
+            })
+            .AddJsonProtocol(options =>
+            {
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+            });
 
             var keyString = "F&dA7W3FLVAcR7KPy9Jac*z5eKnS$cV#";
             var key = Encoding.UTF8.GetBytes(keyString);
@@ -36,6 +44,22 @@ namespace backend
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/chesshub")))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             builder.Services.AddScoped<IAuthenticationService>(sp =>
@@ -49,17 +73,21 @@ namespace backend
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins",
-                    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                    builder => builder.WithOrigins("http://localhost:5182")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
             });
 
             builder.Services.AddHttpClient();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<UserService>();
             builder.Services.AddSingleton<ChessService>();
             builder.Services.AddSingleton<ConnectionMappingService>();
             builder.Services.AddHostedService<TimerService>();
-            // need to add the engine service
+            builder.Services.AddHostedService<EngineService>();
 
             var app = builder.Build();
 

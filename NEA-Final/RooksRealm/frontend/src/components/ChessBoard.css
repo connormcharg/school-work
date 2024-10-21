@@ -65,20 +65,22 @@
 }
 
 .hover-square {
-    @apply absolute w-[12.5%] h-[12.5%] z-20;
+    @apply absolute w-1/8 h-1/8 z-20;
     background: none;
     left: 0;
     top: 0;
     will-change: transform;
     overflow: hidden;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .highlight {
-    @apply absolute w-[12.5%] h-[12.5%] bg-blue-500 opacity-50;
+    @apply absolute w-1/8 h-1/8 bg-blue-500 opacity-50;
     left: 0;
     top: 0;
     will-change: transform;
     overflow: hidden;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .br {

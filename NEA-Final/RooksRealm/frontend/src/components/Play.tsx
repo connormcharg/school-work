@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { isAuthenticated } from "../utils/auth";
 
-const Play: React.FC = () => {
+const Play: React.FC = () => {    
     return (
         <div className="flex flex-col items-center">
             <h1 className="text-xl font-semibold mb-6">Play Chess!</h1>

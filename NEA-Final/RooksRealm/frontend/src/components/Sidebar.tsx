@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { PlayIcon, CodeBracketIcon, Bars3Icon } from "@heroicons/react/24/solid";
+import { PlayIcon, CodeBracketIcon, Bars3Icon, UserIcon, UserPlusIcon, UserCircleIcon, ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/solid";
 import SidebarItem from "./SidebarItem";
 import { Link } from "react-router-dom";
+import Authorize from "./account/authorize";
 
 const Sidebar: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(true);
@@ -41,7 +42,20 @@ const Sidebar: React.FC = () => {
 
             <ul className="flex flex-col items-center mt-4 space-y-4">
                 <SidebarItem icon={PlayIcon} text="Play" to="/" isExpanded={isExpanded} />
-                <SidebarItem icon={CodeBracketIcon} text="Test" to="/play/a" isExpanded={isExpanded} />
+                <Authorize
+                    authorized={
+                        <>
+                            <SidebarItem icon={UserCircleIcon} text="Account" to="/account" isExpanded={isExpanded} />
+                            <SidebarItem icon={ArrowRightStartOnRectangleIcon} text="Logout" to="/logout" isExpanded={isExpanded} />
+                        </>
+                    }
+                    unauthorized={
+                        <>
+                            <SidebarItem icon={UserIcon} text="Login" to="/login" isExpanded={isExpanded} />
+                            <SidebarItem icon={UserPlusIcon} text="Register" to="/register" isExpanded={isExpanded} />
+                        </>
+                    }
+                />
             </ul>
         </div>
     );

@@ -1,19 +1,110 @@
 states:
     1: # no piece selected and no piece being dragged
+        if a selected piece already exists:
+            remove square class from selected piece
+            if a move is trying to be made and the move is valid:
+                add the square class of the hover square
+            else:
+                add the square class of the start square
+            remove the dragging class from the selected piece
+            set the selected piece style to null
+        set selected piece to be null
+        set the start row and col to be null
+        offset = 0
+        percentx = 0
+        percenty = 0
+        state = 1
+        currentMoveSquare.style = hidden
+        hoverSquare.style = hidden
     
     2: # piece selected and being dragged for the first time
-
+        selectedDragging()
+        state = 2
     3: # piece selected but no piece being dragged
-
+        state = 3
+        remove the square class from the selected piece
+        add the square class of the start row and col
+        remove dragging class
+        style = ""
+        hoverSquare style = hidden
     4: # piece selected and being dragged not for the first time
+        set selected piece to be the "p" parameter
+        set the start row and col to the square class of the selected piece
+        offset = piece.getboundingrect.width / 2
+        state = 4
+        remove the square class from the currentMoveSquare
+        set currentMoveSquare.style to be ""
+        update(e)
 
 events:
     for each piece:
         mouse down:
-        
+            if the piece has "interactive" class:
+                add mouse down event:
+                    if button is 0:
+                        if state is 1:
+                            gotoState2(piece)
+                        elif state is 3 and piece is not the selected piece:
+                            gotoState2(piece)
+                        elif state is 3 and piece is the selected piece:
+                            gotoState4(piece)
+
     for grid:
         mouse down:
+            if button is 0:
+                if state is 3 and move is valid:
+                    make the move
+                    gotoState1(move was valid)
+                elif state is 3:
+                    gotoState1(move was not valid)
 
         mouse up:
+            if button is 0:
+                if state is 2 and end square equals start square:
+                    gotoState3()
+                elif state is 2 and move is valid:
+                    make move
+                    gotoState1(move was valid)
+                elif state is 2:
+                    gotoState3()
+                elif state is 4 and start row col equas end row col:
+                    gotoState1(move wsa not valid)
+                elif state is 4 and move is valid:
+                    make move
+                    gotoState1(move was valid)
+                elif state is 4:
+                    gotoState3()
 
         mouse move:
+            update(e)
+
+functions:
+    async isMoveValid(s, e)
+    async makeMove(s, e)
+    function isWhite()
+    
+    function getSquareClass(e)
+    function removeSquareClass(e)
+    function getRowColFromSquareClass(c)
+    function getIndexFromPercent(p)
+    function getRowColFromMouseXY(x, y)
+    function areArraysEqual(a, b)
+    function update(e)
+
+    const clamp = (val) => Math.max(-50, Math.min(val, 800));
+
+variables:
+    selected piece
+    selected piece start row col
+    piece offset
+    percentx
+    percenty
+    state
+
+constants:
+    grid
+    grid rect
+    hover square
+    prev move square start
+    prev move square end
+    curr move square

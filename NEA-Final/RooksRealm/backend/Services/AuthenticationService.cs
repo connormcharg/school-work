@@ -20,9 +20,9 @@ namespace backend.Services
             this.jwtExpirationMinutes = jwtExpirationMinutes;
         }
 
-        public string Authenticate(string username, string password)
+        public string Authenticate(string email, string password)
         {
-            var user = userRepository.GetUserByUsername(username);
+            var user = userRepository.GetUserByEmail(email);
 
             if (user == null || !VerifyPasswordHash(password, user.storedHashValue))
             {

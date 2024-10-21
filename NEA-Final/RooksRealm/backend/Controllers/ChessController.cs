@@ -2,6 +2,7 @@
 using backend.Classes.Utilities;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace backend.Controllers
 {
@@ -71,6 +72,8 @@ namespace backend.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            /*var settings = JsonConvert.DeserializeObject<Settings>(settingsJson);*/
 
             if (settings == null)
             {

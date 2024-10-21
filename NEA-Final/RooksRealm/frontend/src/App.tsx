@@ -4,6 +4,10 @@ import Sidebar from './components/Sidebar';
 import Play from './components/Play';
 import StartGame from './components/StartGame';
 import PlayGame from './components/PlayGame';
+import Account from './components/account/account';
+import Login from './components/account/login';
+import Register from './components/account/register';
+import Authorize from './components/account/authorize';
 import './App.css';
 
 const App: React.FC = () => {
@@ -13,9 +17,27 @@ const App: React.FC = () => {
                 <Sidebar />
                 <div className="flex-1 p-6 bg-gray-300">
                     <Routes>
-                        <Route path="/" element={<Play />} />
-                        <Route path="/start" element={<StartGame />} />
-                        <Route path="/play/:id" element={<PlayGame boardSize={36}/>} />
+                        <Route path="/" element={
+                            <Authorize
+                                authorized={<Play />}
+                                unauthorized={<Navigate to="/login" replace />}
+                            />
+                        } />
+                        <Route path="/start" element={
+                            <Authorize
+                                authorized={<StartGame />}
+                                unauthorized={<Navigate to="/login" replace />}
+                            />
+                        } />
+                        <Route path="/play/:id" element={
+                            <Authorize
+                                authorized={<PlayGame boardSize={36} />}
+                                unauthorized={<Navigate to="/login" replace />}
+                            />
+                        } />
+                        <Route path="/account" element={<Account />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </div>

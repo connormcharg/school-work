@@ -15,13 +15,13 @@ const StartGame: React.FC = () => {
     const handleStartGame = async () => {
         setErrorMessage("");
         const data = {
-            mode,
-            colour,
-            time,
-            privacy,
-            rated,
-            watchable,
-            title
+            isSinglePlayer: mode === "single",
+            isStartingWhite: colour === "white",
+            isTimed: time === "timed",
+            isPrivate: privacy === "private",
+            isRated: rated === "rated",
+            isWatchable: watchable === "yes",
+            gameTitle: title
         };
 
         try {

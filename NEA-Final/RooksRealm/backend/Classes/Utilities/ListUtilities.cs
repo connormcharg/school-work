@@ -8,10 +8,10 @@
 
             if (reverse)
             {
-                for (int i = list.Count() - 1; i > 0; i--)
+                for (int i = list.Count() - 1; i >= 0; i--)
                 {
                     var t = new List<double>();
-                    for (int j = list[i].Count(); j > 0; j--)
+                    for (int j = list[i].Count() - 1; j >= 0; j--)
                     {
                         t.Add(list[i][j]);
                     }
