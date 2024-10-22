@@ -3,10 +3,12 @@ import { PlayIcon, CodeBracketIcon, Bars3Icon, UserIcon, UserPlusIcon, UserCircl
 import SidebarItem from "./SidebarItem";
 import { Link } from "react-router-dom";
 import Authorize from "./account/authorize";
+import { useAuth } from "../context/AuthenticationState";
 
 const Sidebar: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [showFullTitle, setShowFullTitle] = useState(true);
+    const { isAuthenticated } = useAuth();
 
     const toggleSidebar = () => {
         setIsExpanded(!isExpanded);
@@ -42,20 +44,16 @@ const Sidebar: React.FC = () => {
 
             <ul className="flex flex-col items-center mt-4 space-y-4">
                 <SidebarItem icon={PlayIcon} text="Play" to="/" isExpanded={isExpanded} />
-                <Authorize
-                    authorized={
-                        <>
-                            <SidebarItem icon={UserCircleIcon} text="Account" to="/account" isExpanded={isExpanded} />
-                            <SidebarItem icon={ArrowRightStartOnRectangleIcon} text="Logout" to="/logout" isExpanded={isExpanded} />
-                        </>
-                    }
-                    unauthorized={
-                        <>
-                            <SidebarItem icon={UserIcon} text="Login" to="/login" isExpanded={isExpanded} />
-                            <SidebarItem icon={UserPlusIcon} text="Register" to="/register" isExpanded={isExpanded} />
-                        </>
-                    }
-                />
+                {isAuthenticated ?
+                    <>
+                        <SidebarItem icon={UserCircleIcon} text="Account" to="/account" isExpanded={isExpanded} />
+                        <SidebarItem icon={ArrowRightStartOnRectangleIcon} text="Logout" to="/logout" isExpanded={isExpanded} />
+                    </> :
+                    <>
+                        <SidebarItem icon={UserIcon} text="Login" to="/login" isExpanded={isExpanded} />
+                        <SidebarItem icon={UserPlusIcon} text="Register" to="/register" isExpanded={isExpanded} />
+                    </>
+                }
             </ul>
         </div>
     );

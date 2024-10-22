@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEventHandler, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
@@ -7,7 +7,8 @@ const Login: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
-    const handleLogin = async () => {
+    const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
+        e.preventDefault();
         setErrorMessage("");
         const data = {
             email: email,
@@ -41,7 +42,10 @@ const Login: React.FC = () => {
         <div>
             <h1 className="text-xl font-semibold mb-6">Login</h1>
             {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-            <div className="flex-1 flex flex-col items-left justify-center p-4 w-full md:w-80">
+            <form
+                className="flex-1 flex flex-col items-left justify-center p-4 w-full md:w-80"
+                onSubmit={handleLogin}
+            >
                 <input
                     type="text"
                     value={email}
@@ -57,12 +61,12 @@ const Login: React.FC = () => {
                     className="mb-4 border border-gray-300 rounded p-2 w-full"
                 />
                 <button
-                    onClick={handleLogin}
+                    type="submit"
                     className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-[50%] self-center"
                 >
                     Login
                 </button>
-            </div>
+            </form>
         </div>
     );
 }

@@ -1,13 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+export default {
+  content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
-    extend: {
-      spacing: {
-        "1/8": "calc(100% / 8)",
-      }
-    },
+    extend: {},
   },
   plugins: [],
 }
-
