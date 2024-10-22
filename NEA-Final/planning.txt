@@ -1,0 +1,18 @@
+folder layout:
+- src
+    - components
+        - account
+        - game
+        
+    - contexts
+
+component layout:
+- App
+    - AuthProvider
+        - Router
+             - main div
+                - Sidebar
+                - content div
+                    - Routes
+                        - ...
+                            - ...
