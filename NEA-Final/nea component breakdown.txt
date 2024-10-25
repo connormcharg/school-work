@@ -1,0 +1,18 @@
+/play/{id}
+
+chat and game message box
+player info
+chess board
+private code box
+timer
+move log box
+pause, resign, draw buttons
+suggested move button
+
+/watch/{id}
+
+
+/start
+
+
+/join
