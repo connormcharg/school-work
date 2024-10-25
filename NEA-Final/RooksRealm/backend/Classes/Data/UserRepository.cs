@@ -92,6 +92,19 @@ namespace backend.Classes.Data
             {
                 connection.Open();
 
+                // Check if the email already exists
+                NpgsqlCommand checkEmailCommand = new NpgsqlCommand("SELECT COUNT(*) FROM tblusers WHERE email = @checkEmail", connection);
+                checkEmailCommand.Parameters.AddWithValue("checkEmail", email);
+                if (checkEmailCommand == null)
+                {
+                    return false;
+                }
+                int emailCount = (int)checkEmailCommand.ExecuteScalar();
+                if (emailCount > 0)
+                {
+                    return false;
+                }
+
                 var command = new NpgsqlCommand(
                     "INSERT INTO tblusers (username, email, emailconfirmed, storedhashvalue) VALUES (@username, @email, @emailconfirmed, @storedhashvalue)",
                     connection);
@@ -105,6 +118,29 @@ namespace backend.Classes.Data
 
             return true;
         }
+
+        public bool DeleteUser(string username, string email)
+        {
+            if (username == null || email == null)
+            {
+                return false;
+            }
+
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                var command = new NpgsqlCommand(
+                    "DELETE FROM tblUsers WHERE username = @username AND email = @email;",
+                    connection);
+                command.Parameters.AddWithValue("username", username);
+                command.Parameters.AddWithValue("email", email);
+
+                command.ExecuteNonQuery();
+            }
+
+            return true;
+        } 
 
         private User MapReaderToUser(NpgsqlDataReader reader)
         {

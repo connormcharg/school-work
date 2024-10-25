@@ -22,7 +22,7 @@ namespace backend.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterRequest request)
+        public IActionResult Register([FromBody] AuthRequest request)
         {
             var result = userRepository.CreateUser(userService.GenerateUniqueNickname(), request.email, request.password);
 
@@ -36,8 +36,9 @@ namespace backend.Controllers
 
         // Endpoint for user login
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest request)
+        public IActionResult Login([FromBody] AuthRequest request)
         {
+            Console.WriteLine("LOGIN ATTEMPT!");
             var token = authenticationService.Authenticate(request.email, request.password);
 
             if (string.IsNullOrEmpty(token))
@@ -54,17 +55,33 @@ namespace backend.Controllers
         {
             return Ok("This is protected data");
         }
+
+        /*
+        
+        getDetails = (token) => (username, email)
+        changeEmail = (token, new) => ()
+        changeUsername = (token, new) => ()
+        changePassword = (token, old, new) => ()
+        deleteAccount = (token, password) => ()
+
+        */
+
+        [Authorize]
+        [HttpGet("details")]
+        public IActionResult GetDetails([FromBody] DetailsRequest request)
+        {
+            return Ok();
+        }
     }
 
-    public class RegisterRequest
+    public class AuthRequest
     {
         public string email { get; set; }
         public string password { get; set; }
     }
 
-    public class LoginRequest
+    public class DetailsRequest
     {
-        public string email { get; set; }
-        public string password { get; set; }
+        public string token { get; set; }
     }
 }

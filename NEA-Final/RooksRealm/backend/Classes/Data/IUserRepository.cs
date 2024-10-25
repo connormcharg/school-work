@@ -6,5 +6,6 @@
         User? GetUserByUsername(string username);
         User? GetUserByEmail(string email);
         bool CreateUser(string username, string email, string password);
+        bool DeleteUser(string username, string email);
     }
 }

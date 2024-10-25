@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
 import { ArrowRightStartOnRectangleIcon, Bars3Icon, PlayIcon, UserCircleIcon, UserIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 
@@ -22,6 +22,36 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ icon: Icon, text, to, isExpan
         <Icon className="w-6 h-6" />
         {isExpanded && <span className="font-semibold text-xl">{text}</span>}
       </Link>
+    </li>
+  )
+}
+
+interface SidebarButtonProps {
+  icon: React.ElementType;
+  text: string;
+  isExpanded: boolean
+}
+
+const SidebarButton: React.FC<SidebarButtonProps> = ({ icon: Icon, text, isExpanded }) => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleClick = () => {
+    logout();
+    navigate("/");
+  }
+  
+  return (
+    <li
+      className="flex items-center justify-center"
+    >
+      <button
+        onClick={handleClick}
+        className="flex items-center space-x-2 text-gray-300 hover:text-rose-400 transition-all duration-300"
+      >
+        <Icon className="w-6 h-6" />
+        {isExpanded && <span className="font-semibold text-xl">{text}</span>}
+      </button>
     </li>
   )
 }
@@ -68,7 +98,7 @@ const Sidebar: React.FC = () => {
         {isLoggedIn ?
           <>
             <SidebarItem icon={UserCircleIcon} text="Account" to="/account" isExpanded={isExpanded} />
-            <SidebarItem icon={ArrowRightStartOnRectangleIcon} text="Logout" to="/logout" isExpanded={isExpanded} />
+            <SidebarButton icon={ArrowRightStartOnRectangleIcon} text="Logout" isExpanded={isExpanded} />
           </> :
           <>
             <SidebarItem icon={UserIcon} text="Login" to="/login" isExpanded={isExpanded} />
