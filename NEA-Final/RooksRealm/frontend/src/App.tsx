@@ -5,6 +5,9 @@ import Sidebar from './components/Sidebar';
 import Play from './components/Play';
 import Login from './components/account/Login';
 import Register from './components/account/Register';
+import Account from './components/account/Account';
+import PlayGame from './components/gameplay/PlayGame';
+import StartGame from './components/gameplay/StartGame';
 import './App.css'
 
 const AppRoutes: React.FC = () => {
@@ -17,12 +20,16 @@ const AppRoutes: React.FC = () => {
           <>
             <Route path="/login" element={<Navigate to="/" replace />} />
             <Route path="/register" element={<Navigate to="/" replace />} />
-            <Route path="/account" element={<Navigate to="/" replace />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/play/:id" element={<PlayGame boardSize={36} />} />
+            <Route path="/start" element={<StartGame />} />
           </> :
           <>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/account" element={<Navigate to="/" replace />} />
+            <Route path="/play/:id" element={<Navigate to="/" replace />} />
+            <Route path="/start" element={<Navigate to="/" replace />} />
           </>
       }
       <Route path="*" element={<Navigate to="/" replace />} />

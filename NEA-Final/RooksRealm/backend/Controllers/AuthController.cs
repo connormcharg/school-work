@@ -2,6 +2,8 @@
 using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace backend.Controllers
 {
@@ -24,6 +26,12 @@ namespace backend.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] AuthRequest request)
         {
+            var possibleUser = userRepository.GetUserByEmail(request.email);
+            if (possibleUser != null)
+            {
+                return BadRequest(new { message = "User already registered with that email" });
+            }
+            
             var result = userRepository.CreateUser(userService.GenerateUniqueNickname(), request.email, request.password);
 
             if (!result)
@@ -38,7 +46,6 @@ namespace backend.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] AuthRequest request)
         {
-            Console.WriteLine("LOGIN ATTEMPT!");
             var token = authenticationService.Authenticate(request.email, request.password);
 
             if (string.IsNullOrEmpty(token))
@@ -68,9 +75,25 @@ namespace backend.Controllers
 
         [Authorize]
         [HttpGet("details")]
-        public IActionResult GetDetails([FromBody] DetailsRequest request)
+        public IActionResult GetDetails()
         {
-            return Ok();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            var user = userRepository.GetUserById(int.Parse(userId));
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            return Ok(new
+            {
+                username = user.username,
+                email = user.email
+            });
         }
     }
 

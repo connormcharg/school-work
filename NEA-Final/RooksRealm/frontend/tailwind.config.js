@@ -5,7 +5,11 @@ export default {
     "./index.html"
   ],
   theme: {
-    extend: {},
+    extend: {
+      spacing: {
+        "1/8": "calc(100% / 8)",
+      }
+    },
   },
   plugins: [],
 }

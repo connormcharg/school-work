@@ -55,7 +55,8 @@ namespace backend.Services
                     new Claim(ClaimTypes.Name, user.username)
                     // additional claims can go here
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(jwtExpirationMinutes),
+                /*Expires = DateTime.UtcNow.AddMinutes(jwtExpirationMinutes),*/
+                Expires = DateTime.UtcNow.AddYears(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

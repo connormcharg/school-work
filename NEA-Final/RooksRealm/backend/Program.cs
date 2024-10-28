@@ -67,7 +67,7 @@ namespace backend
                 return new AuthenticationService(
                     sp.GetRequiredService<IUserRepository>(),
                     keyString,
-                    30);
+                    1);
             });
 
             builder.Services.AddCors(options =>

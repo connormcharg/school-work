@@ -11,7 +11,6 @@ const Login: React.FC = () => {
   const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     await login(email, password);
-    console.log(isLoggedIn);
   }
 
   useEffect(() => {
