@@ -109,6 +109,12 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
   // #region Callback
   const onMoveValidCheck = useCallback(    
     async (start: number[], end: number[]) => {
+      if (!isWhite()) {
+        start[0] = 7 - start[0];
+        start[1] = 7 - start[1];
+        end[0] = 7 - end[0];
+        end[1] = 7 - end[1];
+      }
       const squaresToCode = (s: number[], e: number[]) => s[0] * 1000 + s[1] * 100 + e[0] * 10 + e[1];
       const code = squaresToCode(start, end);
       if (data && data.currentValidMoves) {
@@ -142,10 +148,6 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
     }
     throw new Error("no players data found in data")
   }
-
-  const onIsWhiteCheck = useCallback(async () => {
-    return isWhite();
-  }, [data]);
   // #endregion
 
   return (
@@ -160,7 +162,6 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           isInteractive={true}
           onMoveValidCheck={onMoveValidCheck}
           onMakeMove={onMakeMove}
-          onIsWhiteCheck={onIsWhiteCheck}
         />
         <MessageBox boxSize={(96 - boardSize) / 2} />
       </div>

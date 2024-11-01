@@ -8,7 +8,6 @@ interface ChessBoardProps {
   isWhite: boolean;
   onMoveValidCheck: (start: number[], end: number[]) => Promise<boolean>;
   onMakeMove: (start: number[], end: number[]) => Promise<void>;
-  onIsWhiteCheck: () => Promise<boolean>;
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({
@@ -17,8 +16,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   board,
   isWhite,
   onMoveValidCheck,
-  onMakeMove,
-  onIsWhiteCheck,
+  onMakeMove
 }) => {
   // #region Scaling
 
@@ -62,12 +60,15 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   // #region Interactivity
 
   // variables
-  const [selectedPiece, setSelectedPiece] = useState<HTMLDivElement | null>(null);
-  const [selectedPieceStartRowCol, setSelectedPieceStartRowCol] = useState<Array<number> | null>(null);
+  // const [selectedPiece, setSelectedPiece] = useState<HTMLDivElement | null>(null);
+  // const [selectedPieceStartRowCol, setSelectedPieceStartRowCol] = useState<Array<number> | null>(null);
+  const selectedPiece = useRef<HTMLDivElement | null>(null);
+  const selectedPieceStartRowCol = useRef<Array<number> | null>(null);
   const pieceOffset = useRef(0);
   const percentX = useRef(0);
   const percentY = useRef(0);
-  const state = useRef(0);
+  const state = useRef(1);
+  const selectedPieceString = useRef("");
   // var selectedPiece: HTMLDivElement | null = null;
   // var selectedPieceStartRowCol: Array<number> | null = null;
   // var pieceOffset = 0;
@@ -77,8 +78,25 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
 
   // effects
   useEffect(() => {
-    if (selectedPiece && board) {
-      const isPieceChanged = 
+    if (selectedPiece.current && board) {
+      const isPieceChanged = checkIfChanged(
+        getRowColFromSquareClass(getSquareClass(selectedPiece.current)),
+        selectedPieceString.current);
+      if (isPieceChanged) {
+        // resetting code to restore board back to normal
+        selectedPiece.current.style.cssText = "";
+        selectedPiece.current.classList.remove("dragging");
+        if (currentMoveSquare.current) currentMoveSquare.current.style.visibility = "hidden";
+        if (hoverSquare.current) hoverSquare.current.style.visibility = "hidden";
+
+        selectedPiece.current = null;
+        selectedPieceStartRowCol.current = null;
+        pieceOffset.current = 0;
+        percentX.current = 0;
+        percentY.current = 0;
+        state.current = 1;
+        selectedPieceString.current = "";
+      }
     }
   }, [board]);
 
@@ -91,8 +109,22 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   const currentMoveSquare = useRef<HTMLDivElement>(null);
 
   // functions
-  const isGrabbable = (piece: string) => piece !== "--";
+  const isGrabbable = (piece: string) => piece !== "--" && isInteractive && ((piece[0] === "w" && isWhite) || (piece[0] === "b" && !isWhite));
   const clamp = (value: number) => Math.max(-50, Math.min(value, 800));
+
+  function checkIfChanged(rowCol: Array<number>, piece: string) {
+    if (board[rowCol[0]][rowCol[1]].toLowerCase() !== piece) {
+      return true;
+    }
+    return false;
+  }
+
+  function getPieceClass(element: HTMLDivElement) {
+    let regex = /^(w|b)[a-z]/;
+    let classList = Array.from(element.classList);
+    let foundClass = classList.find((name) => regex.test(name as string));
+    return foundClass ?? "";
+  }
 
   function getSquareClass(element: HTMLDivElement) {
     let regex = /^square-\d-\d$/;
@@ -122,7 +154,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   }
 
   function getRowColFromPercents() {
-    return [getIndexFromPercent(percentY), getIndexFromPercent(percentX)];
+    return [getIndexFromPercent(percentY.current), getIndexFromPercent(percentX.current)];
   }
 
   function getRowColFromMouseXY(x: number, y: number) {
@@ -143,36 +175,26 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   }
 
   function update(e: React.MouseEvent<HTMLDivElement>) {
-    if (state === 2 || state === 4) {
+    if (state.current === 2 || state.current === 4) {
       if (gridRect) {
-        // setPercentX(clamp(
-        //   ((e.clientX - gridRect.left - pieceOffset + window.scrollX) /
-        //     gridRect.width) *
-        //     800,
-        // ));
-        // setPercentY(clamp(
-        //   ((e.clientY - gridRect.top - pieceOffset + window.scrollY) /
-        //     gridRect.height) *
-        //     800,
-        // ));
-        percentX = clamp(
-          ((e.clientX - gridRect.left - pieceOffset + window.scrollX) /
+        percentX.current = clamp(
+          ((e.clientX - gridRect.left - pieceOffset.current + window.scrollX) /
             gridRect.width) *
             800,
         );
-        percentY = clamp(
-          ((e.clientY - gridRect.top - pieceOffset + window.scrollY) /
+        percentY.current = clamp(
+          ((e.clientY - gridRect.top - pieceOffset.current + window.scrollY) /
             gridRect.height) *
             800,
         );
       }
-      if (selectedPiece) {
-        selectedPiece.style.transform = `translate(${percentX}%, ${percentY}%)`;
-        selectedPiece.classList.add("dragging");
+      if (selectedPiece.current) {
+        selectedPiece.current.style.cssText = `transform: translate(${percentX.current}%, ${percentY.current}%)`;
+        selectedPiece.current.classList.add("dragging");
       }
       removeSquareClass(hoverSquare.current);
       hoverSquare.current?.classList.add(
-        `square-${getIndexFromPercent(percentY)}-${getIndexFromPercent(percentX)}`,
+        `square-${getIndexFromPercent(percentY.current)}-${getIndexFromPercent(percentX.current)}`,
       );
       if (hoverSquare.current) {
         hoverSquare.current.style.cssText = "";
@@ -181,30 +203,24 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   }
 
   function noSelectedNoDragging(valid = false) {
-    if (selectedPiece) {
-      removeSquareClass(selectedPiece);
+    if (selectedPiece.current) {
+      removeSquareClass(selectedPiece.current);
       if (valid && hoverSquare.current) {
-        selectedPiece.classList.add(getSquareClass(hoverSquare.current));
-      } else if (selectedPieceStartRowCol) {
-        selectedPiece.classList.add(
-          `square-${selectedPieceStartRowCol[0]}-${selectedPieceStartRowCol[1]}`,
+        selectedPiece.current.classList.add(getSquareClass(hoverSquare.current));
+      } else if (selectedPieceStartRowCol.current) {
+        selectedPiece.current.classList.add(
+          `square-${selectedPieceStartRowCol.current[0]}-${selectedPieceStartRowCol.current[1]}`,
         );
       }
-      selectedPiece.classList.remove("dragging");
-      selectedPiece.style.cssText = "";
+      selectedPiece.current.classList.remove("dragging");
+      selectedPiece.current.style.cssText = "";
     }
-    // setSelectedPiece(null);
-    // setSelectedPieceStartRowCol(null);
-    // setPieceOffset(0);
-    // setPercentX(0);
-    // setPercentY(0);
-    // setState(1);
-    selectedPiece = null;
-    selectedPieceStartRowCol = null;
-    pieceOffset = 0;
-    percentX = 0;
-    percentY = 0;
-    state = 1;
+    selectedPiece.current = null;
+    selectedPieceStartRowCol.current = null;
+    pieceOffset.current = 0;
+    percentX.current = 0;
+    percentY.current = 0;
+    state.current = 1;
     if (currentMoveSquare.current)
       currentMoveSquare.current.style.visibility = "hidden";
     if (hoverSquare.current) hoverSquare.current.style.visibility = "hidden";
@@ -215,20 +231,18 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     p: HTMLDivElement,
   ) {
     selectedDragging(e, p);
-    // setState(2);
-    state = 2;
+    state.current = 2;
   }
 
   function selectedNoDragging() {
-    // setState(3);
-    state = 3;
-    removeSquareClass(selectedPiece);
-    if (selectedPieceStartRowCol)
-      selectedPiece?.classList.add(
-        `square-${selectedPieceStartRowCol[0]}-${selectedPieceStartRowCol[1]}`,
+    state.current = 3;
+    removeSquareClass(selectedPiece.current);
+    if (selectedPieceStartRowCol.current)
+      selectedPiece.current?.classList.add(
+        `square-${selectedPieceStartRowCol.current[0]}-${selectedPieceStartRowCol.current[1]}`,
       );
-    selectedPiece?.classList.remove("dragging");
-    if (selectedPiece) selectedPiece.style.cssText = "";
+    selectedPiece.current?.classList.remove("dragging");
+    if (selectedPiece.current) selectedPiece.current.style.cssText = "";
     if (hoverSquare.current) hoverSquare.current.style.visibility = "hidden";
   }
 
@@ -236,25 +250,20 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     e: React.MouseEvent<HTMLDivElement>,
     p: HTMLDivElement,
   ) {
-    // setSelectedPiece(p);
-    selectedPiece = p;
-    if (!selectedPiece) {
+    selectedPiece.current = p;
+    selectedPieceString.current = getPieceClass(selectedPiece.current);
+    if (!selectedPiece.current) {
       return;
     }
-    // setSelectedPieceStartRowCol(getRowColFromSquareClass(
-    //   getSquareClass(selectedPiece),
-    // ));
-    // setPieceOffset(selectedPiece.getBoundingClientRect().width / 2);
-    // setState(4);
-    selectedPieceStartRowCol = getRowColFromSquareClass(
-      getSquareClass(selectedPiece)
+    selectedPieceStartRowCol.current = getRowColFromSquareClass(
+      getSquareClass(selectedPiece.current),
     );
-    pieceOffset = selectedPiece.getBoundingClientRect().width / 2;
-    state = 4;
+    pieceOffset.current = selectedPiece.current.getBoundingClientRect().width / 2;
+    state.current = 4;
     removeSquareClass(currentMoveSquare.current);
-    if (currentMoveSquare.current && selectedPieceStartRowCol) {
+    if (currentMoveSquare.current && selectedPieceStartRowCol.current) {
       currentMoveSquare.current.classList.add(
-        `square-${selectedPieceStartRowCol[0]}-${selectedPieceStartRowCol[1]}`,
+        `square-${selectedPieceStartRowCol.current[0]}-${selectedPieceStartRowCol.current[1]}`,
       );
       currentMoveSquare.current.style.cssText = "";
     }
@@ -266,11 +275,11 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     // e.target is the element
     var piece = e.target as HTMLDivElement;
     if (!piece.classList.contains("nograb")) {
-      if (state === 1) {
+      if (state.current === 1) {
         selectedDraggingFirstTime(e, piece);
-      } else if (state === 3 && piece !== selectedPiece) {
+      } else if (state.current === 3 && piece !== selectedPiece.current) {
         selectedDraggingFirstTime(e, piece);
-      } else if (state === 3 && piece === selectedPiece) {
+      } else if (state.current === 3 && piece === selectedPiece.current) {
         selectedDragging(e, piece);
       }
     }
@@ -278,15 +287,15 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
 
   const handleGridMouseDown: MouseEventHandler<HTMLDivElement> = async (e) => {
     if (e.button === 0) {
-      if (state === 3) {
-        if (selectedPieceStartRowCol) {
+      if (state.current === 3) {
+        if (selectedPieceStartRowCol.current) {
           var endRowCol = getRowColFromMouseXY(e.clientX, e.clientY);
-          if (await onMoveValidCheck(selectedPieceStartRowCol, endRowCol)) {
-            await onMakeMove(selectedPieceStartRowCol, endRowCol);
+          if (await onMoveValidCheck(selectedPieceStartRowCol.current, endRowCol)) {
+            await onMakeMove(selectedPieceStartRowCol.current, endRowCol);
             noSelectedNoDragging();
           }
         }
-      } else if (state === 3) {
+      } else if (state.current === 3) {
         await noSelectedNoDragging();
       }
     }
@@ -295,32 +304,32 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   const handleGridMouseUp: MouseEventHandler<HTMLDivElement> = async (e) => {
     if (e.button === 0) {
       var rowColFromPercents = getRowColFromPercents();
-      if (selectedPieceStartRowCol) {
+      if (selectedPieceStartRowCol.current) {
         if (
-          state === 2 &&
-          arraysEqual(selectedPieceStartRowCol, rowColFromPercents)
+          state.current === 2 &&
+          arraysEqual(selectedPieceStartRowCol.current, rowColFromPercents)
         ) {
           selectedNoDragging();
         } else if (
-          state === 2 &&
-          (await onMoveValidCheck(selectedPieceStartRowCol, rowColFromPercents))
+          state.current === 2 &&
+          (await onMoveValidCheck(selectedPieceStartRowCol.current, rowColFromPercents))
         ) {
-          await onMakeMove(selectedPieceStartRowCol, rowColFromPercents);
+          await onMakeMove(selectedPieceStartRowCol.current, rowColFromPercents);
           noSelectedNoDragging(true);
-        } else if (state === 2) {
+        } else if (state.current === 2) {
           selectedNoDragging();
         } else if (
-          state === 4 &&
-          arraysEqual(selectedPieceStartRowCol, rowColFromPercents)
+          state.current === 4 &&
+          arraysEqual(selectedPieceStartRowCol.current, rowColFromPercents)
         ) {
           noSelectedNoDragging();
         } else if (
-          state === 4 &&
-          (await onMoveValidCheck(selectedPieceStartRowCol, rowColFromPercents))
+          state.current === 4 &&
+          (await onMoveValidCheck(selectedPieceStartRowCol.current, rowColFromPercents))
         ) {
-          await onMakeMove(selectedPieceStartRowCol, rowColFromPercents);
+          await onMakeMove(selectedPieceStartRowCol.current, rowColFromPercents);
           noSelectedNoDragging(true);
-        } else if (state === 4) {
+        } else if (state.current === 4) {
           selectedNoDragging();
         }
       }
@@ -362,7 +371,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
               return (
                 <div
                   key={`${row}-${col}`}
-                  className={`chess-piece ${grabbableClass} ${colourClass} ${pieceClass} square-${row}-${col}`}
+                  className={`chess-piece ${grabbableClass} ${pieceClass} ${colourClass} square-${row}-${col}`}
                   onMouseDown={handlePieceMouseDown}
                   style={{}}
                 ></div>
