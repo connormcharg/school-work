@@ -8,6 +8,13 @@ interface ChessBoardProps {
   isWhite: boolean;
   onMoveValidCheck: (start: number[], end: number[]) => Promise<boolean>;
   onMakeMove: (start: number[], end: number[]) => Promise<void>;
+  onHighlightSquares: () => HighlightData;
+}
+
+interface HighlightData {
+  "prev-start": [number, number] | null;
+  "prev-end": [number, number] | null;
+  "check": [number, number] | null;
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({
@@ -16,7 +23,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   board,
   isWhite,
   onMoveValidCheck,
-  onMakeMove
+  onMakeMove,
+  onHighlightSquares
 }) => {
   // #region Scaling
 
@@ -78,6 +86,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
 
   // effects
   useEffect(() => {
+    // reset if board changed whilst picked up
     if (selectedPiece.current && board) {
       const isPieceChanged = checkIfChanged(
         getRowColFromSquareClass(getSquareClass(selectedPiece.current)),
@@ -98,6 +107,44 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         selectedPieceString.current = "";
       }
     }
+
+    // update highlighting squares (prev move, check)
+    if (previousMoveStartSquare.current) {
+      previousMoveStartSquare.current.style.visibility = "hidden";
+      removeSquareClass(previousMoveStartSquare.current);
+    }
+    if (previousMoveEndSquare.current) {
+      previousMoveEndSquare.current.style.visibility = "hidden";
+      removeSquareClass(previousMoveEndSquare.current);
+    }
+    if (checkSquare.current) {
+      checkSquare.current.style.visibility = "hidden";
+      removeSquareClass(checkSquare.current);
+    }
+
+    const highlightData: HighlightData = onHighlightSquares();
+    if (highlightData["prev-start"]) {
+      if (previousMoveStartSquare.current) {
+        previousMoveStartSquare.current.classList.add(
+          `square-${highlightData["prev-start"][0]}-${highlightData["prev-start"][1]}`);
+        previousMoveStartSquare.current.style.cssText = "";
+      } 
+    }
+    if (highlightData["prev-end"]) {
+      if (previousMoveEndSquare.current) {
+        previousMoveEndSquare.current.classList.add(
+          `square-${highlightData["prev-end"][0]}-${highlightData["prev-end"][1]}`);
+        previousMoveEndSquare.current.style.cssText = "";
+      } 
+    }
+    if (highlightData["check"]) {
+      if (checkSquare.current) {
+        checkSquare.current.classList.add(
+          `square-${highlightData["check"][0]}-${highlightData["check"][1]}`);
+        checkSquare.current.style.cssText = "";
+      } 
+    }
+
   }, [board]);
 
   // constants
@@ -107,6 +154,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   const previousMoveStartSquare = useRef<HTMLDivElement>(null);
   const previousMoveEndSquare = useRef<HTMLDivElement>(null);
   const currentMoveSquare = useRef<HTMLDivElement>(null);
+  const checkSquare = useRef<HTMLDivElement>(null);
 
   // functions
   const isGrabbable = (piece: string) => piece !== "--" && isInteractive && ((piece[0] === "w" && isWhite) || (piece[0] === "b" && !isWhite));
@@ -400,21 +448,27 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         </div>
         <div
           id="prev-move-start"
-          className="highlight"
+          className="highlight bg-blue-500"
           style={{ visibility: "hidden" }}
           ref={previousMoveStartSquare}
         ></div>
         <div
           id="prev-move-end"
-          className="highlight"
+          className="highlight bg-blue-500"
           style={{ visibility: "hidden" }}
           ref={previousMoveEndSquare}
         ></div>
         <div
           id="curr-move"
-          className="highlight"
+          className="highlight bg-blue-500"
           style={{ visibility: "hidden" }}
           ref={currentMoveSquare}
+        ></div>
+        <div
+          id="check"
+          className="highlight bg-red-500"
+          style={{ visibility: "hidden" }}
+          ref={checkSquare}
         ></div>
       </div>
       <div id="ranks" className="chess-ranks">

@@ -12,6 +12,12 @@ interface PlayGameProps {
   boardSize: number;
 }
 
+interface HighlightData {
+  "prev-start": [number, number] | null;
+  "prev-end": [number, number] | null;
+  "check": [number, number] | null;
+}
+
 const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
   const { id } = useParams<{ id: string }>();
   const [board, setBoard] = useState<string[][]>([
@@ -41,7 +47,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
     }
     
     const newConnection = new HubConnectionBuilder()
-      .withUrl("https://localhost:7204/chesshub", {
+      .withUrl("/proxy/chesshub", {
         accessTokenFactory: () => getJwtToken(),
       })
       .withAutomaticReconnect()
@@ -135,6 +141,39 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
     [connection],
   );
 
+  const onHighlightSquares = useCallback(
+    (): HighlightData => {
+      let prevStart: [number, number] | null = null;
+      let prevEnd: [number, number] | null = null;
+      let check: [number, number] | null = null;
+      if (data && data.state && data.state.moveLog && data.state.moveLog.length > 0) {
+        prevStart = [
+          data.state.moveLog[data.state.moveLog.length - 1].startRow,
+          data.state.moveLog[data.state.moveLog.length - 1].startCol
+        ];
+        prevEnd = [
+          data.state.moveLog[data.state.moveLog.length - 1].endRow,
+          data.state.moveLog[data.state.moveLog.length - 1].endCol
+        ];
+
+        if (data.state.inCheck) {
+          if (data.state.whiteToMove) {
+            check = data.state.whiteKingLocation;
+          } else {
+            check = data.state.blackKingLocation;
+          }
+        }
+      }
+      
+      return {
+        "prev-start": prevStart,
+        "prev-end": prevEnd,
+        "check": check
+      };
+    },
+    [data],
+  );
+
   const isWhite = () => {
     if (!data) {
       return true;
@@ -162,6 +201,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           isInteractive={true}
           onMoveValidCheck={onMoveValidCheck}
           onMakeMove={onMakeMove}
+          onHighlightSquares={onHighlightSquares}
         />
         <MessageBox boxSize={(96 - boardSize) / 2} />
       </div>

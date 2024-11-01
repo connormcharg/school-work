@@ -15,7 +15,7 @@ const Account: React.FC = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const res = await fetch("https://localhost:7204/api/auth/details", {
+        const res = await fetch("/proxy/api/auth/details", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

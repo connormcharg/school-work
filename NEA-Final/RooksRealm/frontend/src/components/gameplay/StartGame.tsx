@@ -25,7 +25,7 @@ const StartGame: React.FC = () => {
     };
 
     try {
-      const response = await fetch("https://localhost:7204/api/chess/start", {
+      const response = await fetch("/proxy/api/chess/start", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

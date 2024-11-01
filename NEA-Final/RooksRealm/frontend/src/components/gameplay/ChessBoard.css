@@ -75,7 +75,7 @@
 }
 
 .highlight {
-  @apply w-1/8 h-1/8 absolute bg-blue-500 opacity-50;
+  @apply w-1/8 h-1/8 absolute opacity-50;
   left: 0;
   top: 0;
   will-change: transform;

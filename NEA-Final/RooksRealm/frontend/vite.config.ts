@@ -8,5 +8,14 @@ export default defineConfig({
     port: 5182,
     open: "/",
     host: "0.0.0.0",
+    proxy: {
+      "/proxy": {
+        target: "https://localhost:7204",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/proxy/, ""),
+        secure: false,
+        ws: true
+      },
+    }
   }
 })

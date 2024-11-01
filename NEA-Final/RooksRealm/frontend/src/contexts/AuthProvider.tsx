@@ -70,7 +70,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const refreshToken = async () => {
     try {
-      const res = await fetch("https://localhost:7204/api/auth/refresh", {
+      const res = await fetch("/proxy/api/auth/refresh", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +98,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         logout,
         login(email, password) {
           return new Promise((resolve, reject) => {
-            fetch("https://localhost:7204/api/auth/login", {
+            fetch("/proxy/api/auth/login", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -146,7 +146,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         },
         register(email, password) {
           return new Promise((resolve, reject) => {
-            fetch("https://localhost:7204/api/auth/register", {
+            fetch("/proxy/api/auth/register", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

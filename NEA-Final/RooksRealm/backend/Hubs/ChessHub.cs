@@ -72,6 +72,7 @@ namespace backend.Hubs
 
             if (game.players.Count >= 2)
             {
+                Console.WriteLine("players >= 2");
                 if (game.players.Any(p => p.nickName == nickname))
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
