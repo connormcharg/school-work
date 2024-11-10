@@ -73,8 +73,6 @@ namespace backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            /*var settings = JsonConvert.DeserializeObject<Settings>(settingsJson);*/
-
             if (settings == null)
             {
                 return BadRequest();

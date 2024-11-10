@@ -15,7 +15,7 @@ namespace backend.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(FindEngineMoves, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+            _timer = new Timer(FindEngineMoves, null, TimeSpan.Zero, TimeSpan.FromSeconds(3));
             return Task.CompletedTask;
         }
 
@@ -35,6 +35,14 @@ namespace backend.Services
                 {
                     continue;
                 }
+                if (game.state.checkMate || game.state.staleMate)
+                {
+                    continue;
+                }
+                if (game.state.gameOver)
+                {
+                    continue;
+                }
 
                 var engine = new MinMaxEngine();
                 game.currentValidMoves = GameHandler.FindValidMoves(game);
@@ -45,7 +53,17 @@ namespace backend.Services
                 }
 
                 GameHandler.MakeMove(game, engine.nextMove);
-                await _chessService.UpdateGame(game.id, game);
+                int engineMoveId = engine.nextMove.moveID;
+
+                game.currentValidMoves = GameHandler.FindValidMoves(game);
+                engine.FindBestMove(game, game.currentValidMoves);
+                if (engine.nextMove == null)
+                {
+                    engine.FindRandomMove(game, game.currentValidMoves);
+                }
+                game.suggestedMoveId = engine.nextMove.moveID;
+
+                await _chessService.EngineUpdate(game.id, engineMoveId, game.suggestedMoveId);
             }
         }
 

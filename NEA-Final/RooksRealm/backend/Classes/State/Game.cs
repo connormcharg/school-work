@@ -12,6 +12,7 @@ namespace backend.Classes.State
         public List<string> watchers { get; set; }
         /*public List<IMessage> messages { get; set; }*/
         public Settings settings { get; set; }
+        public int suggestedMoveId { get; set; }
 
         public Game(Settings settings)
         { 
@@ -22,6 +23,7 @@ namespace backend.Classes.State
             this.watchers = new List<string>();
             /*this.messages = new List<IMessage>();*/
             this.settings = settings;
+            this.suggestedMoveId = 0;
         }
 
         public Game(Game original)
@@ -33,11 +35,12 @@ namespace backend.Classes.State
             this.watchers = new List<string>(original.watchers);
             /*this.messages = original.messages.Select(m => m.DeepCopy()).ToList();*/
             this.settings = new Settings(original.settings);
+            this.suggestedMoveId = original.suggestedMoveId;
         }
 
         [JsonConstructor]
         public Game(GameState state, List<Move> currentValidMoves, string id, List<Player> players,
-            List<string> watchers, /*List<IMessage> messages,*/ Settings settings)
+            List<string> watchers, /*List<IMessage> messages,*/ Settings settings, int suggestedMoveId)
         {
             this.state = state;
             this.currentValidMoves = currentValidMoves;
@@ -46,6 +49,7 @@ namespace backend.Classes.State
             this.watchers = watchers;
             /*this.messages = messages;*/
             this.settings = settings;
+            this.suggestedMoveId = suggestedMoveId;
         }
     }
 }

@@ -14,13 +14,10 @@ namespace backend.Classes.Utilities
             {
                 return isHost;
             }
-            var rng = new Random();
-            var r = rng.Next(0, 2);
-            if (r == 0)
+            else
             {
-                return true;
+                return !isHost;
             }
-            return false;
         }
     }
 }

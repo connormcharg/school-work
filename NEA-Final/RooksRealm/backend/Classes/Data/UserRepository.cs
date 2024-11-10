@@ -99,7 +99,7 @@ namespace backend.Classes.Data
                 {
                     return false;
                 }
-                int emailCount = (int)checkEmailCommand.ExecuteScalar();
+                int emailCount = Convert.ToInt32(checkEmailCommand.ExecuteScalar());
                 if (emailCount > 0)
                 {
                     return false;

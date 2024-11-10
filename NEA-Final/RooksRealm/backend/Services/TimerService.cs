@@ -20,24 +20,34 @@
         {
             foreach (var game in chessService.GetAllGames())
             {
-                var updated = false;
-
-                if (game.state.whiteTimeRunning)
+                if (!game.settings.isTimed)
                 {
-                    game.state.whiteTime -= 1;
-                    updated = true;
+                    continue;
+                }
+                if (game.state.gameOver)
+                {
+                    continue;
                 }
 
-                if (game.state.blackTimeRunning)
+                if (!(game.state.whiteTimeRunning || game.state.blackTimeRunning))
                 {
-                    game.state.blackTime -= 1;
-                    updated = true;
+                    if (game.settings.isSinglePlayer)
+                    {
+                        if (game.players.Count == 1)
+                        {
+                            await chessService.StartTimer(game.id, true);
+                        }
+                    }
+                    else
+                    {
+                        if (game.players.Count == 2)
+                        {
+                            await chessService.StartTimer(game.id, true);
+                        }
+                    }
                 }
 
-                if (updated)
-                {
-                    await chessService.UpdateGame(game.id, game);
-                }
+                await chessService.UpdateTimers(game.id);
             }
         }
 

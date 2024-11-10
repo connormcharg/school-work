@@ -21,7 +21,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/login" element={<Navigate to="/" replace />} />
             <Route path="/register" element={<Navigate to="/" replace />} />
             <Route path="/account" element={<Account />} />
-            <Route path="/play/:id" element={<PlayGame boardSize={36} />} />
+            <Route path="/play/:id" element={<PlayGame boardSize={40} />} />
             <Route path="/start" element={<StartGame />} />
           </> :
           <>

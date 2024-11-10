@@ -69,7 +69,6 @@ const StartGame: React.FC = () => {
             <option value="">Select Starting Colour</option>
             <option value="white">White</option>
             <option value="black">Black</option>
-            <option value="random">Random</option>
           </select>
 
           <select
@@ -128,7 +127,7 @@ const StartGame: React.FC = () => {
           </button>
         </div>
 
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center h-full">
           <img
             draggable="false"
             src="/images/static-game-board.png"

@@ -4929,7 +4929,7 @@
       "containerId": "EzWjSHCSfCkLYMT1wy6y1",
       "originalText": "opponent info",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -4999,12 +4999,12 @@
       "containerId": "CJatLg4RCaLhTjwC4Rtix",
       "originalText": "your info",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
-      "version": 224,
-      "versionNonce": 1945014707,
+      "version": 271,
+      "versionNonce": 830199795,
       "isDeleted": false,
       "id": "TuKsVoBw5RzzI-QjZ3mMn",
       "fillStyle": "solid",
@@ -5018,7 +5018,7 @@
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
       "width": 370.5004540236778,
-      "height": 515.0598797265579,
+      "height": 652.0598797265579,
       "seed": 1773430553,
       "groupIds": [],
       "frameId": null,
@@ -5026,7 +5026,7 @@
         "type": 3
       },
       "boundElements": [],
-      "updated": 1729877268631,
+      "updated": 1730830399207,
       "link": null,
       "locked": false
     },
@@ -5098,7 +5098,7 @@
       "containerId": "f_Ri81zAkbX3a_cItEipv",
       "originalText": "opp. time left",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -5168,7 +5168,7 @@
       "containerId": "Uyfy3OD-Nvh5Xo4ZflElA",
       "originalText": "your time left",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -7634,7 +7634,7 @@
       "containerId": "mQxV_4IBsGj-AmxKNLpzI",
       "originalText": "black info",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -7704,7 +7704,7 @@
       "containerId": "fyZZiJi7WF5Z4i_XXLDcu",
       "originalText": "white info",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -7803,7 +7803,7 @@
       "containerId": "H8gJZEUEzA2zP7VShRWif",
       "originalText": "bla. time left",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -7873,7 +7873,7 @@
       "containerId": "MR3qVRUs0QsuWejQZDwLi",
       "originalText": "whi. time left",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -8318,7 +8318,7 @@
       "containerId": "5-AGgAbasbngdR-ybBDI7",
       "originalText": "flip board ",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -8388,7 +8388,7 @@
       "containerId": "lSPQKlrSGV5E06Qy0F-d5",
       "originalText": "if private, have code or link to copy",
       "lineHeight": 1.25,
-      "baseline": 82
+      "baseline": 77
     },
     {
       "type": "rectangle",
@@ -8458,7 +8458,7 @@
       "containerId": "PDGqthWwys69c5YXTIEYa",
       "originalText": "enter game code",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -8667,8 +8667,8 @@
     },
     {
       "type": "rectangle",
-      "version": 124,
-      "versionNonce": 2036316125,
+      "version": 194,
+      "versionNonce": 38467293,
       "isDeleted": false,
       "id": "AfJ6y2BjRYvTf7VVS3M0_",
       "fillStyle": "solid",
@@ -8677,12 +8677,12 @@
       "roughness": 1,
       "opacity": 100,
       "angle": 0,
-      "x": 2683.7674204697687,
-      "y": 968.6068189554609,
+      "x": 2694.7674204697687,
+      "y": 967.6068189554609,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 377.45001853184203,
-      "height": 104.92292933917622,
+      "width": 328.45001853184203,
+      "height": 91.3019907110174,
       "seed": 1640666871,
       "groupIds": [],
       "frameId": null,
@@ -8695,14 +8695,14 @@
           "id": "DZNOcUFR14jlQo1o917cv"
         }
       ],
-      "updated": 1729877268632,
+      "updated": 1730830408324,
       "link": null,
       "locked": false
     },
     {
       "type": "text",
-      "version": 41,
-      "versionNonce": 394133619,
+      "version": 228,
+      "versionNonce": 249697085,
       "isDeleted": false,
       "id": "DZNOcUFR14jlQo1o917cv",
       "fillStyle": "solid",
@@ -8711,21 +8711,21 @@
       "roughness": 1,
       "opacity": 100,
       "angle": 0,
-      "x": 2704.250761034518,
-      "y": 976.0682836250489,
+      "x": 2713.2416362786585,
+      "y": 974.2586304459371,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 336.48333740234375,
-      "height": 90,
+      "width": 291.5015869140625,
+      "height": 77.99836773006487,
       "seed": 2043764471,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1729877268632,
+      "updated": 1730830408324,
       "link": null,
       "locked": false,
-      "fontSize": 36,
+      "fontSize": 31.19934709202595,
       "fontFamily": 1,
       "text": "suggested move if \nplaying with CPU",
       "textAlign": "center",
@@ -8733,7 +8733,7 @@
       "containerId": "AfJ6y2BjRYvTf7VVS3M0_",
       "originalText": "suggested move if playing with CPU",
       "lineHeight": 1.25,
-      "baseline": 82
+      "baseline": 66
     },
     {
       "type": "rectangle",
@@ -10889,7 +10889,7 @@
       "containerId": "xSjdhJbJVXQ-Yj-ow7XMH",
       "originalText": "black info",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -10959,7 +10959,7 @@
       "containerId": "VIwwXnbSyJyMuxkp9It-C",
       "originalText": "white info",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -11303,7 +11303,7 @@
       "containerId": "PsnlYbm9LhwtWK-UFX-W4",
       "originalText": "flip board ",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "rectangle",
@@ -12473,7 +12473,7 @@
       "containerId": "9_vRY7J7UG3ow6ld1vWZw",
       "originalText": "refresh",
       "lineHeight": 1.25,
-      "baseline": 37
+      "baseline": 32
     },
     {
       "type": "text",
@@ -14773,7 +14773,7 @@
       "containerId": "k49BCOAJrkYAdnIdccaKW",
       "originalText": "opponent info",
       "lineHeight": 1.25,
-      "baseline": 29
+      "baseline": 24
     },
     {
       "type": "rectangle",
@@ -14843,7 +14843,7 @@
       "containerId": "9R9G4nTIh_8OT8UJWnaSa",
       "originalText": "your info",
       "lineHeight": 1.25,
-      "baseline": 29
+      "baseline": 24
     },
     {
       "type": "rectangle",
@@ -15007,7 +15007,7 @@
       "containerId": "2tvLMrPoyv8cInriuGOOH",
       "originalText": "opp. time left",
       "lineHeight": 1.25,
-      "baseline": 22
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -15077,7 +15077,7 @@
       "containerId": "Mv_Hscafe9uc3ILbv024c",
       "originalText": "your time left",
       "lineHeight": 1.25,
-      "baseline": 22
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -15457,7 +15457,7 @@
       "containerId": "lCoVTL03lG8n1C72bZ73P",
       "originalText": "suggested move if playing with CPU",
       "lineHeight": 1.25,
-      "baseline": 50
+      "baseline": 47
     },
     {
       "type": "freedraw",

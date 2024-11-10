@@ -60,46 +60,55 @@ namespace backend.Hubs
 
             if (game == null)
             {
-                return;
+                throw new Exception("No game with that gameId found");
             }
 
             var nickname = userService.GetNickname(Context.ConnectionId);
 
             if (nickname == null)
             {
-                return;
+                throw new Exception("No nickname found for the given connection id");
             }
 
             if (game.players.Count >= 2)
             {
-                Console.WriteLine("players >= 2");
                 if (game.players.Any(p => p.nickName == nickname))
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+                    await chessService.JoinPlayer(gameId, nickname, Context.ConnectionId);
                 }
                 else
                 {
-                    return;
+                    throw new Exception("Game already full and you are not in the players list");
                 }
             }
             else
             {
                 if (game.players.Count == 0)
                 {
-                    game.players.Add(new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, true), true, nickname));
+                    await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+                    await chessService.AddPlayer(game.id, new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, true), true, nickname, false));
+                    await chessService.JoinPlayer(game.id, nickname, Context.ConnectionId);
                 }
                 else if (game.settings.isSinglePlayer)
                 {
-                    return;
+                    if (game.players.Any(p => p.nickName == nickname))
+                    {
+                        await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+                        await chessService.JoinPlayer(gameId, nickname, Context.ConnectionId);
+                    }
+                    else
+                    {
+                        throw new Exception("Game already full and you are not in the players list");
+                    }
                 }
                 else
                 {
-                    game.players.Add(new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, false), false, nickname));
+                    await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+                    await chessService.AddPlayer(game.id, new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, false), false, nickname, false));
+                    await chessService.JoinPlayer(game.id, nickname, Context.ConnectionId);
                 }
-                await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
             }
-
-            await chessService.UpdateGame(gameId, game);
         }
 
         public async Task LeaveGameAsPlayer()
@@ -117,10 +126,9 @@ namespace backend.Hubs
             {
                 return;
             }
-            game.players.Remove(player);
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, game.id);
-            await chessService.UpdateGame(game.id, game);
+            await chessService.RemovePlayer(game.id, player);
         }
 
         public async Task JoinGameAsWatcher(string gameId)
@@ -137,8 +145,7 @@ namespace backend.Hubs
             }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
-            game.watchers.Add(Context.ConnectionId);
-            await chessService.UpdateGame(gameId, game);
+            await chessService.AddWatcher(game.id, Context.ConnectionId);
         }
 
         public async Task LeaveGameAsWatcher()
@@ -151,9 +158,8 @@ namespace backend.Hubs
                 return;
             }
 
-            game.watchers.Remove(Context.ConnectionId);
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, game.id);
-            await chessService.UpdateGame(game.id, game);
+            await chessService.RemoveWatcher(game.id, Context.ConnectionId);
         }
 
         public async Task SendMove(string moveJson)
@@ -187,11 +193,9 @@ namespace backend.Hubs
             {
                 if (MoveHandler.MovesEqual(m, move))
                 {
-                    GameHandler.MakeMove(game, m);
+                    await chessService.PushMove(game.id, m);
                 }
             }
-
-            await chessService.UpdateGame(game.id, game);
         }
     }
 }

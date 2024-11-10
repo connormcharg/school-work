@@ -59,6 +59,26 @@ namespace backend.Classes.Handlers
                 game.state.currentCastlingRight.bks,
                 game.state.currentCastlingRight.wqs,
                 game.state.currentCastlingRight.bqs));
+
+            if (game.state.whiteTimeRunning)
+            {
+                game.state.whiteTimeRunning = false;
+                game.state.blackTimeRunning = true;
+            }
+            else
+            {
+                game.state.whiteTimeRunning = true;
+                game.state.blackTimeRunning = false;
+            }
+
+            if (move.pieceMoved[1].ToString() != "P" && move.pieceCaptured == "--") 
+            {
+                game.state.fiftyMoveCounter += 1;
+            }
+            else
+            {
+                game.state.fiftyMoveCounter = 0;
+            }
         }
 
         public static void UndoMove(Game game)
@@ -93,6 +113,10 @@ namespace backend.Classes.Handlers
                 }
 
                 game.state.castleRightsLog.RemoveAt(game.state.castleRightsLog.Count - 1);
+                if (game.state.castleRightsLog.Count == 0)
+                {
+                    game.state.castleRightsLog.Add(new CastleRights(true, true, true, true));
+                }
                 var newRights = game.state.castleRightsLog[game.state.castleRightsLog.Count - 1];
                 game.state.currentCastlingRight = new CastleRights(newRights.wks, newRights.bks, newRights.wqs, newRights.bqs);
 
@@ -108,6 +132,26 @@ namespace backend.Classes.Handlers
                         game.state.board[move.endRow][move.endCol - 2] = game.state.board[move.endRow][move.endCol + 1];
                         game.state.board[move.endRow][move.endCol + 1] = "--";
                     }
+                }
+
+                if (game.state.whiteTimeRunning)
+                {
+                    game.state.whiteTimeRunning = false;
+                    game.state.blackTimeRunning = true;
+                }
+                else
+                {
+                    game.state.whiteTimeRunning = true;
+                    game.state.blackTimeRunning = false;
+                }
+
+                if (move.pieceMoved[1].ToString() != "P" && move.pieceCaptured == "--")
+                {
+                    game.state.fiftyMoveCounter -= 1;
+                }
+                else
+                {
+                    game.state.fiftyMoveCounter = 0;
                 }
             }
         }
@@ -151,6 +195,39 @@ namespace backend.Classes.Handlers
                         game.state.currentCastlingRight.bks = false;
                     }
                 }
+            }
+        }
+
+        public static void CheckGameOver(Game game)
+        {
+            if (game == null)
+            {
+                return;
+            }
+            if (game.state == null)
+            {
+                return;
+            }
+
+            if (game.state.checkMate)
+            {
+                game.state.gameOver = true;
+            }
+            else if (game.state.staleMate)
+            {
+                game.state.gameOver = true;
+            }
+            else if (game.state.fiftyMoveCounter >= 100)
+            {
+                game.state.gameOver = true;
+            }
+            else if (game.state.drawAgreed)
+            {
+                game.state.gameOver = true;
+            }
+            else if (game.state.playerResigned)
+            {
+                game.state.gameOver = true;
             }
         }
 

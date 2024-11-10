@@ -21,6 +21,12 @@ namespace backend.Classes.State
         public int blackTime { get; set; }
         public bool whiteTimeRunning { get; set; }
         public bool blackTimeRunning { get; set; }
+        public bool gameOver { get; set; }
+        public int fiftyMoveCounter { get; set; }
+        public int threeFoldCounter { get; set; }
+        public bool drawAgreed { get; set; }
+        public bool playerResigned { get; set; }
+        public bool isWhiteResignation { get; set; }
 
         public GameState()
         {
@@ -51,6 +57,11 @@ namespace backend.Classes.State
             blackTime = 600;
             whiteTimeRunning = false;
             blackTimeRunning = false;
+            gameOver = false;
+            fiftyMoveCounter = 0;
+            drawAgreed = false;
+            playerResigned = false;
+            isWhiteResignation = false;
         }
 
         public GameState(GameState original)
@@ -72,6 +83,11 @@ namespace backend.Classes.State
             this.blackTime = original.blackTime;
             this.whiteTimeRunning = original.whiteTimeRunning;
             this.blackTimeRunning = original.blackTimeRunning;
+            this.gameOver = original.gameOver;
+            this.fiftyMoveCounter = original.fiftyMoveCounter;
+            this.drawAgreed = original.drawAgreed;
+            this.playerResigned = original.playerResigned;
+            this.isWhiteResignation = original.isWhiteResignation;
         }
 
         [JsonConstructor]
@@ -80,7 +96,9 @@ namespace backend.Classes.State
             List<List<int>> pins, List<List<int>> checks, bool checkMate, bool staleMate,
             List<int>? enPassantPossible, CastleRights currentCastlingRight,
             List<CastleRights> castleRightsLog, int whiteTime, int blackTime,
-            bool whiteTimeRunning, bool blackTimeRunning)
+            bool whiteTimeRunning, bool blackTimeRunning, bool gameOver,
+            int fiftyMoveCounter, bool drawAgreed, bool playerResigned,
+            bool isWhiteResignation)
         {
             this.board = board;
             this.whiteToMove = whiteToMove;
@@ -99,6 +117,11 @@ namespace backend.Classes.State
             this.blackTime = blackTime;
             this.blackTimeRunning = blackTimeRunning;
             this.whiteTimeRunning = whiteTimeRunning;
+            this.gameOver = gameOver;
+            this.fiftyMoveCounter = fiftyMoveCounter;
+            this.drawAgreed = drawAgreed;
+            this.playerResigned = playerResigned;
+            this.isWhiteResignation = isWhiteResignation;
         }
     }
 }
