@@ -88,6 +88,7 @@ namespace backend
             builder.Services.AddSingleton<ConnectionMappingService>();
             builder.Services.AddHostedService<TimerService>();
             builder.Services.AddHostedService<EngineService>();
+            builder.Services.AddHostedService<GameOverService>();
 
             var app = builder.Build();
 

@@ -4,6 +4,7 @@ using backend.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System.Numerics;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace backend.Services
 {
@@ -89,21 +90,15 @@ namespace backend.Services
             await UpdateClients(id);
         }
 
-        public async Task StopTimer(string id, bool isWhiteTimer)
+        public async Task StopTimers(string id)
         {
             games.TryGetValue(id, out var game);
             if (game == null)
             {
                 throw new Exception("game id not found in games dictionary");
             }
-            if (isWhiteTimer)
-            {
-                game.state.whiteTimeRunning = false;
-            }
-            else
-            {
-                game.state.blackTimeRunning = false;
-            }
+            game.state.whiteTimeRunning = false;
+            game.state.blackTimeRunning = false;
             await UpdateClients(id);
         }
 
@@ -126,6 +121,7 @@ namespace backend.Services
             {
                 game.state.gameOver = true;
             }
+            GameHandler.CheckGameOver(game);
             await UpdateClients(id);
         }
 
@@ -143,8 +139,22 @@ namespace backend.Services
                 GameHandler.MakeMove(game, move);
                 game.suggestedMoveId = suggestedMoveId;
                 game.currentValidMoves = GameHandler.FindValidMoves(game);
+                GameHandler.CheckGameOver(game);
                 await UpdateClients(id);
             }
+        }
+
+        public async Task SuggestedMoveUpdate(string id, int suggestedMoveId)
+        {
+            games.TryGetValue(id, out var game);
+            if (game == null)
+            {
+                throw new Exception("game id not found in games dictionary");
+            }
+            game.currentValidMoves = GameHandler.FindValidMoves(game);
+            game.suggestedMoveId = suggestedMoveId;
+            GameHandler.CheckGameOver(game);
+            await UpdateClients(id);
         }
 
         public async Task AddPlayer(string id, Player player)
@@ -218,8 +228,75 @@ namespace backend.Services
             {
                 throw new Exception("game id not found in games dictionary");
             }
+            if (game.state.pauseAgreed || game.state.gameOver)
+            {
+                return;
+            }
             GameHandler.MakeMove(game, move);
             game.currentValidMoves = GameHandler.FindValidMoves(game);
+            GameHandler.CheckGameOver(game);
+            await UpdateClients(id);
+        }
+
+        public async Task PushResign(string id, bool isWhite)
+        {
+            games.TryGetValue(id, out var game);
+            if (game == null)
+            {
+                throw new Exception("game id not found in games dictionary");
+            }
+            game.state.isWhiteResignation = isWhite;
+            game.state.playerResigned = true;
+            GameHandler.CheckGameOver(game);
+            await UpdateClients(id);
+        }
+
+        public async Task PushPauseRequest(string id, string nickname)
+        {
+            games.TryGetValue(id, out var game);
+            if (game == null)
+            {
+                throw new Exception("game id not found in games dictionary");
+            }
+            if (game.state.pauseRequests.Contains(nickname))
+            {
+                game.state.pauseRequests.Remove(nickname);
+            }
+            else
+            {
+                game.state.pauseRequests.Add(nickname);
+                if ((game.state.pauseRequests.Count >= 2 && !game.settings.isSinglePlayer)
+                    || (game.state.pauseRequests.Count >= 1 && game.settings.isSinglePlayer))
+                {
+                    game.state.pauseRequests = new List<string>();
+                    game.state.pauseAgreed = !game.state.pauseAgreed;
+                }
+            }
+            GameHandler.CheckGameOver(game);
+            await UpdateClients(id);
+        }
+
+        public async Task PushDrawOffer(string id, string nickname)
+        {
+            games.TryGetValue(id, out var game);
+            if (game == null)
+            {
+                throw new Exception("game id not found in games dictionary");
+            }
+            if (game.state.drawOffers.Contains(nickname))
+            {
+                game.state.drawOffers.Remove(nickname);
+            }
+            else
+            {
+                game.state.drawOffers.Add(nickname);
+                if (game.state.drawOffers.Count >= 2 && !game.settings.isSinglePlayer)
+                {
+                    game.state.drawOffers = new List<string>();
+                    game.state.drawAgreed = !game.state.drawAgreed;
+                }
+            }
+            GameHandler.CheckGameOver(game);
             await UpdateClients(id);
         }
 

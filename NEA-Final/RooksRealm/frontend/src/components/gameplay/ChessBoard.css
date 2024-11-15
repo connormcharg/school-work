@@ -74,6 +74,15 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
+.dot-square {
+  @apply w-1/8 h-1/8 absolute z-20;
+  background: none;
+  left: 0;
+  top: 0;
+  will-change: transform;
+  overflow: hidden;
+}
+
 .highlight {
   @apply w-1/8 h-1/8 absolute opacity-50;
   left: 0;

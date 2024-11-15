@@ -72,7 +72,7 @@ namespace backend.Classes.Engine
 
         private const int CHECKMATE = 1000;
         private const int STALEMATE = 0;
-        private const int DEPTH = 4;
+        private const int DEPTH = 2;
 
         public Move? nextMove = null;
 

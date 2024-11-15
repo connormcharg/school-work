@@ -10,6 +10,7 @@ interface ChessBoardProps {
   onMoveValidCheck: (start: number[], end: number[]) => Promise<boolean>;
   onMakeMove: (start: number[], end: number[]) => Promise<void>;
   onHighlightSquares: () => HighlightData;
+  onValidMovesData: (row: number, col: number) => Array<string>;
 }
 
 interface HighlightData {
@@ -26,7 +27,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   isWhite,
   onMoveValidCheck,
   onMakeMove,
-  onHighlightSquares
+  onHighlightSquares,
+  onValidMovesData
 }) => {
   // #region Scaling
 
@@ -77,99 +79,123 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   const percentY = useRef(0);
   const state = useRef(1);
   const selectedPieceString = useRef("");
+  const previousBoardRef = useRef<string[][] | null>(null);
+
+  // Helper function to compare 2D arrays
+  const hasBoardChanged = (prevBoard: string[][] | null, newBoard: string[][] | null) => {
+    if (!prevBoard || !newBoard || prevBoard.length !== newBoard.length) {
+      return true;
+    }
+    for (let i = 0; i < newBoard.length; i++) {
+      if (prevBoard[i].length !== newBoard[i].length) {
+        return true;
+      }
+      for (let j = 0; j < newBoard[i].length; j++) {
+        if (prevBoard[i][j] !== newBoard[i][j]) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
 
   // effects
   useEffect(() => {
-    // reset if board changed whilst picked up
-    if (selectedPiece.current && board) {
-      const isPieceChanged = checkIfChanged(
-        getRowColFromSquareClass(getSquareClass(selectedPiece.current)),
-        selectedPieceString.current);
-      if (isPieceChanged) {
-        // resetting code to restore board back to normal
-        selectedPiece.current.style.cssText = "";
-        selectedPiece.current.classList.remove("dragging");
-        if (currentMoveSquare.current) currentMoveSquare.current.style.visibility = "hidden";
-        if (hoverSquare.current) hoverSquare.current.style.visibility = "hidden";
+    // Check if the board has actually changed
+    if (hasBoardChanged(previousBoardRef.current, board)) {
+      // Update the previous board reference
+      previousBoardRef.current = board;
 
-        selectedPiece.current = null;
-        selectedPieceStartRowCol.current = null;
-        pieceOffset.current = 0;
-        percentX.current = 0;
-        percentY.current = 0;
-        state.current = 1;
-        selectedPieceString.current = "";
+      // Your existing effect code here
+
+      if (selectedPiece.current && board) {
+        const isPieceChanged = checkIfChanged(
+          getRowColFromSquareClass(getSquareClass(selectedPiece.current)),
+          selectedPieceString.current
+        );
+        if (isPieceChanged) {
+          // Resetting code to restore the board back to normal
+          selectedPiece.current.style.cssText = "";
+          selectedPiece.current.classList.remove("dragging");
+          if (currentMoveSquare.current) currentMoveSquare.current.style.visibility = "hidden";
+          if (hoverSquare.current) hoverSquare.current.style.visibility = "hidden";
+
+          selectedPiece.current = null;
+          selectedPieceStartRowCol.current = null;
+          pieceOffset.current = 0;
+          percentX.current = 0;
+          percentY.current = 0;
+          state.current = 1;
+          selectedPieceString.current = "";
+          setValidMoveDivs([]);
+        }
       }
-    }
 
-    // update highlighting squares (prev move, check)
-    if (previousMoveStartSquare.current) {
-      previousMoveStartSquare.current.style.visibility = "hidden";
-      removeSquareClass(previousMoveStartSquare.current);
-    }
-    if (previousMoveEndSquare.current) {
-      previousMoveEndSquare.current.style.visibility = "hidden";
-      removeSquareClass(previousMoveEndSquare.current);
-    }
-    if (checkSquare.current) {
-      checkSquare.current.style.visibility = "hidden";
-      removeSquareClass(checkSquare.current);
-    }
-    if (suggestedMoveStartSquare.current) {
-      suggestedMoveStartSquare.current.style.visibility = "hidden";
-      removeSquareClass(suggestedMoveStartSquare.current);
-    }
-    if (suggestedMoveEndSquare.current) {
-      suggestedMoveEndSquare.current.style.visibility = "hidden";
-      removeSquareClass(suggestedMoveEndSquare.current);
-    }
+      // Update highlighting squares (prev move, check)
+      if (previousMoveStartSquare.current) {
+        previousMoveStartSquare.current.style.visibility = "hidden";
+        removeSquareClass(previousMoveStartSquare.current);
+      }
+      if (previousMoveEndSquare.current) {
+        previousMoveEndSquare.current.style.visibility = "hidden";
+        removeSquareClass(previousMoveEndSquare.current);
+      }
+      if (checkSquare.current) {
+        checkSquare.current.style.visibility = "hidden";
+        removeSquareClass(checkSquare.current);
+      }
+      if (suggestedMoveStartSquare.current) {
+        suggestedMoveStartSquare.current.style.visibility = "hidden";
+        removeSquareClass(suggestedMoveStartSquare.current);
+      }
+      if (suggestedMoveEndSquare.current) {
+        suggestedMoveEndSquare.current.style.visibility = "hidden";
+        removeSquareClass(suggestedMoveEndSquare.current);
+      }
 
-    const highlightData: HighlightData = onHighlightSquares();
+      const highlightData = onHighlightSquares();
 
-    if (!isWhite()) {
-      if (highlightData["prev-start"]) {
-        if (previousMoveStartSquare.current) {
+      if (!isWhite()) {
+        if (highlightData["prev-start"] && previousMoveStartSquare.current) {
           previousMoveStartSquare.current.classList.add(
-            `square-${7 - highlightData["prev-start"][0]}-${7 - highlightData["prev-start"][1]}`);
+            `square-${7 - highlightData["prev-start"][0]}-${7 - highlightData["prev-start"][1]}`
+          );
           previousMoveStartSquare.current.style.cssText = "";
-        } 
-      }
-      if (highlightData["prev-end"]) {
-        if (previousMoveEndSquare.current) {
+        }
+        if (highlightData["prev-end"] && previousMoveEndSquare.current) {
           previousMoveEndSquare.current.classList.add(
-            `square-${7 - highlightData["prev-end"][0]}-${7 - highlightData["prev-end"][1]}`);
+            `square-${7 - highlightData["prev-end"][0]}-${7 - highlightData["prev-end"][1]}`
+          );
           previousMoveEndSquare.current.style.cssText = "";
-        } 
-      }
-      if (highlightData["check"]) {
-        if (checkSquare.current) {
+        }
+        if (highlightData["check"] && checkSquare.current) {
           checkSquare.current.classList.add(
-            `square-${7 - highlightData["check"][0]}-${7 - highlightData["check"][1]}`);
+            `square-${7 - highlightData["check"][0]}-${7 - highlightData["check"][1]}`
+          );
           checkSquare.current.style.cssText = "";
-        } 
-      }
-    } else {
-      if (highlightData["prev-start"]) {
-        if (previousMoveStartSquare.current) {
+        }
+      } else {
+        if (highlightData["prev-start"] && previousMoveStartSquare.current) {
           previousMoveStartSquare.current.classList.add(
-            `square-${highlightData["prev-start"][0]}-${highlightData["prev-start"][1]}`);
+            `square-${highlightData["prev-start"][0]}-${highlightData["prev-start"][1]}`
+          );
           previousMoveStartSquare.current.style.cssText = "";
-        } 
-      }
-      if (highlightData["prev-end"]) {
-        if (previousMoveEndSquare.current) {
+        }
+        if (highlightData["prev-end"] && previousMoveEndSquare.current) {
           previousMoveEndSquare.current.classList.add(
-            `square-${highlightData["prev-end"][0]}-${highlightData["prev-end"][1]}`);
+            `square-${highlightData["prev-end"][0]}-${highlightData["prev-end"][1]}`
+          );
           previousMoveEndSquare.current.style.cssText = "";
-        } 
-      }
-      if (highlightData["check"]) {
-        if (checkSquare.current) {
+        }
+        if (highlightData["check"] && checkSquare.current) {
           checkSquare.current.classList.add(
-            `square-${highlightData["check"][0]}-${highlightData["check"][1]}`);
+            `square-${highlightData["check"][0]}-${highlightData["check"][1]}`
+          );
           checkSquare.current.style.cssText = "";
-        } 
+        }
       }
+
+      createValidMoveDivs();
     }
   }, [board]);
 
@@ -212,7 +238,32 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   const suggestedMoveStartSquare = useRef<HTMLDivElement>(null);
   const suggestedMoveEndSquare = useRef<HTMLDivElement>(null);
 
+  const [validMoveDivs, setValidMoveDivs] = useState<JSX.Element[]>([]);
+
   // functions
+  const createValidMoveDivs = () => {
+    if (selectedPiece.current && selectedPieceStartRowCol.current) {
+      const data = onValidMovesData(
+        selectedPieceStartRowCol.current[0],
+        selectedPieceStartRowCol.current[1]
+      );
+      const divs = Array.from({ length: data.length }, (_, index) => (
+        <div key={`piece-moves-${index}`} className={`dot-square ${data[index]}`}>
+          <svg viewBox="0 0 100 100">
+            <circle
+              cx="50"
+              cy="50"
+              r="20"
+              fill="rgba(0, 0, 0, 0.5)"
+            ></circle>
+          </svg>
+        </div>
+      ));
+      setValidMoveDivs(divs);
+    }
+  }
+
+
   const isGrabbable = (piece: string) => piece !== "--" && isInteractive && ((piece[0] === "w" && isWhite()) || (piece[0] === "b" && !isWhite()));
   const clamp = (value: number) => Math.max(-50, Math.min(value, 800));
 
@@ -336,6 +387,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     if (currentMoveSquare.current)
       currentMoveSquare.current.style.visibility = "hidden";
     if (hoverSquare.current) hoverSquare.current.style.visibility = "hidden";
+    setValidMoveDivs([]);
   }
 
   function selectedDraggingFirstTime(
@@ -381,6 +433,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
       );
       currentMoveSquare.current.style.cssText = "";
     }
+    createValidMoveDivs();
     update(e);
   }
 
@@ -512,6 +565,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
             ></rect>
           </svg>
         </div>
+        {validMoveDivs}
         <div
           id="prev-move-start"
           className="highlight bg-blue-500"
@@ -539,13 +593,11 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         <div
           id="suggested-start"
           className="highlight bg-green-500"
-          style={{ visibility: "hidden" }}
           ref={suggestedMoveStartSquare}
         ></div>
         <div
           id="suggested-end"
           className="highlight bg-green-500"
-          style={{ visibility: "hidden" }}
           ref={suggestedMoveEndSquare}
         ></div>
       </div>

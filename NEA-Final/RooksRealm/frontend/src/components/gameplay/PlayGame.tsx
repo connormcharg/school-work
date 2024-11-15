@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import {
   HubConnectionBuilder,
@@ -8,6 +8,7 @@ import ChessBoard from "./ChessBoard";
 import MessageBox from "./MessageBox";
 import { useAuth } from "../../contexts/AuthProvider";
 import ControlStack from "./ControlStack";
+import { useNavigate } from 'react-router-dom';
 
 interface PlayGameProps {
   boardSize: number;
@@ -39,6 +40,11 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
   ]);
   const [playerData, setPlayerData] = useState<Array<Player> | null>(null);
   const [moveLogData, setMoveLogData] = useState<Array<string> | null>(null);
+  const [isEndOfGame, setIsEndOfGame] = useState(false);
+  const [gameResult, setGameResult] = useState('');
+  const [gameReason, setGameReason] = useState('');
+  const [maxHeight, _] = useState<string>("10rem");
+  const navigate = useNavigate();
 
   const { isLoggedIn, token } = useAuth();
 
@@ -72,6 +78,12 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
         newConnection.on("ReceiveGame", (eventData: any) => {
           setData(JSON.parse(eventData));
         });
+        newConnection.on("ReceiveGameOver", (eventData: any) => {
+          const data = JSON.parse(eventData);
+          setGameResult(data.result);
+          setGameReason(data.reason);
+          setIsEndOfGame(true);
+        });
       })
       .catch((err: any) => console.log("Error while starting connection: ", err));
 
@@ -81,6 +93,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           console.log("Connection stopped.");
         });
         newConnection.off("ReceiveGame");
+        newConnection.off("ReceiveGameOver");
       }
     };
   }, []);
@@ -98,7 +111,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
 
   useEffect(() => {
     if (data && data.state && data.state.board) setBoard(data.state.board);
-    if (data && data.settings) {
+    if (data?.settings) {
       if (data.settings.isSinglePlayer) {
         if (isWhite()) {
           setPlayerData([
@@ -269,29 +282,11 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
     
     return result;
   }
+
+  const handleGoHome = () => {
+    navigate("/");
+  }
   // #endregion
-
-  const chessBoardRef = useRef<HTMLDivElement | null>(null);
-  const [maxHeight, setMaxHeight] = useState<string>("10rem");
-
-  useEffect(() => {
-    // Update the maxHeight when the component mounts or when the ChessBoard size changes
-    if (chessBoardRef.current) {
-      const handleResize = () => {
-        const chessBoardHeight = chessBoardRef.current?.clientHeight || 0;
-        setMaxHeight(`${chessBoardHeight}px`);
-      };
-
-      // Initial call to set height
-      handleResize();
-
-      // Add a resize event listener to adjust height dynamically
-      window.addEventListener("resize", handleResize);
-
-      // Cleanup event listener on unmount
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, []);
 
   async function sendMove(start: number[], end: number[]) {
     try {
@@ -316,6 +311,9 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
   // #region Callback
   const onMoveValidCheck = useCallback(    
     async (start: number[], end: number[]) => {
+      if (isPaused()) {
+        return false;
+      }
       const startCopy = [...start];
       const endCopy = [...end];
       if (!isWhite()) {
@@ -406,6 +404,46 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
     return data.settings.isSinglePlayer;
   }, [data])
 
+  const isPaused = useCallback(() => {
+    if (!data) {
+      return false;
+    }
+    return data.state.pauseAgreed;
+  }, [data])
+
+  const findPauseRequestCount = useCallback(() => {
+    if (!data) {
+      return 0;
+    }
+    return data.state.pauseRequests.length;
+  }, [data])
+
+  const findDrawOfferCount = useCallback(() => {
+    if (!data) {
+      return 0;
+    }
+    return data.state.drawOFfers.length;
+  }, [data])
+
+  const onValidMovesData = useCallback((pieceRow: number, pieceCol: number) => {
+    const rowColToSquareClass = (row: number, col: number) => {
+      const rowCopy = isWhite() ? row : 7 - row;
+      const colCopy = isWhite() ? col : 7 - col;
+      return `square-${rowCopy}-${colCopy}`;
+    }
+
+    const pieceRowCopy = isWhite() ? pieceRow : 7 - pieceRow;
+    const pieceColCopy = isWhite() ? pieceCol : 7 - pieceCol;
+    
+    var p = data.players.find((player: any) => player.connectionId === connection?.connectionId);
+    if (data && p && data.currentValidMoves && (data.state.whiteToMove === p.isWhite)) {
+      var r = (data.currentValidMoves as Array<any>)
+        .filter(move => move.startRow === pieceRowCopy && move.startCol === pieceColCopy)
+        .map(move => rowColToSquareClass(move.endRow, move.endCol));
+      return r;
+    }
+    return new Array<string>;
+  }, [data, connection])
 
   const [suggestedMoveSquares, setSuggestedMoveSquares] = useState<Array<Array<number>> | null>(null);
   const displaySuggestedMove = useCallback(() => {
@@ -420,10 +458,57 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
       setSuggestedMoveSquares(moveIdToRowsAndCols(data.suggestedMoveId));
     }
   }, [data])
+
+  const sendResignation = useCallback(() => {
+    if (connection && isConnected) {
+      connection
+        .send("SendResignation")
+        .then(() => {
+          console.log("Client sent resignation.")
+        })
+        .catch((err: any) => console.log("Error resigning from game: ", err));
+    }
+  }, [connection, isConnected, id])
+
+  const sendPauseRequest = useCallback(() => {
+    if (connection && isConnected) {
+      connection
+        .send("SendPauseRequest")
+        .then(() => {
+          console.log("Client sent pause request.")
+        })
+        .catch((err: any) => console.log("Error sending pause request to game: ", err));
+    }
+  }, [connection, isConnected, id])
+
+  const sendDrawOffer = useCallback(() => {
+    if (connection && isConnected) {
+      connection
+        .send("SendDrawOffer")
+        .then(() => {
+          console.log("Client sent draw offer.")
+        })
+        .catch((err: any) => console.log("Error sending draw offer to game: ", err));
+    }
+  }, [connection, isConnected, id])
   // #endregion
 
   return (
-    <div>
+    <div className="flex flex-col relative">
+      {isEndOfGame && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 text-center">
+            <h2 className="text-2xl font-bold mb-4">{gameResult}</h2>
+            <p className="mb-6">{gameReason}</p>
+            <button
+              onClick={handleGoHome}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Go to Home
+            </button>
+          </div>
+        </div>
+      )}
       <h1 className="mb-6 text-xl font-semibold">Play Game!</h1>
       <div className="flex">
         <MessageBox boxSize={(96 - boardSize) / 2} />
@@ -436,6 +521,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           onMoveValidCheck={onMoveValidCheck}
           onMakeMove={onMakeMove}
           onHighlightSquares={onHighlightSquares}
+          onValidMovesData={onValidMovesData}
         />
         <ControlStack
           boxSize={(96 - boardSize) / 2}
@@ -444,6 +530,12 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           playerData={playerData}
           moveLogData={moveLogData}
           maxHeight={maxHeight}
+          sendPauseRequest={sendPauseRequest}
+          sendResignation={sendResignation}
+          sendDrawOffer={sendDrawOffer}
+          isPaused={isPaused}
+          findPauseRequestCount={findPauseRequestCount}
+          findDrawOfferCount={findDrawOfferCount}
         />
       </div>
     </div>

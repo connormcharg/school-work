@@ -1,5 +1,6 @@
 ﻿using backend.Classes.Handlers;
 using backend.Classes.Engine;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace backend.Services
 {
@@ -31,10 +32,6 @@ namespace backend.Services
                 {
                     continue;
                 }
-                if (game.state.whiteToMove == game.players[0].isWhite)
-                {
-                    continue;
-                }
                 if (game.state.checkMate || game.state.staleMate)
                 {
                     continue;
@@ -43,27 +40,53 @@ namespace backend.Services
                 {
                     continue;
                 }
-
-                var engine = new MinMaxEngine();
-                game.currentValidMoves = GameHandler.FindValidMoves(game);
-                engine.FindBestMove(game, game.currentValidMoves);
-                if (engine.nextMove == null)
+                if (game.state.pauseAgreed)
                 {
-                    engine.FindRandomMove(game, game.currentValidMoves);
+                    continue;
                 }
 
-                GameHandler.MakeMove(game, engine.nextMove);
-                int engineMoveId = engine.nextMove.moveID;
-
-                game.currentValidMoves = GameHandler.FindValidMoves(game);
-                engine.FindBestMove(game, game.currentValidMoves);
-                if (engine.nextMove == null)
-                {
-                    engine.FindRandomMove(game, game.currentValidMoves);
+                if (game.state.whiteToMove == game.players[0].isWhite)
+                { // player's turn
+                    var engine = new MinMaxEngine();
+                    game.currentValidMoves = GameHandler.FindValidMoves(game);
+                    engine.FindBestMove(game, game.currentValidMoves);
+                    if (engine.nextMove == null)
+                    {
+                        engine.FindRandomMove(game, game.currentValidMoves);
+                    }
+                    await _chessService.SuggestedMoveUpdate(game.id, engine.nextMove.moveID);
                 }
-                game.suggestedMoveId = engine.nextMove.moveID;
+                else
+                { // ai's turn
+                    var engine = new MinMaxEngine();
+                    game.currentValidMoves = GameHandler.FindValidMoves(game);
+                    engine.FindBestMove(game, game.currentValidMoves);
+                    if (engine.nextMove == null)
+                    {
+                        game.currentValidMoves = GameHandler.FindValidMoves(game);
+                        engine.FindRandomMove(game, game.currentValidMoves);
+                    }
 
-                await _chessService.EngineUpdate(game.id, engineMoveId, game.suggestedMoveId);
+                    GameHandler.MakeMove(game, engine.nextMove);
+                    int engineMoveId = engine.nextMove.moveID;
+
+                    if (game.state.checkMate || game.state.staleMate)
+                    {
+                        await _chessService.EngineUpdate(game.id, engineMoveId, 0);
+                        continue;
+                    }
+
+                    game.currentValidMoves = GameHandler.FindValidMoves(game);
+                    engine.FindBestMove(game, game.currentValidMoves);
+                    if (engine.nextMove == null)
+                    {
+                        game.currentValidMoves = GameHandler.FindValidMoves(game);
+                        engine.FindRandomMove(game, game.currentValidMoves);
+                    }
+                    game.suggestedMoveId = engine.nextMove.moveID;
+
+                    await _chessService.EngineUpdate(game.id, engineMoveId, game.suggestedMoveId);
+                }
             }
         }
 

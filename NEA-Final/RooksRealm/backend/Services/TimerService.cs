@@ -28,6 +28,10 @@
                 {
                     continue;
                 }
+                if (game.state.pauseAgreed)
+                {
+                    continue;
+                }
 
                 if (!(game.state.whiteTimeRunning || game.state.blackTimeRunning))
                 {

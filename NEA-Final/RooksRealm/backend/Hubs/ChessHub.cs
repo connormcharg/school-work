@@ -104,9 +104,18 @@ namespace backend.Hubs
                 }
                 else
                 {
-                    await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
-                    await chessService.AddPlayer(game.id, new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, false), false, nickname, false));
-                    await chessService.JoinPlayer(game.id, nickname, Context.ConnectionId);
+                    if (game.players.Any(p => p.nickName == nickname))
+                    {
+                        await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+                        await chessService.JoinPlayer(game.id, nickname, Context.ConnectionId);
+                    }
+                    else
+                    {
+                        await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+                        await chessService.AddPlayer(game.id, new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, false), false, nickname, false));
+                        await chessService.JoinPlayer(game.id, nickname, Context.ConnectionId);
+                    }
+                    
                 }
             }
         }
@@ -196,6 +205,60 @@ namespace backend.Hubs
                     await chessService.PushMove(game.id, m);
                 }
             }
+        }
+
+        public async Task SendResignation()
+        {
+            var game = chessService.GetAllGames().
+                FirstOrDefault(g => g.players.Any(p => p.connectionId == Context.ConnectionId));
+            if (game == null)
+            {
+                return;
+            }
+
+            var player = game.players.FirstOrDefault(p => p.connectionId == Context.ConnectionId);
+            if (player == null)
+            {
+                return;
+            }
+
+            await chessService.PushResign(game.id, player.isWhite);
+        }
+
+        public async Task SendPauseRequest()
+        {
+            var game = chessService.GetAllGames().
+                FirstOrDefault(g => g.players.Any(p => p.connectionId == Context.ConnectionId));
+            if (game == null)
+            {
+                return;
+            }
+
+            var player = game.players.FirstOrDefault(p => p.connectionId == Context.ConnectionId);
+            if (player == null)
+            {
+                return;
+            }
+
+            await chessService.PushPauseRequest(game.id, player.nickName);
+        }
+
+        public async Task SendDrawOffer()
+        {
+            var game = chessService.GetAllGames().
+                FirstOrDefault(g => g.players.Any(p => p.connectionId == Context.ConnectionId));
+            if (game == null)
+            {
+                return;
+            }
+
+            var player = game.players.FirstOrDefault(p => p.connectionId == Context.ConnectionId);
+            if (player == null)
+            {
+                return;
+            }
+
+            await chessService.PushDrawOffer(game.id, player.nickName);
         }
     }
 }

@@ -27,6 +27,9 @@ namespace backend.Classes.State
         public bool drawAgreed { get; set; }
         public bool playerResigned { get; set; }
         public bool isWhiteResignation { get; set; }
+        public List<string> drawOffers { get; set; }
+        public List<string> pauseRequests { get; set; }
+        public bool pauseAgreed { get; set; }
 
         public GameState()
         {
@@ -62,6 +65,9 @@ namespace backend.Classes.State
             drawAgreed = false;
             playerResigned = false;
             isWhiteResignation = false;
+            drawOffers = new List<string>();
+            pauseRequests = new List<string>();
+            pauseAgreed = false;
         }
 
         public GameState(GameState original)
@@ -88,6 +94,9 @@ namespace backend.Classes.State
             this.drawAgreed = original.drawAgreed;
             this.playerResigned = original.playerResigned;
             this.isWhiteResignation = original.isWhiteResignation;
+            this.drawOffers = original.drawOffers;
+            this.pauseRequests = original.pauseRequests;
+            this.pauseAgreed = original.pauseAgreed;
         }
 
         [JsonConstructor]
@@ -98,7 +107,8 @@ namespace backend.Classes.State
             List<CastleRights> castleRightsLog, int whiteTime, int blackTime,
             bool whiteTimeRunning, bool blackTimeRunning, bool gameOver,
             int fiftyMoveCounter, bool drawAgreed, bool playerResigned,
-            bool isWhiteResignation)
+            bool isWhiteResignation, List<string> drawOffers, List<string> pauseRequests,
+            bool pauseAgreed)
         {
             this.board = board;
             this.whiteToMove = whiteToMove;
@@ -122,6 +132,9 @@ namespace backend.Classes.State
             this.drawAgreed = drawAgreed;
             this.playerResigned = playerResigned;
             this.isWhiteResignation = isWhiteResignation;
+            this.drawOffers = drawOffers;
+            this.pauseRequests = pauseRequests;
+            this.pauseAgreed = pauseAgreed;
         }
     }
 }

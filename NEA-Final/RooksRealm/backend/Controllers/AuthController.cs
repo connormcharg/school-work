@@ -65,13 +65,31 @@ namespace backend.Controllers
 
         /*
         
-        getDetails = (token) => (username, email)
         changeEmail = (token, new) => ()
         changeUsername = (token, new) => ()
         changePassword = (token, old, new) => ()
         deleteAccount = (token, password) => ()
 
         */
+
+        [Authorize]
+        [HttpPost("changeEmail")]
+        public IActionResult ChangeEmail()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            var user = userRepository.GetUserById(int.Parse(userId));
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+
+        }
 
         [Authorize]
         [HttpGet("details")]

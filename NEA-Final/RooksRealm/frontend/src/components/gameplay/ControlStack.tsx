@@ -1,8 +1,5 @@
-import React, {
-  useEffect,
-  useState,
-  useRef
-} from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { FlagIcon, PauseIcon, ScaleIcon, PlayIcon } from "@heroicons/react/24/solid";
 
 interface Player {
   nickname: string;
@@ -12,11 +9,17 @@ interface Player {
 
 interface ControlStackProps {
   boxSize: number;
-  suggestedMoveButton: () => boolean,
+  suggestedMoveButton: () => boolean;
   displaySuggestedMove: () => void;
   playerData: Array<Player> | null;
   moveLogData: Array<string> | null;
   maxHeight: string;
+  sendResignation: () => void;
+  sendPauseRequest: () => void;
+  sendDrawOffer: () => void;
+  isPaused: () => boolean;
+  findPauseRequestCount: () => number;
+  findDrawOfferCount: () => number;
 }
 
 const ControlStack: React.FC<ControlStackProps> = ({
@@ -25,8 +28,14 @@ const ControlStack: React.FC<ControlStackProps> = ({
   displaySuggestedMove,
   playerData,
   moveLogData,
-  maxHeight
-}) => {  
+  maxHeight,
+  sendResignation,
+  sendPauseRequest,
+  sendDrawOffer,
+  isPaused,
+  findPauseRequestCount,
+  findDrawOfferCount
+}) => {
   const moveLogRef = useRef<HTMLDivElement | null>(null);
   const [isUserScrolled, setIsUserScrolled] = useState(false);
 
@@ -34,7 +43,6 @@ const ControlStack: React.FC<ControlStackProps> = ({
   const handleScroll = () => {
     if (moveLogRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = moveLogRef.current;
-      // Check if the user has scrolled away from the bottom
       setIsUserScrolled(scrollTop + clientHeight < scrollHeight - 10);
     }
   };
@@ -48,94 +56,129 @@ const ControlStack: React.FC<ControlStackProps> = ({
 
   const handleSuggestedMoveClick = () => {
     displaySuggestedMove();
-  }
+  };
 
   const formatTime = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60);
     const remainingSeconds = totalSeconds % 60;
-    const formattedMinutes = String(minutes).padStart(2, "0");
-    const formattedSeconds = String(remainingSeconds).padStart(2, "0");
-    return `${formattedMinutes}:${formattedSeconds}`;
-  }
-  
+    return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+  };
+
   return (
     <div
-      className="ml-2 mr-2 flex h-full flex-col rounded-lg bg-gray-800 p-6 text-white"
-      style={{ width: `${boxSize}%` } as React.CSSProperties}
+      className="ml-2 mr-2 flex flex-col rounded-lg bg-gray-800 p-4 text-white h-full"
+      style={{ width: `${boxSize}%` }}
     >
       {/* Player 1 Timer and Info */}
-      <div className="flex-1 w-full mb-2 p-6 text-center bg-gray-600 font-bold rounded-lg transition-colors flex justify-between items-center">
-        {playerData && playerData[0] &&(playerData[0].timeLeft !== -1) &&
-          <>
-            <div className="bg-gray-700 p-2 rounded-lg text-lg">
-              {playerData && formatTime(playerData[0].timeLeft)}
-            </div>
-          </>
-        }
-        <div className="bg-gray-700 p-2 rounded-lg text-lg">
-          {playerData && playerData[0] && playerData[0].nickname}
+      <div className="font-semibold flex items-center justify-between bg-gray-600 rounded-lg p-4 mb-2">
+        {playerData && playerData[0] && playerData[0].timeLeft !== -1 && (
+          <div className="bg-gray-700 rounded-lg p-2 text-lg">
+            {formatTime(playerData[0].timeLeft)}
+          </div>
+        )}
+        <div className="bg-gray-700 rounded-lg p-2 text-lg">
+          {playerData && playerData[0]?.nickname}
         </div>
       </div>
 
       {/* Move Log */}
       <div
-        className="flex-1 w-full mb-2 p-6 bg-gray-600 font-bold rounded-lg overflow-y-auto"
+        className="flex flex-col bg-gray-600 rounded-lg p-4 mb-2 overflow-hidden justify-between"
         style={{ maxHeight }}
-        ref={moveLogRef}
-        onScroll={handleScroll}
       >
-        {moveLogData &&
-          moveLogData.map((move, index) => {
+        <div className="items-center w-fit font-semibold bg-gray-700 rounded-lg p-2 mb-2 text-lg">
+          Move Log
+        </div>
+        {moveLogData && moveLogData.length > 0 && <div
+          className="items-center w-fit bg-gray-700 rounded-lg p-2 text-lg overflow-y-auto"
+          ref={moveLogRef}
+          onScroll={handleScroll}
+          style={{ maxHeight: "80%" }}
+        >
+          {moveLogData?.map((_, index) => {
             if (index % 2 === 0) {
               const moveNumber = Math.floor(index / 2) + 1;
               const whiteMove = moveLogData[index];
-              const blackMove = moveLogData[index + 1] || ""; // Leave blank if there's no black move
-
-              const formatMove = (moveString: string) => {
-                return moveString.padEnd(10, " ");
-              };
+              const blackMove = moveLogData[index + 1] || "";
 
               return (
                 <div key={moveNumber} className="flex justify-start items-center mb-1">
-                  {/* Move Number */}
                   <span className="mr-3 text-gray-300">{moveNumber}.</span>
-
-                  {/* White Move */}
-                  <span className="mr-6 text-white font-normal" style={{ width: "10ch" }}>
-                    {formatMove(whiteMove)}
+                  <span className="mr-6 text-white font-normal" style={{ width: "8ch" }}>
+                    {whiteMove}
                   </span>
-
-                  {/* Black Move */}
-                  <span className="text-white font-normal" style={{ width: "10ch" }}>
-                    {formatMove(blackMove)}
+                  <span className="text-white font-normal" style={{ width: "8ch" }}>
+                    {blackMove}
                   </span>
                 </div>
               );
             }
             return null;
           })}
+        </div>}
+      </div>
+
+      {/* Pause, Resign & Draw offer buttons */}
+      <div className="flex items-center justify-center bg-gray-600 rounded-lg p-4 mb-2">        
+        {playerData && playerData[0].timeLeft !== -1 &&
+          <div className="relative">
+            <button
+              className="self-center bg-gray-700 rounded-lg p-2 mx-2 text-gray-300 hover:text-rose-400"
+              onClick={sendPauseRequest}
+            >
+              {isPaused() && <PlayIcon className="h-6 w-6" />}
+              {!isPaused() && <PauseIcon className="w-6 h-6" />}
+            </button>
+            {findPauseRequestCount() > 0 && (
+              <span className="absolute top-0 right-0 bg-rose-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                {findPauseRequestCount()}
+              </span>
+            )}
+          </div>
+        }
+        <button
+          className="self-center bg-gray-700 rounded-lg p-2 mx-2 text-gray-300 hover:text-rose-400"
+          onClick={sendResignation}
+        >
+          <FlagIcon className="w-6 h-6" />
+        </button>
+        {!suggestedMoveButton() &&
+          <div className="relative">
+            <button
+              className="self-center bg-gray-700 rounded-lg p-2 mx-2 text-gray-300 hover:text-rose-400"
+              onClick={sendDrawOffer}
+            >
+              <ScaleIcon className="w-6 h-6" />
+            </button>
+            {findDrawOfferCount() > 0 && (
+              <span className="absolute top-0 right-0 bg-rose-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                {findDrawOfferCount()}
+              </span>
+            )}
+          </div>
+        }
       </div>
 
       {/* Player 2 Timer and Info */}
-      <div className="flex-1 w-full mb-2 p-6 text-center bg-gray-600 font-bold rounded-lg transition-colors flex justify-between items-center">
-        {playerData && playerData[1] && (playerData[1].timeLeft !== -1) &&
-          <>
-            <div className="bg-gray-700 p-2 rounded-lg text-lg">
-              {playerData && formatTime(playerData[1].timeLeft)}
-            </div>
-          </>
-        }
-        <div className="bg-gray-700 p-2 rounded-lg text-lg">
-          {playerData && playerData[1] && playerData[1].nickname}
+      <div className="font-semibold flex items-center justify-between bg-gray-600 rounded-lg p-4 mb-2">
+        {playerData && playerData[1] && playerData[1].timeLeft !== -1 && (
+          <div className="bg-gray-700 rounded-lg p-2 text-lg">
+            {formatTime(playerData[1].timeLeft)}
+          </div>
+        )}
+        <div className="bg-gray-700 rounded-lg p-2 text-lg">
+          {playerData && playerData[1]?.nickname}
         </div>
       </div>
 
-      {suggestedMoveButton() && <button
-        className="flex-1 w-full p-10 text-center bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-lg transition-colors"
-        onClick={handleSuggestedMoveClick}
-      >
-        Suggested Move!
-      </button>}
+      {suggestedMoveButton() && (
+        <button
+          className="bg-indigo-500 hover:bg-indigo-600 rounded-lg p-4 text-white font-bold transition-colors"
+          onClick={handleSuggestedMoveClick}
+        >
+          Suggested Move!
+        </button>
+      )}
     </div>
   );
 };

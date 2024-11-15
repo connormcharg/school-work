@@ -90,6 +90,8 @@ namespace backend.Controllers
 
             bool result = chessService.AddGame(game);
 
+
+
             if (result)
             {
                 return CreatedAtAction(nameof(StartGame), new { id = newId });
