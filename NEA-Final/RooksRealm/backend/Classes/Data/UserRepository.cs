@@ -106,12 +106,13 @@ namespace backend.Classes.Data
                 }
 
                 var command = new NpgsqlCommand(
-                    "INSERT INTO tblusers (username, email, emailconfirmed, storedhashvalue) VALUES (@username, @email, @emailconfirmed, @storedhashvalue)",
+                    "INSERT INTO tblusers (username, email, emailconfirmed, storedhashvalue, boardtheme) VALUES (@username, @email, @emailconfirmed, @storedhashvalue, @boardtheme)",
                     connection);
                 command.Parameters.AddWithValue("username", username);
                 command.Parameters.AddWithValue("email", email);
                 command.Parameters.AddWithValue("emailconfirmed", false);
                 command.Parameters.AddWithValue("storedhashvalue", storedHashValue);
+                command.Parameters.AddWithValue("boardtheme", "blue");
 
                 command.ExecuteNonQuery();
             }
@@ -140,7 +141,100 @@ namespace backend.Classes.Data
             }
 
             return true;
-        } 
+        }
+
+        public bool UpdateUserNickname(string email, string username)
+        {
+            if (email == null || username == null)
+            {
+                return false;
+            }
+
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                var command = new NpgsqlCommand(
+                    "UPDATE tblUsers SET username = @username WHERE email = @email;",
+                    connection);
+                command.Parameters.AddWithValue("username", username);
+                command.Parameters.AddWithValue("email", email);
+
+                command.ExecuteNonQuery();
+            }
+
+            return true;
+        }
+
+        public bool UpdateUserEmail(string email, string newEmail)
+        {
+            if (email == null || newEmail == null)
+            {
+                return false;
+            }
+
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                var command = new NpgsqlCommand(
+                    "UPDATE tblUsers SET email = @newEmail WHERE email = @email;",
+                    connection);
+                command.Parameters.AddWithValue("email", email);
+                command.Parameters.AddWithValue("newEmail", newEmail);
+
+                command.ExecuteNonQuery();
+            }
+
+            return true;
+        }
+
+        public bool UpdateUserPassword(string email, string oldStoredValue, string oldPassword, string newPassword)
+        {
+            if (email == null ||  oldPassword == null || newPassword == null) { return false; }
+
+            if (!SecurityUtilities.VerifyPassword(oldPassword, oldStoredValue))
+            {
+                return false;
+            }
+
+            string newStoredValue = SecurityUtilities.GetHash(newPassword);
+
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                var command = new NpgsqlCommand(
+                    "UPDATE tblUsers SET storedhashvalue = @storedhashvalue WHERE email = @email",
+                    connection);
+                command.Parameters.AddWithValue("storedhashvalue", newStoredValue);
+                command.Parameters.AddWithValue("email", email);
+
+                command.ExecuteNonQuery();
+            }
+
+            return true;
+        }
+
+        public bool UpdateUserBoardTheme(string email, string newTheme)
+        {
+            if (email == null || newTheme == null) { return false; }
+
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                var command = new NpgsqlCommand(
+                    "UPDATE tblUsers SET boardtheme = @boardtheme WHERE email = @email;",
+                    connection);
+                command.Parameters.AddWithValue("boardtheme", newTheme);
+                command.Parameters.AddWithValue("email", email);
+
+                command.ExecuteNonQuery();
+            }
+
+            return true;
+        }
 
         private User MapReaderToUser(NpgsqlDataReader reader)
         {
@@ -150,7 +244,8 @@ namespace backend.Classes.Data
                 email = reader.GetString(reader.GetOrdinal("email")),
                 emailConfirmed = reader.GetBoolean(reader.GetOrdinal("emailconfirmed")),
                 username = reader.GetString(reader.GetOrdinal("username")),
-                storedHashValue = reader.GetString(reader.GetOrdinal("storedhashvalue"))
+                storedHashValue = reader.GetString(reader.GetOrdinal("storedhashvalue")),
+                boardTheme = reader.GetString(reader.GetOrdinal("boardtheme"))
             };
         }
     }

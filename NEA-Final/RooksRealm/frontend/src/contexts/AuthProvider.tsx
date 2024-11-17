@@ -9,6 +9,11 @@ interface AuthContextType {
   logout: () => void;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
+  changeEmail: (newEmail: string) => Promise<void>;
+  changeUsername: (newUsername: string) => Promise<void>;
+  changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
+  deleteAccount: () => Promise<void>;
+  changeTheme: (newTheme: string) => Promise<void>;
 }
 
 interface DecodedToken {
@@ -89,6 +94,184 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       logout();
     }
   }
+
+  const changeEmail = async (newEmail: string) => {
+    try {
+      const res = await fetch("/proxy/api/auth/changeEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ newEmail }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to change email");
+      }
+
+      toast({
+        title: "Email Updated",
+        description: "Your email has been successfully updated.",
+        status: "success",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error Changing Email",
+        description: error.message || "An error occurred.",
+        status: "error",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+    }
+  };
+
+  const changeUsername = async (newUsername: string) => {
+    try {
+      const res = await fetch("/proxy/api/auth/changeUsername", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ newUsername }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to change username");
+      }
+
+      toast({
+        title: "Username Updated",
+        description: "Your username has been successfully updated.",
+        status: "success",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error Changing Username",
+        description: error.message || "An error occurred.",
+        status: "error",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+    }
+  };
+
+  const changePassword = async (oldPassword: string, newPassword: string) => {
+    try {
+      const res = await fetch("/proxy/api/auth/changePassword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ oldPassword, newPassword }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to change password");
+      }
+
+      toast({
+        title: "Password Updated",
+        description: "Your password has been successfully updated.",
+        status: "success",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+
+      logout();
+    } catch (error: any) {
+      toast({
+        title: "Error Changing Password",
+        description: error.message || "An error occurred.",
+        status: "error",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+    }
+  };
+
+  const deleteAccount = async () => {
+    try {
+      const res = await fetch("/proxy/api/auth/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        }
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete account.");
+      }
+
+      toast({
+        title: "Account Deleted",
+        description: "Your account has been successfully deleted.",
+        status: "success",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+
+      logout();
+    } catch (error: any) {
+      toast({
+        title: "Error Deleting Account",
+        description: error.message || "An error occurred.",
+        status: "error",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+    }
+  };
+
+  const changeTheme = async (newTheme: string) => {
+    try {
+      const res = await fetch("/proxy/api/auth/changeTheme", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ newTheme }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to change theme.");
+      }
+
+      toast({
+        title: "Theme Changed",
+        description: "Your theme has been successfully changed.",
+        status: "success",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error Changing Theme",
+        description: error.message || "An error occurred.",
+        status: "error",
+        duration: toastDuration,
+        isClosable: true,
+        position: toastPosition,
+      });
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -194,6 +377,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
               });
           });
         },
+        changeEmail,
+        changeUsername,
+        changePassword,
+        deleteAccount,
+        changeTheme,
       }}
     >
       {children}

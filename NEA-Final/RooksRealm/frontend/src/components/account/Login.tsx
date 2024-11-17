@@ -20,8 +20,8 @@ const Login: React.FC = () => {
   }, [isLoggedIn, navigate])
 
   return (
-    <div>
-      <h1 className="text-xl font-semibold mb-6">Login</h1>
+    <div className="w-full md:w-80 mx-auto">
+      <h1 className="text-xl font-semibold mb-6 text-center">Login</h1>
       <form
         className="flex-1 flex flex-col items-left justify-center p-4 w-full md:w-80"
         onSubmit={handleLogin}

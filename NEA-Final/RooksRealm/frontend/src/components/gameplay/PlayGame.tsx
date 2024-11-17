@@ -459,6 +459,27 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
     }
   }, [data])
 
+  const getBoardTheme = useCallback(async () => {
+    try {
+      const res = await fetch("/proxy/api/auth/details", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to get user details");
+      }
+      const data = await res.json();
+      if (data) {
+        return data.boardTheme;
+      }
+    } catch {
+      return "blue";
+    }
+  }, [token, isLoggedIn])
+
   const sendResignation = useCallback(() => {
     if (connection && isConnected) {
       connection
@@ -522,6 +543,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           onMakeMove={onMakeMove}
           onHighlightSquares={onHighlightSquares}
           onValidMovesData={onValidMovesData}
+          getBoardTheme={getBoardTheme}
         />
         <ControlStack
           boxSize={(96 - boardSize) / 2}

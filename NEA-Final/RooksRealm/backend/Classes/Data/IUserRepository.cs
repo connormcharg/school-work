@@ -7,5 +7,9 @@
         User? GetUserByEmail(string email);
         bool CreateUser(string username, string email, string password);
         bool DeleteUser(string username, string email);
+        bool UpdateUserNickname(string email, string username);
+        bool UpdateUserEmail(string email, string newEmail);
+        bool UpdateUserPassword(string email, string oldStoredValue, string oldPassword, string newPassword);
+        bool UpdateUserBoardTheme(string email, string newTheme);
     }
 }

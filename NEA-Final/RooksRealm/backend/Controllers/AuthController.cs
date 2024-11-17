@@ -57,24 +57,8 @@ namespace backend.Controllers
         }
 
         [Authorize]
-        [HttpGet("protected")]
-        public IActionResult Protected()
-        {
-            return Ok("This is protected data");
-        }
-
-        /*
-        
-        changeEmail = (token, new) => ()
-        changeUsername = (token, new) => ()
-        changePassword = (token, old, new) => ()
-        deleteAccount = (token, password) => ()
-
-        */
-
-        [Authorize]
-        [HttpPost("changeEmail")]
-        public IActionResult ChangeEmail()
+        [HttpPost("changeUsername")]
+        public IActionResult ChangeUsername([FromBody] UsernameUpdateRequest request)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -88,7 +72,118 @@ namespace backend.Controllers
                 return NotFound("User not found");
             }
 
+            var otherUser = userRepository.GetUserByUsername(request.newUsername);
+            if (otherUser != null)
+            {
+                if (otherUser.email != user.email)
+                {
+                    return BadRequest("User already exists with that username");
+                }
+            }
 
+            bool res = userRepository.UpdateUserNickname(user.email, request.newUsername);
+            if (res)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+
+        [Authorize]
+        [HttpPost("changeEmail")]
+        public IActionResult ChangeEmail([FromBody] EmailUpdateRequest request)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            var user = userRepository.GetUserById(int.Parse(userId));
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            bool res = userRepository.UpdateUserEmail(user.email, request.newEmail);
+            if (res)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPost("changePassword")]
+        public IActionResult ChangePassword([FromBody] PasswordUpdateRequest request)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            var user = userRepository.GetUserById(int.Parse(userId));
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            bool res = userRepository.UpdateUserPassword(user.email, user.storedHashValue, request.oldPassword, request.newPassword);
+            if (res)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPost("changeTheme")]
+        public IActionResult UpdateTheme([FromBody] ThemeUpdateRequest request)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            var user = userRepository.GetUserById(int.Parse(userId));
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            bool res = userRepository.UpdateUserBoardTheme(user.email, request.newTheme);
+            if (res)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPost("delete")]
+        public IActionResult DeleteAccount()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            var user = userRepository.GetUserById(int.Parse(userId));
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            bool res = userRepository.DeleteUser(user.username, user.email);
+            if (res)
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
 
         [Authorize]
@@ -110,7 +205,8 @@ namespace backend.Controllers
             return Ok(new
             {
                 username = user.username,
-                email = user.email
+                email = user.email,
+                boardTheme = user.boardTheme,
             });
         }
     }
@@ -121,8 +217,24 @@ namespace backend.Controllers
         public string password { get; set; }
     }
 
-    public class DetailsRequest
+    public class EmailUpdateRequest
     {
-        public string token { get; set; }
+        public string newEmail { get; set; }
+    }
+
+    public class UsernameUpdateRequest
+    {
+        public string newUsername { get; set; }
+    }
+
+    public class PasswordUpdateRequest
+    {
+        public string oldPassword { get; set; }
+        public string newPassword { get; set; }
+    }
+
+    public class ThemeUpdateRequest
+    {
+        public string newTheme { get; set; }
     }
 }

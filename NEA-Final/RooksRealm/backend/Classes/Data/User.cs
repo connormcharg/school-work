@@ -7,5 +7,6 @@
         public string? email { get; set; }
         public bool emailConfirmed { get; set; }
         public string? storedHashValue { get; set; }
+        public string? boardTheme { get; set; }
     }
 }

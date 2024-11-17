@@ -11,6 +11,7 @@ interface ChessBoardProps {
   onMakeMove: (start: number[], end: number[]) => Promise<void>;
   onHighlightSquares: () => HighlightData;
   onValidMovesData: (row: number, col: number) => Array<string>;
+  getBoardTheme: () => Promise<string>;
 }
 
 interface HighlightData {
@@ -28,7 +29,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   onMoveValidCheck,
   onMakeMove,
   onHighlightSquares,
-  onValidMovesData
+  onValidMovesData,
+  getBoardTheme
 }) => {
   // #region Scaling
 
@@ -508,6 +510,17 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   };
   // #endregion
 
+  const [gridClassName, setGridClassName] = useState("chess-grid rounded-tl-l theme-blue");
+
+  useEffect(() => {
+    const updateGridClass = async () => {
+      const asyncClass = `theme-${await getBoardTheme()}`;
+      setGridClassName(`chess-grid rounded-tl-lg ${asyncClass}`.trim());
+    }
+
+    updateGridClass();
+  }, [getBoardTheme])
+
   return (
     <div
       id="board"
@@ -523,7 +536,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
       <div
         id="grid"
         ref={grid}
-        className="chess-grid rounded-tl-lg"
+        className={gridClassName}
         onMouseDown={handleGridMouseDown}
         onMouseUp={handleGridMouseUp}
         onMouseMove={handleGridMouseMove}

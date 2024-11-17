@@ -13,7 +13,6 @@
 
 .chess-grid {
   @apply relative order-1 flex-shrink-0 self-start bg-cover bg-center;
-  background-image: url("/images/blue-board.png");
   width: 96%;
   aspect-ratio: 1 / 1;
 }
@@ -90,6 +89,54 @@
   will-change: transform;
   overflow: hidden;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.theme-8-bit {
+  background-image: url("/images/boards/8-bit.png");
+}
+
+.theme-blue {
+  background-image: url("/images/boards/blue.png");
+}
+
+.theme-brown {
+  background-image: url("/images/boards/brown.png");
+}
+
+.theme-bubblegum {
+  background-image: url("/images/boards/bubblegum.png");
+}
+
+.theme-checkers {
+  background-image: url("/images/boards/checkers.png");
+}
+
+.theme-green {
+  background-image: url("/images/boards/green.png");
+}
+
+.theme-light {
+  background-image: url("/images/boards/light.png");
+}
+
+.theme-orange {
+  background-image: url("/images/boards/orange.png");
+}
+
+.theme-purple {
+  background-image: url("/images/boards/purple.png");
+}
+
+.theme-red {
+  background-image: url("/images/boards/red.png");
+}
+
+.theme-sky {
+  background-image: url("/images/boards/sky.png");
+}
+
+.theme-tan {
+  background-image: url("/images/boards/tan.png");
 }
 
 .br {

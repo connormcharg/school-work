@@ -64,6 +64,7 @@
                             await chessService.GameOver(game.id, "White wins!", "White won by black's resignation!");
                         }
                     }
+                    chessService.RemoveGame(game.id);
                 }
             }
         }
