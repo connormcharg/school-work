@@ -525,7 +525,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     <div
       id="board"
       ref={boardRef}
-      className="chess-board rounded-xl border"
+      className="chess-board rounded-xl border h-full"
       style={
         {
           "--chess-board-size": `${boardSize}%`,

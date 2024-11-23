@@ -5,6 +5,7 @@ interface Player {
   nickname: string;
   isWhite: boolean;
   timeLeft: number;
+  rating: number;
 }
 
 interface ControlStackProps {
@@ -77,7 +78,12 @@ const ControlStack: React.FC<ControlStackProps> = ({
           </div>
         )}
         <div className="bg-gray-700 rounded-lg p-2 text-lg">
-          {playerData && playerData[0]?.nickname}
+          {playerData && playerData[0] && (
+            <>
+              {playerData[0].rating !== -1 && `[${playerData[0].rating}] `}
+              {playerData[0].nickname}
+            </>
+          )}
         </div>
       </div>
 
@@ -167,7 +173,12 @@ const ControlStack: React.FC<ControlStackProps> = ({
           </div>
         )}
         <div className="bg-gray-700 rounded-lg p-2 text-lg">
-          {playerData && playerData[1]?.nickname}
+          {playerData && playerData[1] && (
+            <>
+              {playerData[1].rating !== -1 && `[${playerData[1].rating}] `}
+              {playerData[1].nickname}
+            </>
+          )}
         </div>
       </div>
 

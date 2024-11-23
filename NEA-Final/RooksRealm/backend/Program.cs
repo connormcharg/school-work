@@ -83,6 +83,8 @@ namespace backend
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IStatisticsRepository, StatisticsRepository>();
+            builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddSingleton<ChessService>();
             builder.Services.AddSingleton<ConnectionMappingService>();

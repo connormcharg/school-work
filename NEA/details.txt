@@ -21,13 +21,6 @@ playing the game
 	board is updated after each successful move
 
 
-
-ELO:
-
-expected = 1 / (10^[(B - A) / 400] + 1)
-Elo change = K × (score - expected)
-
-
 Server:
  - new connections: either game id (join existing) or no game id (create a new game)
  - setup game: send all important data to each client in game

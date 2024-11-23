@@ -5,18 +5,15 @@ namespace backend.Classes.Data
 {
     public class UserRepository : IUserRepository
     {
-        private readonly string connectionString =
-            "Host=localhost;Database=rooksrealm;Username=root;Password=root";
-
         public User? GetUserById(int id)
         {
             User? user = null;
 
-            using (var connection = new NpgsqlConnection(connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
-                var command = new NpgsqlCommand("SELECT * FROM tblusers WHERE id = @id", connection);
+                var command = new NpgsqlCommand("SELECT * FROM tblUsers WHERE id = @id", connection);
                 command.Parameters.AddWithValue("id", id);
 
                 using (var reader = command.ExecuteReader())
@@ -35,11 +32,11 @@ namespace backend.Classes.Data
         {
             User? user = null;
 
-            using (var connection = new NpgsqlConnection(connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
-                var command = new NpgsqlCommand("SELECT * FROM tblusers WHERE username = @username", connection);
+                var command = new NpgsqlCommand("SELECT * FROM tblUsers WHERE username = @username", connection);
                 command.Parameters.AddWithValue("username", username);
 
                 using (var reader = command.ExecuteReader())
@@ -58,11 +55,11 @@ namespace backend.Classes.Data
         {
             User? user = null;
 
-            using (var connection = new NpgsqlConnection(connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
-                var command = new NpgsqlCommand("SELECT * FROM tblusers WHERE email = @email", connection);
+                var command = new NpgsqlCommand("SELECT * FROM tblUsers WHERE email = @email", connection);
                 command.Parameters.AddWithValue("email", email);
 
                 using (var reader = command.ExecuteReader())
@@ -88,12 +85,12 @@ namespace backend.Classes.Data
 
             string storedHashValue = SecurityUtilities.GetHash(password);
 
-            using (var connection = new NpgsqlConnection(connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
                 // Check if the email already exists
-                NpgsqlCommand checkEmailCommand = new NpgsqlCommand("SELECT COUNT(*) FROM tblusers WHERE email = @checkEmail", connection);
+                NpgsqlCommand checkEmailCommand = new NpgsqlCommand("SELECT COUNT(*) FROM tblUsers WHERE email = @checkEmail", connection);
                 checkEmailCommand.Parameters.AddWithValue("checkEmail", email);
                 if (checkEmailCommand == null)
                 {
@@ -106,13 +103,14 @@ namespace backend.Classes.Data
                 }
 
                 var command = new NpgsqlCommand(
-                    "INSERT INTO tblusers (username, email, emailconfirmed, storedhashvalue, boardtheme) VALUES (@username, @email, @emailconfirmed, @storedhashvalue, @boardtheme)",
+                    "INSERT INTO tblUsers (username, email, emailconfirmed, storedhashvalue, boardtheme, rating) VALUES (@username, @email, @emailconfirmed, @storedhashvalue, @boardtheme, @rating)",
                     connection);
                 command.Parameters.AddWithValue("username", username);
                 command.Parameters.AddWithValue("email", email);
                 command.Parameters.AddWithValue("emailconfirmed", false);
                 command.Parameters.AddWithValue("storedhashvalue", storedHashValue);
                 command.Parameters.AddWithValue("boardtheme", "blue");
+                command.Parameters.AddWithValue("rating", 400);
 
                 command.ExecuteNonQuery();
             }
@@ -127,7 +125,7 @@ namespace backend.Classes.Data
                 return false;
             }
 
-            using (var connection = new NpgsqlConnection(connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
@@ -150,7 +148,7 @@ namespace backend.Classes.Data
                 return false;
             }
 
-            using (var connection = new NpgsqlConnection(connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
@@ -173,7 +171,7 @@ namespace backend.Classes.Data
                 return false;
             }
 
-            using (var connection = new NpgsqlConnection(connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
@@ -200,7 +198,7 @@ namespace backend.Classes.Data
 
             string newStoredValue = SecurityUtilities.GetHash(newPassword);
 
-            using (var connection = new NpgsqlConnection(connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
@@ -220,7 +218,7 @@ namespace backend.Classes.Data
         {
             if (email == null || newTheme == null) { return false; }
 
-            using (var connection = new NpgsqlConnection(connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
@@ -229,6 +227,26 @@ namespace backend.Classes.Data
                     connection);
                 command.Parameters.AddWithValue("boardtheme", newTheme);
                 command.Parameters.AddWithValue("email", email);
+
+                command.ExecuteNonQuery();
+            }
+
+            return true;
+        }
+
+        public bool UpdateUserRating(string username, int newRating)
+        {
+            if (username == null) { return false; }
+
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            {
+                connection.Open();
+
+                var command = new NpgsqlCommand(
+                    "UPDATE tblUsers SET rating = @rating WHERE username = @username;",
+                    connection);
+                command.Parameters.AddWithValue("rating", newRating);
+                command.Parameters.AddWithValue("username", username);
 
                 command.ExecuteNonQuery();
             }
@@ -245,7 +263,8 @@ namespace backend.Classes.Data
                 emailConfirmed = reader.GetBoolean(reader.GetOrdinal("emailconfirmed")),
                 username = reader.GetString(reader.GetOrdinal("username")),
                 storedHashValue = reader.GetString(reader.GetOrdinal("storedhashvalue")),
-                boardTheme = reader.GetString(reader.GetOrdinal("boardtheme"))
+                boardTheme = reader.GetString(reader.GetOrdinal("boardtheme")),
+                rating = reader.GetInt32(reader.GetOrdinal("rating")),
             };
         }
     }

@@ -3,6 +3,7 @@ using BenchmarkDotNet.Running;
 using backend.Classes.Engine;
 using backend.Classes.State;
 using backend.Classes.Handlers;
+using backend.Classes.Utilities;
 
 namespace testing
 {
@@ -45,9 +46,9 @@ namespace testing
             g.state.blackKingLocation = new List<int>() { 1, 5 };
             g.currentValidMoves = GameHandler.FindValidMoves(g);
 
-            var e = new MinMaxEngine();
+            /*var e = new MinMaxEngine();
             e.FindBestMove(g, g.currentValidMoves);
-            Console.WriteLine(e.nextMove.moveID);
+            Console.WriteLine(e.nextMove.moveID);*/
 
         }
     }

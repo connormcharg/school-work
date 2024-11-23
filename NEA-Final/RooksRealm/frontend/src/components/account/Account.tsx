@@ -6,6 +6,7 @@ interface UserDetails {
   username: string;
   email: string;
   boardTheme: string;
+  rating: number;
 }
 
 const Account: React.FC = () => {
@@ -36,6 +37,7 @@ const Account: React.FC = () => {
           setEmail(data.email);
           setTheme(data.boardTheme);
           setThemePreview(`/images/boards/${data.boardTheme}.png`);
+          setRating(data.rating);
         }
       } catch {
         setError("Failed to load user details");
@@ -87,6 +89,7 @@ const Account: React.FC = () => {
   const [email, setEmail] = useState("");
   const [theme, setTheme] = useState("");
   const [themePreview, setThemePreview] = useState("");
+  const [rating, setRating] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
@@ -162,7 +165,7 @@ const Account: React.FC = () => {
           </div>
           <input
             type="text"
-            value="Rating: 1200"
+            value={`Rating: ${rating}`}
             disabled
             className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600"
             readOnly

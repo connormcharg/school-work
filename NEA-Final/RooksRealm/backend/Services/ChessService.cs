@@ -32,31 +32,24 @@ namespace backend.Services
             return games.Values.Select(g => new Game(g)).ToList();
         }
 
-        public async Task UpdateGame(string id, Game game)
-        {
-            game.currentValidMoves = GameHandler.FindValidMoves(game);
-            games[id] = game;
-            var json = JsonConvert.SerializeObject(games[id]);
-            await hubContext.Clients.Group(id).SendAsync("ReceiveGame", json);
-        }
-
         public bool AddGame(Game game)
         {
             return games.TryAdd(game.id, new Game(game));
         }
 
-        public bool RemoveGame(string id, bool archive = false)
+        public bool RemoveGame(string id)
         {
             games.TryGetValue(id, out var game);
             if (game == null)
             {
                 return false;
             }
-            if (archive)
-            {
-                // send game to archive
-            }
             return games.Remove(id);
+        }
+
+        public bool ArchiveGame(string id)
+        {
+
         }
 
         // Better update functions
@@ -68,7 +61,8 @@ namespace backend.Services
             {
                 throw new Exception("game id not found in games dictionary");
             }
-            var json = JsonConvert.SerializeObject(game);
+            var gameCopy = new Game(game);
+            var json = JsonConvert.SerializeObject(gameCopy);
             await hubContext.Clients.Group(id).SendAsync("ReceiveGame", json);
         }
 
@@ -308,6 +302,18 @@ namespace backend.Services
                 throw new Exception("game id not found in games dictionary");
             }
             var data = new {result = result, reason = reason};
+            var json = JsonConvert.SerializeObject(data);
+            await hubContext.Clients.Group(id).SendAsync("ReceiveGameOver", json);
+        }
+
+        public async Task GameOver(string id, string result, string reason, string ratingChange)
+        {
+            games.TryGetValue(id, out var game);
+            if (game == null)
+            {
+                throw new Exception("game id not found in games dictionary");
+            }
+            var data = new { result = result, reason = reason, ratingChange = ratingChange };
             var json = JsonConvert.SerializeObject(data);
             await hubContext.Clients.Group(id).SendAsync("ReceiveGameOver", json);
         }

@@ -24,6 +24,7 @@ interface Player {
   nickname: string;
   isWhite: boolean;
   timeLeft: number;
+  rating: number;
 }
 
 const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
@@ -43,6 +44,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
   const [isEndOfGame, setIsEndOfGame] = useState(false);
   const [gameResult, setGameResult] = useState('');
   const [gameReason, setGameReason] = useState('');
+  const [gameRatingChange, setGameRatingChange] = useState<string | null>(null);
   const [maxHeight, _] = useState<string>("10rem");
   const navigate = useNavigate();
 
@@ -79,9 +81,12 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           setData(JSON.parse(eventData));
         });
         newConnection.on("ReceiveGameOver", (eventData: any) => {
-          const data = JSON.parse(eventData);
-          setGameResult(data.result);
-          setGameReason(data.reason);
+          const gameOverData = JSON.parse(eventData);
+          setGameResult(gameOverData.result);
+          setGameReason(gameOverData.reason);
+          if (gameOverData.ratingChange) {
+            setGameRatingChange(gameOverData.ratingChange);
+          }
           setIsEndOfGame(true);
         });
       })
@@ -101,11 +106,16 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
   useEffect(() => {
     if (connection && isConnected) {
       connection
-        .send("JoinGameAsPlayer", id)
+        .invoke("JoinGameAsPlayer", id)
         .then(() => {
           console.log("Joined game with ID: ", id);
         })
-        .catch((err: any) => console.log("Error joining game: ", err));
+        .catch((err: any) => {
+          console.log("Error joining game: ", err);
+          if (err.message.includes("InvalidGameId")) {
+            handleGoHome();
+          }
+        });
     }
   }, [connection, isConnected, id]);
 
@@ -119,11 +129,13 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
               nickname: "Computer Player",
               isWhite: false,
               timeLeft: data.settings.isTimed ? data.state.blackTime : -1,
+              rating: -1,
             },
             {
               nickname: data.players[0].nickName,
               isWhite: true,
               timeLeft: data.settings.isTimed ? data.state.whiteTime : -1,
+              rating: data.players[0].rating,
             },
           ]);
         } else {
@@ -132,11 +144,13 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
               nickname: "Computer Player",
               isWhite: true,
               timeLeft: data.settings.isTimed ? data.state.whiteTime : -1,
+              rating: -1,
             },
             {
               nickname: data.players[0].nickName,
               isWhite: false,
               timeLeft: data.settings.isTimed ? data.state.blackTime : -1,
+              rating: data.players[0].rating,
             },
           ]);
         }
@@ -149,11 +163,13 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
               nickname: p2 ? p2.nickName : "Waiting...",
               isWhite: false,
               timeLeft: data.settings.isTimed ? data.state.blackTime : -1,
+              rating: p2 ? p2.rating : -1,
             },
             {
               nickname: p.nickName,
               isWhite: true,
               timeLeft: data.settings.isTimed ? data.state.whiteTime : -1,
+              rating: p.rating,
             },
           ]);
         } else {
@@ -164,11 +180,13 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
               nickname: p2 ? p2.nickName : "Waiting...",
               isWhite: true,
               timeLeft: data.settings.isTimed ? data.state.whiteTime : -1,
+              rating: p2 ? p2.rating : -1,
             },
             {
               nickname: p.nickName,
               isWhite: false,
               timeLeft: data.settings.isTimed ? data.state.blackTime : -1,
+              rating: p.rating,
             },
           ]);
         }
@@ -302,7 +320,11 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
         isCastleMove: false,
       };
       const jsonString = JSON.stringify(move);
-      await connection?.send("SendMove", jsonString);
+      await connection?.invoke("SendMove", jsonString)
+        .then(() => null)
+        .catch((err: any) => {
+          console.log("Error sending move: ", err);
+        })
     } catch (e) {
       console.error("Error sending move: ", e);
     }
@@ -422,7 +444,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
     if (!data) {
       return 0;
     }
-    return data.state.drawOFfers.length;
+    return data.state.drawOffers.length;
   }, [data])
 
   const onValidMovesData = useCallback((pieceRow: number, pieceCol: number) => {
@@ -521,6 +543,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           <div className="bg-white rounded-lg p-6 text-center">
             <h2 className="text-2xl font-bold mb-4">{gameResult}</h2>
             <p className="mb-6">{gameReason}</p>
+            {gameRatingChange && <p className="mb-6">{gameRatingChange}</p>}
             <button
               onClick={handleGoHome}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"

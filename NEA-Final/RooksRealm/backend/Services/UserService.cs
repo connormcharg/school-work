@@ -40,6 +40,40 @@ namespace backend.Services
             return newNickname;
         }
 
+        public int GetRating(string connectionId)
+        {
+            var httpContext = connectionMappingService.GetHttpContext(connectionId);
+
+            if (httpContext == null)
+            {
+                throw new InvalidOperationException("httpContext was null for the given connectionId");
+            }
+
+            var userIdClaim = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+            {
+                // user not logged in or no valid claim
+                return -1;
+            }
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+            {
+                throw new Exception("Invalid user ID claim value");
+            }
+
+            var user = userRepository.GetUserById(userId);
+
+            if (user == null)
+            {
+                // user was not found
+                return -1;
+            }
+
+            var rating = user.rating;
+            return rating;
+        }
+
         public string? GetNickname(string connectionId)
         {
             var httpContext = connectionMappingService.GetHttpContext(connectionId);

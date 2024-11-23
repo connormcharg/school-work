@@ -207,6 +207,7 @@ namespace backend.Controllers
                 username = user.username,
                 email = user.email,
                 boardTheme = user.boardTheme,
+                user.rating,
             });
         }
     }

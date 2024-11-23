@@ -1,20 +1,34 @@
 import React, { FormEventHandler, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthProvider";
+import { useToast } from "@chakra-ui/react";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const { isLoggedIn, register, login } = useAuth();
+  const toast = useToast();
+
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleRegister: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
       e.preventDefault();
-      await register(email, password);
-      await login(email, password);
+      if (validateEmail(email)) {
+        await register(email, password);
+        await login(email, password);
+      } else {
+        throw new Error("Email not valid.")
+      }
     } catch (error) {
-      
+      toast({
+        title: "Invalid Email Address",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom",
+      });
     }
   }
 

@@ -9,6 +9,7 @@ namespace backend.Classes.State
         public bool isHost { get; set; }
         public string nickName { get; set; }
         public bool isConnected { get; set; }
+        public int rating { get; set; }
 
         public Player(string connectionId)
         {
@@ -22,16 +23,18 @@ namespace backend.Classes.State
             this.isHost = original.isHost;
             this.nickName = original.nickName;
             this.isConnected = original.isConnected;
+            this.rating = original.rating;
         }
 
         [JsonConstructor]
-        public Player(string connectionId, bool isWhite, bool isHost, string nickName, bool isConnected)
+        public Player(string connectionId, bool isWhite, bool isHost, string nickName, bool isConnected, int rating)
         {
             this.connectionId = connectionId;
             this.isWhite = isWhite;
             this.isHost = isHost;
             this.nickName = nickName;
             this.isConnected = isConnected;
+            this.rating = rating;
         }
     }
 }

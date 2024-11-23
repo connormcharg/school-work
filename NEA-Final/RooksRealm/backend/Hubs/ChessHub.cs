@@ -60,15 +60,17 @@ namespace backend.Hubs
 
             if (game == null)
             {
-                throw new Exception("No game with that gameId found");
+                throw new HubException("InvalidGameId: No game with that gameId found");
             }
 
             var nickname = userService.GetNickname(Context.ConnectionId);
 
             if (nickname == null)
             {
-                throw new Exception("No nickname found for the given connection id");
+                throw new HubException("No nickname found for the given connection id");
             }
+            
+            int rating = userService.GetRating(Context.ConnectionId);
 
             if (game.players.Count >= 2)
             {
@@ -79,7 +81,7 @@ namespace backend.Hubs
                 }
                 else
                 {
-                    throw new Exception("Game already full and you are not in the players list");
+                    throw new HubException("Game already full and you are not in the players list");
                 }
             }
             else
@@ -87,7 +89,7 @@ namespace backend.Hubs
                 if (game.players.Count == 0)
                 {
                     await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
-                    await chessService.AddPlayer(game.id, new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, true), true, nickname, false));
+                    await chessService.AddPlayer(game.id, new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, true), true, nickname, false, rating));
                     await chessService.JoinPlayer(game.id, nickname, Context.ConnectionId);
                 }
                 else if (game.settings.isSinglePlayer)
@@ -99,7 +101,7 @@ namespace backend.Hubs
                     }
                     else
                     {
-                        throw new Exception("Game already full and you are not in the players list");
+                        throw new HubException("Game already full and you are not in the players list");
                     }
                 }
                 else
@@ -112,10 +114,9 @@ namespace backend.Hubs
                     else
                     {
                         await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
-                        await chessService.AddPlayer(game.id, new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, false), false, nickname, false));
+                        await chessService.AddPlayer(game.id, new Player(Context.ConnectionId, GameUtilities.IsPlayerWhite(game, false), false, nickname, false, rating));
                         await chessService.JoinPlayer(game.id, nickname, Context.ConnectionId);
                     }
-                    
                 }
             }
         }

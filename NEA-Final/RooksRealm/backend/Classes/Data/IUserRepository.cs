@@ -11,5 +11,6 @@
         bool UpdateUserEmail(string email, string newEmail);
         bool UpdateUserPassword(string email, string oldStoredValue, string oldPassword, string newPassword);
         bool UpdateUserBoardTheme(string email, string newTheme);
+        bool UpdateUserRating(string username, int newRating);
     }
 }
