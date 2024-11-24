@@ -2,6 +2,6 @@
 {
     public interface IGameRepository
     {
-        bool CreateGame(int playerOneId, int playerTwoId, string gameData);
+        int CreateGame(int playerOneId, int playerTwoId, string gameData);
     }
 }

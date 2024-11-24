@@ -9,5 +9,6 @@
         public string? storedHashValue { get; set; }
         public string? boardTheme { get; set; }
         public int rating { get; set; }
+        public string? role { get; set; }
     }
 }

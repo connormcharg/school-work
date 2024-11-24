@@ -13,7 +13,7 @@ namespace backend.Classes.Data
             {
                 connection.Open();
 
-                var command = new NpgsqlCommand("SELECT * FROM tblUsers WHERE id = @id", connection);
+                var command = new NpgsqlCommand("SELECT * FROM tblusers WHERE id = @id", connection);
                 command.Parameters.AddWithValue("id", id);
 
                 using (var reader = command.ExecuteReader())
@@ -36,7 +36,7 @@ namespace backend.Classes.Data
             {
                 connection.Open();
 
-                var command = new NpgsqlCommand("SELECT * FROM tblUsers WHERE username = @username", connection);
+                var command = new NpgsqlCommand("SELECT * FROM tblusers WHERE username = @username", connection);
                 command.Parameters.AddWithValue("username", username);
 
                 using (var reader = command.ExecuteReader())
@@ -59,7 +59,7 @@ namespace backend.Classes.Data
             {
                 connection.Open();
 
-                var command = new NpgsqlCommand("SELECT * FROM tblUsers WHERE email = @email", connection);
+                var command = new NpgsqlCommand("SELECT * FROM tblusers WHERE email = @email", connection);
                 command.Parameters.AddWithValue("email", email);
 
                 using (var reader = command.ExecuteReader())
@@ -74,7 +74,7 @@ namespace backend.Classes.Data
             return user;
         }
 
-        public bool CreateUser(string username, string email, string password)
+        public bool CreateUser(string username, string email, string password, string role = "user")
         {            
             if (username == null ||
                 email == null ||
@@ -90,7 +90,7 @@ namespace backend.Classes.Data
                 connection.Open();
 
                 // Check if the email already exists
-                NpgsqlCommand checkEmailCommand = new NpgsqlCommand("SELECT COUNT(*) FROM tblUsers WHERE email = @checkEmail", connection);
+                NpgsqlCommand checkEmailCommand = new NpgsqlCommand("SELECT COUNT(*) FROM tblusers WHERE email = @checkEmail", connection);
                 checkEmailCommand.Parameters.AddWithValue("checkEmail", email);
                 if (checkEmailCommand == null)
                 {
@@ -103,7 +103,7 @@ namespace backend.Classes.Data
                 }
 
                 var command = new NpgsqlCommand(
-                    "INSERT INTO tblUsers (username, email, emailconfirmed, storedhashvalue, boardtheme, rating) VALUES (@username, @email, @emailconfirmed, @storedhashvalue, @boardtheme, @rating)",
+                    "INSERT INTO tblusers (username, email, emailconfirmed, storedhashvalue, boardtheme, rating, role) VALUES (@username, @email, @emailconfirmed, @storedhashvalue, @boardtheme, @rating, @role)",
                     connection);
                 command.Parameters.AddWithValue("username", username);
                 command.Parameters.AddWithValue("email", email);
@@ -111,6 +111,7 @@ namespace backend.Classes.Data
                 command.Parameters.AddWithValue("storedhashvalue", storedHashValue);
                 command.Parameters.AddWithValue("boardtheme", "blue");
                 command.Parameters.AddWithValue("rating", 400);
+                command.Parameters.AddWithValue("role", role);
 
                 command.ExecuteNonQuery();
             }
@@ -130,7 +131,7 @@ namespace backend.Classes.Data
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "DELETE FROM tblUsers WHERE username = @username AND email = @email;",
+                    "DELETE FROM tblusers WHERE username = @username AND email = @email;",
                     connection);
                 command.Parameters.AddWithValue("username", username);
                 command.Parameters.AddWithValue("email", email);
@@ -153,12 +154,14 @@ namespace backend.Classes.Data
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "UPDATE tblUsers SET username = @username WHERE email = @email;",
+                    "UPDATE tblusers SET username = @username WHERE email = @email;",
                     connection);
                 command.Parameters.AddWithValue("username", username);
                 command.Parameters.AddWithValue("email", email);
 
                 command.ExecuteNonQuery();
+                
+                connection.Close();
             }
 
             return true;
@@ -176,12 +179,14 @@ namespace backend.Classes.Data
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "UPDATE tblUsers SET email = @newEmail WHERE email = @email;",
+                    "UPDATE tblusers SET email = @newEmail WHERE email = @email;",
                     connection);
                 command.Parameters.AddWithValue("email", email);
                 command.Parameters.AddWithValue("newEmail", newEmail);
 
                 command.ExecuteNonQuery();
+
+                connection.Close();
             }
 
             return true;
@@ -203,12 +208,14 @@ namespace backend.Classes.Data
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "UPDATE tblUsers SET storedhashvalue = @storedhashvalue WHERE email = @email",
+                    "UPDATE tblusers SET storedhashvalue = @storedhashvalue WHERE email = @email",
                     connection);
                 command.Parameters.AddWithValue("storedhashvalue", newStoredValue);
                 command.Parameters.AddWithValue("email", email);
 
                 command.ExecuteNonQuery();
+
+                connection.Close();
             }
 
             return true;
@@ -223,12 +230,14 @@ namespace backend.Classes.Data
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "UPDATE tblUsers SET boardtheme = @boardtheme WHERE email = @email;",
+                    "UPDATE tblusers SET boardtheme = @boardtheme WHERE email = @email;",
                     connection);
                 command.Parameters.AddWithValue("boardtheme", newTheme);
                 command.Parameters.AddWithValue("email", email);
 
                 command.ExecuteNonQuery();
+
+                connection.Close();
             }
 
             return true;
@@ -243,12 +252,14 @@ namespace backend.Classes.Data
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "UPDATE tblUsers SET rating = @rating WHERE username = @username;",
+                    "UPDATE tblusers SET rating = @rating WHERE username = @username;",
                     connection);
                 command.Parameters.AddWithValue("rating", newRating);
                 command.Parameters.AddWithValue("username", username);
 
                 command.ExecuteNonQuery();
+
+                connection.Close();
             }
 
             return true;
@@ -265,6 +276,7 @@ namespace backend.Classes.Data
                 storedHashValue = reader.GetString(reader.GetOrdinal("storedhashvalue")),
                 boardTheme = reader.GetString(reader.GetOrdinal("boardtheme")),
                 rating = reader.GetInt32(reader.GetOrdinal("rating")),
+                role = reader.GetString(reader.GetOrdinal("role"))
             };
         }
     }

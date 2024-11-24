@@ -1,5 +1,6 @@
 ﻿using backend.Classes.Data;
 using backend.Classes.Utilities;
+using Newtonsoft.Json;
 
 namespace backend.Services
 {
@@ -29,6 +30,7 @@ namespace backend.Services
             {
                 var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
                 var statisticsRepository = scope.ServiceProvider.GetRequiredService<IStatisticsRepository>();
+                var gameRepository = scope.ServiceProvider.GetRequiredService<IGameRepository>();
 
                 foreach (var game in chessService.GetAllGames())
                 {
@@ -255,20 +257,18 @@ namespace backend.Services
                             await chessService.GameOver(game.id, result, reason);
                         }
 
-                        // archive the game
-
-                        // ADD LOGIC TO RUN CREATEGAME FROM GAMEREPOSITORY AND SAVE THE GAMEID OF THAT GAME
-
+                        var json = JsonConvert.SerializeObject(game);
+                        int id = gameRepository.CreateGame(userIdOne, userIdTwo, json);
 
                         if (userIdOne != -1 && userIdTwo != -1 && outcome1 != "" && outcome2 != "")
                         {
-                            statisticsRepository.CreateStatistic((int)(game.state.moveLog.Count / 2), userIdOne, -1, outcome1);
-                            statisticsRepository.CreateStatistic((int)(game.state.moveLog.Count / 2), userIdTwo, -1, outcome2);
+                            statisticsRepository.CreateStatistic((int)(game.state.moveLog.Count / 2), userIdOne, id, outcome1);
+                            statisticsRepository.CreateStatistic((int)(game.state.moveLog.Count / 2), userIdTwo, id, outcome2);
 
                         }
                         else if (userIdOne != -1 && outcome1 != "")
                         {
-                            statisticsRepository.CreateStatistic((int)(game.state.moveLog.Count / 2), userIdOne, -1, outcome1);
+                            statisticsRepository.CreateStatistic((int)(game.state.moveLog.Count / 2), userIdOne, id, outcome1);
                         }
                         chessService.RemoveGame(game.id);
                     }

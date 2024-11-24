@@ -4,11 +4,11 @@ namespace backend.Classes.Data
 {
     public class GameRepository : IGameRepository
     {
-        public bool CreateGame(int playerOneId, int playerTwoId, string gameData)
+        public int CreateGame(int playerOneId, int playerTwoId, string gameData)
         {
             if (gameData == null)
             {
-                return false;
+                return -1;
             }
 
             using (var connection = new NpgsqlConnection(dbConstants.connectionString))
@@ -16,16 +16,34 @@ namespace backend.Classes.Data
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "INSERT INTO tblGames (playerOneId, playerTwoId, gameData) VALUES (@playerOneId, @playerTwoId, @gameData);", 
+                    "INSERT INTO tblgames (playeroneid, playertwoid, gamedata) VALUES (@playerOneId, @playerTwoId, @gameData) RETURNING id;", 
                     connection);
                 command.Parameters.AddWithValue("playerOneId", playerOneId);
                 command.Parameters.AddWithValue("playerTwoId", playerTwoId);
                 command.Parameters.AddWithValue("gameData", gameData);
 
-                command.ExecuteNonQuery();
+                var insertedId = (int?)command.ExecuteScalar();
+
+                connection.Close();
+
+                if (insertedId != null)
+                {
+                    return (int)insertedId;
+                }
             }
 
-            return true;
+            return -1;
+        }
+
+        private Game MapReaderToGame(NpgsqlDataReader reader)
+        {
+            return new Game
+            {
+                id = reader.GetInt32(reader.GetOrdinal("id")),
+                playerOneId = reader.GetInt32(reader.GetOrdinal("playeroneid")),
+                playerTwoId = reader.GetInt32(reader.GetOrdinal("playertwoid")),
+                gameData = reader.GetString(reader.GetOrdinal("gamedata"))
+            };
         }
     }
 }

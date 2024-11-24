@@ -49,7 +49,7 @@ namespace backend.Services
 
         public bool ArchiveGame(string id)
         {
-
+            return false;
         }
 
         // Better update functions
