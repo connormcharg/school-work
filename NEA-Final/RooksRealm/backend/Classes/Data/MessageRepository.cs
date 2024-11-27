@@ -24,9 +24,9 @@
 
                 var command = new NpgsqlCommand(
                     @"SELECT m.id, m.title, m.content, u.username, m.datetime 
-              FROM tblmessages m
-              INNER JOIN tblusers u ON m.userid = u.id
-              WHERE m.datetime >= @dateThreshold;",
+                      FROM tblmessages m
+                      INNER JOIN tblusers u ON m.userid = u.id
+                      WHERE m.datetime >= @dateThreshold;",
                     connection);
 
                 command.Parameters.AddWithValue("dateThreshold", dateThreshold);

@@ -9,6 +9,7 @@ import {
   UserIcon,
   UserPlusIcon,
   EnvelopeIcon,
+  ChartBarIcon,
 } from "@heroicons/react/24/solid";
 
 interface SidebarItemProps {
@@ -121,6 +122,12 @@ const Sidebar: React.FC = () => {
               icon={EnvelopeIcon}
               text="Messages"
               to="/messages"
+              isExpanded={isExpanded}
+            />
+            <SidebarItem
+              icon={ChartBarIcon}
+              text="Statistics"
+              to="/stats"
               isExpanded={isExpanded}
             />
             <SidebarItem

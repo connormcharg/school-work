@@ -4,7 +4,6 @@
     using backend.Classes.Utilities;
     using backend.Services;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Defines the <see cref="ChessController" />

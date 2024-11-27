@@ -5,7 +5,6 @@ namespace backend
     using backend.Services;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.IdentityModel.Tokens;
-    using Newtonsoft.Json;
     using System.Text;
 
     /// <summary>

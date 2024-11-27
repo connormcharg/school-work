@@ -25,10 +25,11 @@
                 var dateThreshold = DateTime.Now.AddDays(-daysAgo);
 
                 var command = new NpgsqlCommand(
-                    @"SELECT s.id, s.avgmovetime, s.numberofmoves, s.gameid, s.outcome, s.datetime 
-              FROM tblstatistics s
-              WHERE s.datetime >= @dateThreshold
-              AND s.userid = @userid;",
+                    @"SELECT s.id, s.avgmovetime, s.numberofmoves, u.username, s.gameid, s.outcome, s.datetime 
+                      FROM tblstatistics s
+                      INNER JOIN tblusers u on u.id = s.userid
+                      WHERE s.datetime >= @dateThreshold
+                      AND s.userid = @userid;",
                     connection);
 
                 command.Parameters.AddWithValue("dateThreshold", dateThreshold);
@@ -71,12 +72,14 @@
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "INSERT INTO tblstatistics (numberofmoves, userid, gameid, outcome, datetime) VALUES (@numberOfMoves, @userId, @gameId, @outcome, @datetime);",
+                    "INSERT INTO tblstatistics (avgmovetime, numberofmoves, userid, gameid, outcome, datetime) VALUES (@avgmovetime, @numberOfMoves, @userId, @gameId, @outcome, @datetime);",
                     connection);
+                command.Parameters.AddWithValue("avgmovetime", 0);
                 command.Parameters.AddWithValue("numberOfMoves", numberOfMoves);
                 command.Parameters.AddWithValue("userId", userId);
                 command.Parameters.AddWithValue("gameId", gameId);
                 command.Parameters.AddWithValue("datetime", timestamp);
+                command.Parameters.AddWithValue("outcome", outcome);
 
                 command.ExecuteNonQuery();
 
@@ -98,7 +101,7 @@
                 id = reader.GetInt32(reader.GetOrdinal("id")),
                 avgMoveTime = reader.GetDouble(reader.GetOrdinal("avgmovetime")),
                 numberOfMoves = reader.GetInt32(reader.GetOrdinal("numberofmoves")),
-                userId = reader.GetInt32(reader.GetOrdinal("userid")),
+                username = reader.GetString(reader.GetOrdinal("username")),
                 gameId = reader.GetInt32(reader.GetOrdinal("gameid")),
                 outcome = reader.GetString(reader.GetOrdinal("outcome")),
                 datetime = reader.GetDateTime(reader.GetOrdinal("datetime"))

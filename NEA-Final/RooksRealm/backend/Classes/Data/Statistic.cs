@@ -21,9 +21,9 @@
         public int numberOfMoves { get; set; }
 
         /// <summary>
-        /// Gets or sets the userId
+        /// Gets or sets the username
         /// </summary>
-        public int userId { get; set; }
+        public string? username { get; set; }
 
         /// <summary>
         /// Gets or sets the gameId

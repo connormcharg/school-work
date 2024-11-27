@@ -592,7 +592,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
       )}
       <h1 className="mb-6 text-xl font-semibold">Play Game!</h1>
       <div className="flex">
-        <MessageBox boxSize={(96 - boardSize) / 2} />
+        {/* <MessageBox boxSize={(96 - boardSize) / 2} /> */}
         <ChessBoard
           boardSize={boardSize}
           isWhite={isWhite}
@@ -606,7 +606,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           getBoardTheme={getBoardTheme}
         />
         <ControlStack
-          boxSize={(96 - boardSize) / 2}
+          boxSize={(96 - boardSize)}
           suggestedMoveButton={isSinglePlayer}
           displaySuggestedMove={displaySuggestedMove}
           playerData={playerData}

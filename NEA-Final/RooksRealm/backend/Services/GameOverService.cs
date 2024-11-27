@@ -273,6 +273,96 @@
                                 }
                             }
                         }
+                        else
+                        {
+                            if (game.settings.isSinglePlayer)
+                            {
+                                var user = userRepository.GetUserByUsername(game.players[0].nickName);
+                                if (user == null)
+                                {
+                                    break;
+                                }
+                                userIdOne = user.id;
+                                switch (winFlag)
+                                {
+                                    case 0:
+                                        // win for white
+                                        if (game.players[0].isWhite)
+                                        {
+                                            outcome1 = "win";
+                                        }
+                                        else
+                                        {
+                                            outcome1 = "loss";
+                                        }
+                                        break;
+                                    case 1:
+                                        // win for black
+                                        if (!game.players[0].isWhite)
+                                        {
+                                            outcome1 = "win";
+                                        }
+                                        else
+                                        {
+                                            outcome1 = "loss";
+                                        }
+                                        break;
+                                    case 2:
+                                        // draw
+                                        outcome1 = "draw";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                var user1 = userRepository.GetUserByUsername(game.players[0].nickName);
+                                var user2 = userRepository.GetUserByUsername(game.players[1].nickName);
+                                if (user1 == null || user2 == null)
+                                {
+                                    break;
+                                }
+                                userIdOne = user1.id;
+                                userIdTwo = user2.id;
+                                switch (winFlag)
+                                {
+                                    case 0:
+                                        // win for white
+                                        if (game.players[0].isWhite)
+                                        {
+                                            outcome1 = "win";
+                                            outcome2 = "loss";
+                                        }
+                                        else
+                                        {
+                                            outcome1 = "loss";
+                                            outcome2 = "win";
+                                        }
+                                        break;
+                                    case 1:
+                                        // win for black
+                                        if (!game.players[0].isWhite)
+                                        {
+                                            outcome1 = "win";
+                                            outcome2 = "loss";
+                                        }
+                                        else
+                                        {
+                                            outcome1 = "loss";
+                                            outcome2 = "win";
+                                        }
+                                        break;
+                                    case 2:
+                                        // draw
+                                        outcome1 = "draw";
+                                        outcome2 = "draw";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
                         if (ratingChange1 != "" && ratingChange2 != "")
                         {
                             await chessService.GameOver(game.id, result, reason, $"{ratingChange1}  ---  {ratingChange2}");
@@ -286,6 +376,8 @@
                             await chessService.GameOver(game.id, result, reason);
                         }
 
+                        // UPDATE THIS TO ONLY INCLUDE NEEDED INFO FOR GAME STORAGE
+                        // OR TRAINING OF AI, NOT REST OF DATA
                         var json = JsonConvert.SerializeObject(game);
                         int id = gameRepository.CreateGame(userIdOne, userIdTwo, json);
 
@@ -293,7 +385,6 @@
                         {
                             statisticsRepository.CreateStatistic((int)(game.state.moveLog.Count / 2), userIdOne, id, outcome1);
                             statisticsRepository.CreateStatistic((int)(game.state.moveLog.Count / 2), userIdTwo, id, outcome2);
-
                         }
                         else if (userIdOne != -1 && outcome1 != "")
                         {

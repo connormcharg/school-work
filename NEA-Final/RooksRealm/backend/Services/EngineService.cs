@@ -2,7 +2,6 @@
 {
     using backend.Classes.Engine;
     using backend.Classes.Handlers;
-    using Microsoft.AspNetCore.Mvc.Formatters;
 
     /// <summary>
     /// Defines the <see cref="EngineService" />

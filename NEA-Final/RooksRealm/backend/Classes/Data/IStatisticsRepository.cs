@@ -15,5 +15,13 @@
         /// <param name="dateTime">The dateTime<see cref="DateTime?"/></param>
         /// <returns>The <see cref="bool"/></returns>
         bool CreateStatistic(int numberOfMoves, int userId, int gameId, string outcome, DateTime? dateTime = null);
+
+        /// <summary>
+        /// The GetStatistics
+        /// </summary>
+        /// <param name="daysAgo">The daysAgo<see cref="int"/></param>
+        /// <param name="userId">The userId<see cref="int"/></param>
+        /// <returns>The <see cref="List{Statistic}"/></returns>
+        List<Statistic> GetStatistics(int daysAgo, int userId);
     }
 }
