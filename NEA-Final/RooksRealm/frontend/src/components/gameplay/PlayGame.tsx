@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import {
-  HubConnectionBuilder,
-  HubConnection
-} from "@microsoft/signalr";
+import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr";
 import ChessBoard from "./ChessBoard";
 import MessageBox from "./MessageBox";
 import { useAuth } from "../../contexts/AuthProvider";
 import ControlStack from "./ControlStack";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 interface PlayGameProps {
   boardSize: number;
@@ -17,7 +14,7 @@ interface PlayGameProps {
 interface HighlightData {
   "prev-start": [number, number] | null;
   "prev-end": [number, number] | null;
-  "check": [number, number] | null;
+  check: [number, number] | null;
 }
 
 interface Player {
@@ -42,8 +39,8 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
   const [playerData, setPlayerData] = useState<Array<Player> | null>(null);
   const [moveLogData, setMoveLogData] = useState<Array<string> | null>(null);
   const [isEndOfGame, setIsEndOfGame] = useState(false);
-  const [gameResult, setGameResult] = useState('');
-  const [gameReason, setGameReason] = useState('');
+  const [gameResult, setGameResult] = useState("");
+  const [gameReason, setGameReason] = useState("");
   const [gameRatingChange, setGameRatingChange] = useState<string | null>(null);
   const [maxHeight, _] = useState<string>("10rem");
   const navigate = useNavigate();
@@ -61,8 +58,8 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
         return token;
       }
       throw new Error("User not logged in!");
-    }
-    
+    };
+
     const newConnection = new HubConnectionBuilder()
       .withUrl("/proxy/chesshub", {
         accessTokenFactory: () => getJwtToken(),
@@ -90,7 +87,9 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           setIsEndOfGame(true);
         });
       })
-      .catch((err: any) => console.log("Error while starting connection: ", err));
+      .catch((err: any) =>
+        console.log("Error while starting connection: ", err),
+      );
 
     return () => {
       if (newConnection) {
@@ -156,8 +155,13 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
         }
       } else {
         if (isWhite()) {
-          var p = data.players.find((player: any) => player.connectionId === connection?.connectionId);
-          var p2 = (data.players.length === 2) ? (data.players[(data.players.indexOf(p) === 0 ? 1 : 0)]) : null;
+          var p = data.players.find(
+            (player: any) => player.connectionId === connection?.connectionId,
+          );
+          var p2 =
+            data.players.length === 2
+              ? data.players[data.players.indexOf(p) === 0 ? 1 : 0]
+              : null;
           setPlayerData([
             {
               nickname: p2 ? p2.nickName : "Waiting...",
@@ -173,8 +177,13 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
             },
           ]);
         } else {
-          var p = data.players.find((player: any) => player.connectionId === connection?.connectionId);
-          var p2 = (data.players.length === 2) ? (data.players[(data.players.indexOf(p) === 0 ? 1 : 0)]) : null;
+          var p = data.players.find(
+            (player: any) => player.connectionId === connection?.connectionId,
+          );
+          var p2 =
+            data.players.length === 2
+              ? data.players[data.players.indexOf(p) === 0 ? 1 : 0]
+              : null;
           setPlayerData([
             {
               nickname: p2 ? p2.nickName : "Waiting...",
@@ -208,7 +217,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
       if (col == 6) return "g";
       if (col == 7) return "h";
       return "";
-    }
+    };
     const rowToRank = (row: number) => {
       if (row == 0) return "1";
       if (row == 1) return "2";
@@ -219,7 +228,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
       if (row == 6) return "7";
       if (row == 7) return "8";
       return "";
-    }
+    };
     const pieceToUnicode = (piece: string, isWhite: boolean) => {
       switch (piece.toUpperCase()) {
         case "R":
@@ -238,10 +247,10 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           return ""; // Return an empty string if the input is not a valid piece letter
       }
     };
-    
-    const result = new Array<string>;
 
-    moveLog.forEach(move => {
+    const result = new Array<string>();
+
+    moveLog.forEach((move) => {
       var notation = "";
       if (move) {
         if (move.isCastleMove) {
@@ -257,7 +266,6 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
 
         var isWhite = move.pieceMoved[0] === "w";
         var piece = move.pieceMoved[1];
-
 
         // 1. Add piece letter if it's not a pawn
         if (piece !== "P") {
@@ -297,13 +305,13 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
         return;
       }
     });
-    
+
     return result;
-  }
+  };
 
   const handleGoHome = () => {
     navigate("/");
-  }
+  };
   // #endregion
 
   async function sendMove(start: number[], end: number[]) {
@@ -320,18 +328,19 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
         isCastleMove: false,
       };
       const jsonString = JSON.stringify(move);
-      await connection?.invoke("SendMove", jsonString)
+      await connection
+        ?.invoke("SendMove", jsonString)
         .then(() => null)
         .catch((err: any) => {
           console.log("Error sending move: ", err);
-        })
+        });
     } catch (e) {
       console.error("Error sending move: ", e);
     }
   }
 
   // #region Callback
-  const onMoveValidCheck = useCallback(    
+  const onMoveValidCheck = useCallback(
     async (start: number[], end: number[]) => {
       if (isPaused()) {
         return false;
@@ -344,7 +353,8 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
         endCopy[0] = 7 - end[0];
         endCopy[1] = 7 - end[1];
       }
-      const squaresToCode = (s: number[], e: number[]) => s[0] * 1000 + s[1] * 100 + e[0] * 10 + e[1];
+      const squaresToCode = (s: number[], e: number[]) =>
+        s[0] * 1000 + s[1] * 100 + e[0] * 10 + e[1];
       const code = squaresToCode(startCopy, endCopy);
       if (data && data.currentValidMoves) {
         if (data.currentValidMoves.some((m: any) => m.moveID === code)) {
@@ -352,7 +362,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
         }
         return false;
       }
-      throw new Error("no currentValidMoves found")
+      throw new Error("no currentValidMoves found");
     },
     [data],
   );
@@ -372,51 +382,55 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
     [connection, data],
   );
 
-  const onHighlightSquares = useCallback(
-    (): HighlightData => {
-      let prevStart: [number, number] | null = null;
-      let prevEnd: [number, number] | null = null;
-      let check: [number, number] | null = null;
-      if (data && data.state && data.state.moveLog && data.state.moveLog.length > 0) {
-        prevStart = [
-          data.state.moveLog[data.state.moveLog.length - 1].startRow,
-          data.state.moveLog[data.state.moveLog.length - 1].startCol
-        ];
-        prevEnd = [
-          data.state.moveLog[data.state.moveLog.length - 1].endRow,
-          data.state.moveLog[data.state.moveLog.length - 1].endCol
-        ];
+  const onHighlightSquares = useCallback((): HighlightData => {
+    let prevStart: [number, number] | null = null;
+    let prevEnd: [number, number] | null = null;
+    let check: [number, number] | null = null;
+    if (
+      data &&
+      data.state &&
+      data.state.moveLog &&
+      data.state.moveLog.length > 0
+    ) {
+      prevStart = [
+        data.state.moveLog[data.state.moveLog.length - 1].startRow,
+        data.state.moveLog[data.state.moveLog.length - 1].startCol,
+      ];
+      prevEnd = [
+        data.state.moveLog[data.state.moveLog.length - 1].endRow,
+        data.state.moveLog[data.state.moveLog.length - 1].endCol,
+      ];
 
-        if (data.state.inCheck) {
-          if (data.state.whiteToMove) {
-            check = data.state.whiteKingLocation;
-          } else {
-            check = data.state.blackKingLocation;
-          }
+      if (data.state.inCheck) {
+        if (data.state.whiteToMove) {
+          check = data.state.whiteKingLocation;
+        } else {
+          check = data.state.blackKingLocation;
         }
       }
-      
-      return {
-        "prev-start": prevStart,
-        "prev-end": prevEnd,
-        "check": check
-      };
-    },
-    [data],
-  );
+    }
+
+    return {
+      "prev-start": prevStart,
+      "prev-end": prevEnd,
+      check: check,
+    };
+  }, [data]);
 
   const isWhite = useCallback(() => {
     if (!data) {
       return true;
     }
     if (data.players) {
-      var p = data.players.find((player: any) => player.connectionId === connection?.connectionId);
+      var p = data.players.find(
+        (player: any) => player.connectionId === connection?.connectionId,
+      );
       if (p) {
         return p.isWhite;
       }
-      throw new Error("player not found in data")
+      throw new Error("player not found in data");
     }
-    throw new Error("no players data found in data")
+    throw new Error("no players data found in data");
   }, [data]);
 
   const isSinglePlayer = useCallback(() => {
@@ -424,62 +438,81 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
       return false;
     }
     return data.settings.isSinglePlayer;
-  }, [data])
+  }, [data]);
 
   const isPaused = useCallback(() => {
     if (!data) {
       return false;
     }
     return data.state.pauseAgreed;
-  }, [data])
+  }, [data]);
 
   const findPauseRequestCount = useCallback(() => {
     if (!data) {
       return 0;
     }
     return data.state.pauseRequests.length;
-  }, [data])
+  }, [data]);
 
   const findDrawOfferCount = useCallback(() => {
     if (!data) {
       return 0;
     }
     return data.state.drawOffers.length;
-  }, [data])
+  }, [data]);
 
-  const onValidMovesData = useCallback((pieceRow: number, pieceCol: number) => {
-    const rowColToSquareClass = (row: number, col: number) => {
-      const rowCopy = isWhite() ? row : 7 - row;
-      const colCopy = isWhite() ? col : 7 - col;
-      return `square-${rowCopy}-${colCopy}`;
-    }
+  const onValidMovesData = useCallback(
+    (pieceRow: number, pieceCol: number) => {
+      const rowColToSquareClass = (row: number, col: number) => {
+        const rowCopy = isWhite() ? row : 7 - row;
+        const colCopy = isWhite() ? col : 7 - col;
+        return `square-${rowCopy}-${colCopy}`;
+      };
 
-    const pieceRowCopy = isWhite() ? pieceRow : 7 - pieceRow;
-    const pieceColCopy = isWhite() ? pieceCol : 7 - pieceCol;
-    
-    var p = data.players.find((player: any) => player.connectionId === connection?.connectionId);
-    if (data && p && data.currentValidMoves && (data.state.whiteToMove === p.isWhite)) {
-      var r = (data.currentValidMoves as Array<any>)
-        .filter(move => move.startRow === pieceRowCopy && move.startCol === pieceColCopy)
-        .map(move => rowColToSquareClass(move.endRow, move.endCol));
-      return r;
-    }
-    return new Array<string>;
-  }, [data, connection])
+      const pieceRowCopy = isWhite() ? pieceRow : 7 - pieceRow;
+      const pieceColCopy = isWhite() ? pieceCol : 7 - pieceCol;
 
-  const [suggestedMoveSquares, setSuggestedMoveSquares] = useState<Array<Array<number>> | null>(null);
+      var p = data.players.find(
+        (player: any) => player.connectionId === connection?.connectionId,
+      );
+      if (
+        data &&
+        p &&
+        data.currentValidMoves &&
+        data.state.whiteToMove === p.isWhite
+      ) {
+        var r = (data.currentValidMoves as Array<any>)
+          .filter(
+            (move) =>
+              move.startRow === pieceRowCopy && move.startCol === pieceColCopy,
+          )
+          .map((move) => rowColToSquareClass(move.endRow, move.endCol));
+        return r;
+      }
+      return new Array<string>();
+    },
+    [data, connection],
+  );
+
+  const [suggestedMoveSquares, setSuggestedMoveSquares] = useState<Array<
+    Array<number>
+  > | null>(null);
   const displaySuggestedMove = useCallback(() => {
     const moveIdToRowsAndCols = (moveId: number) => {
       const s = moveId.toString().padStart(4, "0");
       return [
         [Number(s[0]), Number(s[1])],
-        [Number(s[2]), Number(s[3])]
+        [Number(s[2]), Number(s[3])],
       ];
-    }
-    if (data.players[0].isWhite == data.state.whiteToMove && !data.state.checkMate && !data.state.staleMate) {
+    };
+    if (
+      data.players[0].isWhite == data.state.whiteToMove &&
+      !data.state.checkMate &&
+      !data.state.staleMate
+    ) {
       setSuggestedMoveSquares(moveIdToRowsAndCols(data.suggestedMoveId));
     }
-  }, [data])
+  }, [data]);
 
   const getBoardTheme = useCallback(async () => {
     try {
@@ -500,53 +533,57 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
     } catch {
       return "blue";
     }
-  }, [token, isLoggedIn])
+  }, [token, isLoggedIn]);
 
   const sendResignation = useCallback(() => {
     if (connection && isConnected) {
       connection
         .send("SendResignation")
         .then(() => {
-          console.log("Client sent resignation.")
+          console.log("Client sent resignation.");
         })
         .catch((err: any) => console.log("Error resigning from game: ", err));
     }
-  }, [connection, isConnected, id])
+  }, [connection, isConnected, id]);
 
   const sendPauseRequest = useCallback(() => {
     if (connection && isConnected) {
       connection
         .send("SendPauseRequest")
         .then(() => {
-          console.log("Client sent pause request.")
+          console.log("Client sent pause request.");
         })
-        .catch((err: any) => console.log("Error sending pause request to game: ", err));
+        .catch((err: any) =>
+          console.log("Error sending pause request to game: ", err),
+        );
     }
-  }, [connection, isConnected, id])
+  }, [connection, isConnected, id]);
 
   const sendDrawOffer = useCallback(() => {
     if (connection && isConnected) {
       connection
         .send("SendDrawOffer")
         .then(() => {
-          console.log("Client sent draw offer.")
+          console.log("Client sent draw offer.");
         })
-        .catch((err: any) => console.log("Error sending draw offer to game: ", err));
+        .catch((err: any) =>
+          console.log("Error sending draw offer to game: ", err),
+        );
     }
-  }, [connection, isConnected, id])
+  }, [connection, isConnected, id]);
   // #endregion
 
   return (
-    <div className="flex flex-col relative">
+    <div className="relative flex flex-col">
       {isEndOfGame && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 text-center">
-            <h2 className="text-2xl font-bold mb-4">{gameResult}</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="rounded-lg bg-white p-6 text-center">
+            <h2 className="mb-4 text-2xl font-bold">{gameResult}</h2>
             <p className="mb-6">{gameReason}</p>
             {gameRatingChange && <p className="mb-6">{gameRatingChange}</p>}
             <button
               onClick={handleGoHome}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
             >
               Go to Home
             </button>

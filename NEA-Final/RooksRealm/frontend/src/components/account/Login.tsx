@@ -1,54 +1,56 @@
-import React, { FormEventHandler, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"
+import React, { FormEventHandler, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
+import useInput from "../../hooks/useInput";
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn, login } = useAuth();
 
   const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    await login(email, password);
-  }
+    await login(email.value, password.value);
+  };
 
   useEffect(() => {
     if (isLoggedIn) {
       navigate("/");
     }
-  }, [isLoggedIn, navigate])
+  }, [isLoggedIn, navigate]);
+
+  const email = useInput("");
+  const password = useInput("");
 
   return (
-    <div className="w-full md:w-80 mx-auto">
-      <h1 className="text-xl font-semibold mb-6 text-center">Login</h1>
+    <div className="mx-auto w-full md:w-80">
+      <h1 className="mb-6 text-center text-xl font-semibold">Login</h1>
       <form
-        className="flex-1 flex flex-col items-left justify-center p-4 w-full md:w-80"
+        className="items-left flex w-full flex-1 flex-col justify-center p-4 md:w-80"
         onSubmit={handleLogin}
       >
         <input
-          type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          value={email.value}
+          onChange={email.onChange}
           placeholder="Enter email address"
-          className="mb-4 border border-gray-300 rounded p-2 w-full"
+          className="mb-4 w-full rounded border border-gray-300 p-2"
         />
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={password.value}
+          onChange={password.onChange}
           placeholder="Enter password"
-          className="mb-4 border border-gray-300 rounded p-2 w-full"
+          className="mb-4 w-full rounded border border-gray-300 p-2"
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-[50%] self-center"
+          className="w-[50%] self-center rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
         >
           Login
         </button>
       </form>
     </div>
   );
-}
+};
 
-export default Login;
+export default LoginForm;

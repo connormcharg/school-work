@@ -5,6 +5,7 @@
         public int id { get; set; }
         public string? title { get; set; }
         public string? content { get; set; }
-        public int userId { get; set; }
+        public string? username { get; set; }
+        public DateTime datetime { get; set; }
     }
 }

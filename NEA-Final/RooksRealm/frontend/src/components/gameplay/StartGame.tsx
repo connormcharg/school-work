@@ -2,26 +2,55 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const StartGame: React.FC = () => {
-  const [mode, setMode] = useState("");
-  const [colour, setColour] = useState("");
-  const [time, setTime] = useState("");
-  const [privacy, setPrivacy] = useState("");
-  const [rated, setRated] = useState("");
-  const [watchable, setWatchable] = useState("");
-  const [title, setTitle] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [formData, setFormData] = useState({
+    mode: "",
+    colour: "",
+    time: "",
+    privacy: "",
+    rated: "",
+    watchable: "",
+    title: "",
+  });
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.mode &&
+      formData.colour &&
+      formData.time &&
+      formData.privacy &&
+      formData.rated &&
+      formData.watchable
+    );
+  };
+
   const handleStartGame = async () => {
-    setErrorMessage("");
+    if (!isFormValid()) {
+      setErrorMessage("Please fill in all fields.");
+      return;
+    }
+
+    setErrorMessage(null);
     const data = {
-      isSinglePlayer: mode === "single",
-      isStartingWhite: colour === "white",
-      isTimed: time === "timed",
-      isPrivate: privacy === "private",
-      isRated: rated === "rated",
-      isWatchable: watchable === "yes",
-      gameTitle: title,
+      isSinglePlayer: formData.mode === "single",
+      isStartingWhite: formData.colour === "white",
+      isTimed: formData.time === "timed",
+      isPrivate: formData.privacy === "private",
+      isRated: formData.rated === "rated",
+      isWatchable: formData.watchable === "yes",
+      gameTitle: formData.title,
     };
 
     try {
@@ -52,8 +81,9 @@ const StartGame: React.FC = () => {
       <div className="flex">
         <div className="flex flex-1 flex-col items-center justify-center p-4">
           <select
-            value={mode}
-            onChange={(e) => setMode(e.target.value)}
+            name="mode"
+            value={formData.mode}
+            onChange={handleInputChange}
             className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
           >
             <option value="">Select Mode</option>
@@ -62,8 +92,9 @@ const StartGame: React.FC = () => {
           </select>
 
           <select
-            value={colour}
-            onChange={(e) => setColour(e.target.value)}
+            name="colour"
+            value={formData.colour}
+            onChange={handleInputChange}
             className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
           >
             <option value="">Select Starting Colour</option>
@@ -72,8 +103,9 @@ const StartGame: React.FC = () => {
           </select>
 
           <select
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
+            name="time"
+            value={formData.time}
+            onChange={handleInputChange}
             className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
           >
             <option value="">Select Time Control</option>
@@ -82,8 +114,9 @@ const StartGame: React.FC = () => {
           </select>
 
           <select
-            value={privacy}
-            onChange={(e) => setPrivacy(e.target.value)}
+            name="privacy"
+            value={formData.privacy}
+            onChange={handleInputChange}
             className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
           >
             <option value="">Select Visibility</option>
@@ -92,8 +125,9 @@ const StartGame: React.FC = () => {
           </select>
 
           <select
-            value={rated}
-            onChange={(e) => setRated(e.target.value)}
+            name="rated"
+            value={formData.rated}
+            onChange={handleInputChange}
             className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
           >
             <option value="">Is It Rated?</option>
@@ -102,8 +136,9 @@ const StartGame: React.FC = () => {
           </select>
 
           <select
-            value={watchable}
-            onChange={(e) => setWatchable(e.target.value)}
+            name="watchable"
+            value={formData.watchable}
+            onChange={handleInputChange}
             className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
           >
             <option value="">Can It Be Watched?</option>
@@ -113,8 +148,9 @@ const StartGame: React.FC = () => {
 
           <input
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
             placeholder="Enter Game Title"
             className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
           />
@@ -127,7 +163,7 @@ const StartGame: React.FC = () => {
           </button>
         </div>
 
-        <div className="flex flex-1 items-center justify-center h-full">
+        <div className="flex h-full flex-1 items-center justify-center">
           <img
             draggable="false"
             src="/images/static-game-board.png"

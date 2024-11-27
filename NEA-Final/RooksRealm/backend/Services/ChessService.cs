@@ -124,7 +124,7 @@ namespace backend.Services
             games.TryGetValue(id, out var game);
             if (game == null)
             {
-                throw new Exception("game id not found in games dictionary");
+                return;
             }
             game.currentValidMoves = GameHandler.FindValidMoves(game);
             var move = game.currentValidMoves.FirstOrDefault(m => m.moveID == moveId);
@@ -143,7 +143,7 @@ namespace backend.Services
             games.TryGetValue(id, out var game);
             if (game == null)
             {
-                throw new Exception("game id not found in games dictionary");
+                return;
             }
             game.currentValidMoves = GameHandler.FindValidMoves(game);
             game.suggestedMoveId = suggestedMoveId;

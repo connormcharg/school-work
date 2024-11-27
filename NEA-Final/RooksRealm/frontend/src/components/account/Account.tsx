@@ -10,7 +10,15 @@ interface UserDetails {
 }
 
 const Account: React.FC = () => {
-  const { token, isLoggedIn, changeEmail, changePassword, changeUsername, deleteAccount, changeTheme } = useAuth();
+  const {
+    token,
+    isLoggedIn,
+    changeEmail,
+    changePassword,
+    changeUsername,
+    deleteAccount,
+    changeTheme,
+  } = useAuth();
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -55,7 +63,8 @@ const Account: React.FC = () => {
   }, [token, isLoggedIn]);
 
   // Validation functions
-  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validateEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePassword = (password: string) => password.length >= 8;
   // const validateTheme = async (t: string) => {
   //   try {
@@ -129,14 +138,14 @@ const Account: React.FC = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
             placeholder="Enter new username"
           />
-          <div className="flex flex-col md:flex-row items-center gap-4">
+          <div className="flex flex-col items-center gap-4 md:flex-row">
             <select
               value={theme}
               onChange={handleThemeChange}
-              className="w-full p-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:border-blue-500"
+              className="w-full rounded-md border border-gray-300 bg-white p-2 focus:border-blue-500 focus:outline-none"
             >
               <option value="">Select theme</option>
               <option value="8-bit">8 Bit</option>
@@ -153,12 +162,12 @@ const Account: React.FC = () => {
               <option value="tan">Tan</option>
             </select>
             {themePreview && (
-              <div className="w-16 h-16 overflow-hidden rounded-md flex-shrink-0">
+              <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
                 <img
                   src={themePreview}
                   alt="Board Preview"
-                  className="w-64 h-64 object-cover"
-                  style={{ objectPosition: '0 0' }}
+                  className="h-64 w-64 object-cover"
+                  style={{ objectPosition: "0 0" }}
                 />
               </div>
             )}
@@ -167,19 +176,19 @@ const Account: React.FC = () => {
             type="text"
             value={`Rating: ${rating}`}
             disabled
-            className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600"
+            className="w-full rounded-md border border-gray-300 bg-gray-100 p-2 text-gray-600"
             readOnly
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+            className="w-full rounded-md bg-blue-500 py-2 text-white transition hover:bg-blue-600"
           >
             Update Profile
           </button>
         </form>
       );
     }
-  
+
     if (activeTab === "email" && userDetails) {
       return (
         <form
@@ -203,19 +212,19 @@ const Account: React.FC = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
             placeholder="Enter new email"
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+            className="w-full rounded-md bg-blue-500 py-2 text-white transition hover:bg-blue-600"
           >
             Update Email
           </button>
         </form>
       );
     }
-  
+
     if (activeTab === "password") {
       return (
         <form
@@ -242,50 +251,50 @@ const Account: React.FC = () => {
             placeholder="Old Password"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
           />
           <input
             type="password"
             placeholder="New Password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+            className="w-full rounded-md bg-blue-500 py-2 text-white transition hover:bg-blue-600"
           >
             Change Password
           </button>
         </form>
       );
     }
-  
+
     if (activeTab === "delete") {
       return (
         <button
           onClick={() => deleteAccount()}
-          className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition"
+          className="w-full rounded-md bg-red-500 py-2 text-white transition hover:bg-red-600"
         >
           Delete Account
         </button>
       );
     }
-  
+
     return null;
   };
 
   return (
-    <div className="w-full md:w-80 mx-auto">
-      <h1 className="text-xl font-semibold mb-6 text-center">Account</h1>
-      <div className="flex justify-around mb-4 border-b border-gray-300">
+    <div className="mx-auto w-full md:w-80">
+      <h1 className="mb-6 text-center text-xl font-semibold">Account</h1>
+      <div className="mb-4 flex justify-around border-b border-gray-300">
         {["profile", "email", "password", "delete"].map((tab) => (
           <button
             key={tab}
             className={`pb-2 ${
               activeTab === tab
                 ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500 hover:text-blue-500 transition"
+                : "text-gray-500 transition hover:text-blue-500"
             }`}
             onClick={() => setActiveTab(tab)}
           >
@@ -293,13 +302,13 @@ const Account: React.FC = () => {
           </button>
         ))}
       </div>
-      <div className="w-full md:w-80 space-y-4">
+      <div className="w-full space-y-4 md:w-80">
         {loading ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : (
           renderTabContent()
         )}
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {error && <p className="text-center text-red-500">{error}</p>}
       </div>
     </div>
   );

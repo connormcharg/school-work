@@ -1,4 +1,10 @@
-import { FC, PropsWithChildren, createContext, useContext, useEffect } from "react";
+import {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+} from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { ToastPosition, useToast } from "@chakra-ui/react";
 import { jwtDecode } from "jwt-decode";
@@ -23,7 +29,7 @@ interface DecodedToken {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
-	const [token, setToken] = useLocalStorage("token", "");
+  const [token, setToken] = useLocalStorage("token", "");
   const toast = useToast();
 
   const toastPosition: ToastPosition = "bottom";
@@ -42,14 +48,14 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         logout(true);
         return false;
       } else if (decoded.exp - currentTime < 300) {
-        refreshToken();
+        await refreshToken();
       }
       return true;
     } catch {
       logout(true);
       return false;
     }
-  }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -59,19 +65,21 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     }, 60000);
 
     return () => clearInterval(interval);
-  }, [token])
-  
+  }, [token]);
+
   const logout = (tokenExpired: boolean = false) => {
     setToken("");
     toast({
       title: "Logged out.",
-      description: tokenExpired ? "Your session has expired. Please log in again." : "You have successfully logged out.",
+      description: tokenExpired
+        ? "Your session has expired. Please log in again."
+        : "You have successfully logged out.",
       status: "success",
       duration: toastDuration,
       isClosable: true,
       position: toastPosition,
     });
-  }
+  };
 
   const refreshToken = async () => {
     try {
@@ -79,12 +87,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!res.ok) {
-        throw new Error("Failed to refresh token")
+        throw new Error("Failed to refresh token");
       }
 
       const newToken = await res.json();
@@ -93,183 +101,113 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       console.error("Error refreshing token:", error);
       logout();
     }
-  }
+  };
 
-  const changeEmail = async (newEmail: string) => {
+  const handleLoginResponse = async (res: Response) => {
+    if (!res.ok) {
+      throw new Error((await res.json()).message || "An error occurred.");
+    }
+
+    const data = await res.json();
+    setToken(data["token"]);
+    toast({
+      title: "Logged in.",
+      description: "You have successfully logged in.",
+      status: "success",
+      duration: toastDuration,
+      isClosable: true,
+      position: toastPosition,
+    });
+  };
+
+  const handleResponseError = (error: any) => {
+    toast({
+      title: "Error Occurred",
+      description: error.message || "An error occurred.",
+      status: "error",
+      duration: toastDuration,
+      isClosable: true,
+      position: toastPosition,
+    });
+  };
+
+  const handleLogin = async (email: string, password: string) => {
     try {
-      const res = await fetch("/proxy/api/auth/changeEmail", {
+      const res = await fetch("/proxy/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ newEmail }),
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to change email");
-      }
-
-      toast({
-        title: "Email Updated",
-        description: "Your email has been successfully updated.",
-        status: "success",
-        duration: toastDuration,
-        isClosable: true,
-        position: toastPosition,
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error Changing Email",
-        description: error.message || "An error occurred.",
-        status: "error",
-        duration: toastDuration,
-        isClosable: true,
-        position: toastPosition,
-      });
+      await handleLoginResponse(res);
+    } catch (error) {
+      handleResponseError(error);
     }
   };
 
-  const changeUsername = async (newUsername: string) => {
+  const handleRegister = async (email: string, password: string) => {
     try {
-      const res = await fetch("/proxy/api/auth/changeUsername", {
+      const res = await fetch("/proxy/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ newUsername }),
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
 
       if (!res.ok) {
-        throw new Error("Failed to change username");
+        throw new Error((await res.json()).message || "An error occurred.");
       }
 
       toast({
-        title: "Username Updated",
-        description: "Your username has been successfully updated.",
+        title: "Registered.",
+        description: "You have successfully registered.",
         status: "success",
         duration: toastDuration,
         isClosable: true,
         position: toastPosition,
       });
-    } catch (error: any) {
-      toast({
-        title: "Error Changing Username",
-        description: error.message || "An error occurred.",
-        status: "error",
-        duration: toastDuration,
-        isClosable: true,
-        position: toastPosition,
-      });
+    } catch (error) {
+      handleResponseError(error);
     }
   };
 
-  const changePassword = async (oldPassword: string, newPassword: string) => {
+  const handleAccountAction = async (
+    url: string,
+    body: any,
+    description: string,
+  ) => {
     try {
-      const res = await fetch("/proxy/api/auth/changePassword", {
+      const res = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ oldPassword, newPassword }),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {
-        throw new Error("Failed to change password");
+        throw new Error((await res.json()).message || "An error occurred.");
       }
 
       toast({
-        title: "Password Updated",
-        description: "Your password has been successfully updated.",
+        title: description,
         status: "success",
         duration: toastDuration,
         isClosable: true,
         position: toastPosition,
       });
-
+    } catch (error) {
+      handleResponseError(error);
       logout();
-    } catch (error: any) {
-      toast({
-        title: "Error Changing Password",
-        description: error.message || "An error occurred.",
-        status: "error",
-        duration: toastDuration,
-        isClosable: true,
-        position: toastPosition,
-      });
-    }
-  };
-
-  const deleteAccount = async () => {
-    try {
-      const res = await fetch("/proxy/api/auth/delete", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        }
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete account.");
-      }
-
-      toast({
-        title: "Account Deleted",
-        description: "Your account has been successfully deleted.",
-        status: "success",
-        duration: toastDuration,
-        isClosable: true,
-        position: toastPosition,
-      });
-
-      logout();
-    } catch (error: any) {
-      toast({
-        title: "Error Deleting Account",
-        description: error.message || "An error occurred.",
-        status: "error",
-        duration: toastDuration,
-        isClosable: true,
-        position: toastPosition,
-      });
-    }
-  };
-
-  const changeTheme = async (newTheme: string) => {
-    try {
-      const res = await fetch("/proxy/api/auth/changeTheme", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ newTheme }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to change theme.");
-      }
-
-      toast({
-        title: "Theme Changed",
-        description: "Your theme has been successfully changed.",
-        status: "success",
-        duration: toastDuration,
-        isClosable: true,
-        position: toastPosition,
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error Changing Theme",
-        description: error.message || "An error occurred.",
-        status: "error",
-        duration: toastDuration,
-        isClosable: true,
-        position: toastPosition,
-      });
     }
   };
 
@@ -279,109 +217,36 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         token,
         isLoggedIn: !!token,
         logout,
-        login(email, password) {
-          return new Promise((resolve, reject) => {
-            fetch("/proxy/api/auth/login", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email: email,
-                password: password,
-              }),
-            }).then(async (res) => {
-              if (!res.ok) {
-                toast({
-                  title: "Error occured logging in.",
-                  description:
-                    (await res.json()).message || "An error occurred.",
-                  status: "error",
-                  duration: toastDuration,
-                  isClosable: true,
-                  position: toastPosition,
-                });
-                reject();
-              } else {
-                setToken((await res.json())["token"]);
-                toast({
-                  title: "Logged in.",
-                  description: "You have successfully logged in.",
-                  status: "success",
-                  duration: toastDuration,
-                  isClosable: true,
-                  position: toastPosition,
-                });
-                resolve();
-              }
-            }).catch(() => {
-              toast({
-                title: "Error occured logging in.",
-                description: "An error occurred.",
-                status: "error",
-                duration: toastDuration,
-                isClosable: true,
-                position: toastPosition,
-              });
-              reject();
-            });
-          });
+        login: handleLogin,
+        register: handleRegister,
+        changeEmail: async (newEmail: string) =>
+          await handleAccountAction(
+            "/proxy/api/auth/changeEmail",
+            { newEmail },
+            "Email Updated",
+          ),
+        changeUsername: async (newUsername: string) =>
+          await handleAccountAction(
+            "/proxy/api/auth/changeUsername",
+            { newUsername },
+            "Username Updated",
+          ),
+        changePassword: async (oldPassword: string, newPassword: string) => {
+          await handleAccountAction(
+            "/proxy/api/auth/changePassword",
+            { oldPassword, newPassword },
+            "Password Updated",
+          );
+          logout();
         },
-        register(email, password) {
-          return new Promise((resolve, reject) => {
-            fetch("/proxy/api/auth/register", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email: email,
-                password: password,
-              }),
-            })
-              .then(async (res) => {
-                if (!res.ok) {
-                  toast({
-                    title: "Error occured registering.",
-                    description:
-                      (await res.json()).message || "An error occurred.",
-                    status: "error",
-                    duration: toastDuration,
-                    isClosable: true,
-                    position: toastPosition,
-                  });
-                  reject();
-                } else {
-                  // setToken(await res.json());
-                  toast({
-                    title: "Registered.",
-                    description: "You have successfully registered.",
-                    status: "success",
-                    duration: toastDuration,
-                    isClosable: true,
-                    position: toastPosition,
-                  });
-                  resolve();
-                }
-              })
-              .catch(() => {
-                toast({
-                  title: "Error occured logging in.",
-                  description: "An error occurred.",
-                  status: "error",
-                  duration: toastDuration,
-                  isClosable: true,
-                  position: toastPosition,
-                });
-                reject();
-              });
-          });
-        },
-        changeEmail,
-        changeUsername,
-        changePassword,
-        deleteAccount,
-        changeTheme,
+        deleteAccount: () =>
+          handleAccountAction("/proxy/api/auth/delete", {}, "Account Deleted"),
+        changeTheme: async (newTheme: string) =>
+          await handleAccountAction(
+            "/proxy/api/auth/changeTheme",
+            { newTheme },
+            "Theme Changed",
+          ),
       }}
     >
       {children}

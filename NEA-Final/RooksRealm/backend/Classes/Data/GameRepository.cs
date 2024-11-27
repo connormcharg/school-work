@@ -6,7 +6,16 @@ namespace backend.Classes.Data
     {
         public int CreateGame(int playerOneId, int playerTwoId, string gameData)
         {
-            if (gameData == null)
+            if (string.IsNullOrWhiteSpace(gameData))
+            {
+                return -1;
+            }
+
+            try
+            {
+                var parsedJson = Newtonsoft.Json.Linq.JToken.Parse(gameData);
+            }
+            catch (Newtonsoft.Json.JsonReaderException)
             {
                 return -1;
             }
@@ -16,11 +25,11 @@ namespace backend.Classes.Data
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "INSERT INTO tblgames (playeroneid, playertwoid, gamedata) VALUES (@playerOneId, @playerTwoId, @gameData) RETURNING id;", 
+                    "INSERT INTO tblgames (playeroneid, playertwoid, gamedata) VALUES (@playerOneId, @playerTwoId, @gameData) RETURNING id;",
                     connection);
                 command.Parameters.AddWithValue("playerOneId", playerOneId);
                 command.Parameters.AddWithValue("playerTwoId", playerTwoId);
-                command.Parameters.AddWithValue("gameData", gameData);
+                command.Parameters.AddWithValue("gameData", NpgsqlTypes.NpgsqlDbType.Json, gameData);
 
                 var insertedId = (int?)command.ExecuteScalar();
 

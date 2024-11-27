@@ -64,7 +64,7 @@
 }
 
 .hover-square {
-  @apply w-1/8 h-1/8 absolute z-20;
+  @apply absolute z-20 h-1/8 w-1/8;
   background: none;
   left: 0;
   top: 0;
@@ -74,7 +74,7 @@
 }
 
 .dot-square {
-  @apply w-1/8 h-1/8 absolute z-20;
+  @apply absolute z-20 h-1/8 w-1/8;
   background: none;
   left: 0;
   top: 0;
@@ -83,7 +83,7 @@
 }
 
 .highlight {
-  @apply w-1/8 h-1/8 absolute opacity-50;
+  @apply absolute h-1/8 w-1/8 opacity-50;
   left: 0;
   top: 0;
   will-change: transform;

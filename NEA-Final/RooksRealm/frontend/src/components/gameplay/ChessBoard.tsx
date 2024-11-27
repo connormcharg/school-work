@@ -17,7 +17,7 @@ interface ChessBoardProps {
 interface HighlightData {
   "prev-start": [number, number] | null;
   "prev-end": [number, number] | null;
-  "check": [number, number] | null;
+  check: [number, number] | null;
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({
@@ -30,7 +30,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   onMakeMove,
   onHighlightSquares,
   onValidMovesData,
-  getBoardTheme
+  getBoardTheme,
 }) => {
   // #region Scaling
 
@@ -84,7 +84,10 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   const previousBoardRef = useRef<string[][] | null>(null);
 
   // Helper function to compare 2D arrays
-  const hasBoardChanged = (prevBoard: string[][] | null, newBoard: string[][] | null) => {
+  const hasBoardChanged = (
+    prevBoard: string[][] | null,
+    newBoard: string[][] | null,
+  ) => {
     if (!prevBoard || !newBoard || prevBoard.length !== newBoard.length) {
       return true;
     }
@@ -113,14 +116,16 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
       if (selectedPiece.current && board) {
         const isPieceChanged = checkIfChanged(
           getRowColFromSquareClass(getSquareClass(selectedPiece.current)),
-          selectedPieceString.current
+          selectedPieceString.current,
         );
         if (isPieceChanged) {
           // Resetting code to restore the board back to normal
           selectedPiece.current.style.cssText = "";
           selectedPiece.current.classList.remove("dragging");
-          if (currentMoveSquare.current) currentMoveSquare.current.style.visibility = "hidden";
-          if (hoverSquare.current) hoverSquare.current.style.visibility = "hidden";
+          if (currentMoveSquare.current)
+            currentMoveSquare.current.style.visibility = "hidden";
+          if (hoverSquare.current)
+            hoverSquare.current.style.visibility = "hidden";
 
           selectedPiece.current = null;
           selectedPieceStartRowCol.current = null;
@@ -160,38 +165,38 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
       if (!isWhite()) {
         if (highlightData["prev-start"] && previousMoveStartSquare.current) {
           previousMoveStartSquare.current.classList.add(
-            `square-${7 - highlightData["prev-start"][0]}-${7 - highlightData["prev-start"][1]}`
+            `square-${7 - highlightData["prev-start"][0]}-${7 - highlightData["prev-start"][1]}`,
           );
           previousMoveStartSquare.current.style.cssText = "";
         }
         if (highlightData["prev-end"] && previousMoveEndSquare.current) {
           previousMoveEndSquare.current.classList.add(
-            `square-${7 - highlightData["prev-end"][0]}-${7 - highlightData["prev-end"][1]}`
+            `square-${7 - highlightData["prev-end"][0]}-${7 - highlightData["prev-end"][1]}`,
           );
           previousMoveEndSquare.current.style.cssText = "";
         }
         if (highlightData["check"] && checkSquare.current) {
           checkSquare.current.classList.add(
-            `square-${7 - highlightData["check"][0]}-${7 - highlightData["check"][1]}`
+            `square-${7 - highlightData["check"][0]}-${7 - highlightData["check"][1]}`,
           );
           checkSquare.current.style.cssText = "";
         }
       } else {
         if (highlightData["prev-start"] && previousMoveStartSquare.current) {
           previousMoveStartSquare.current.classList.add(
-            `square-${highlightData["prev-start"][0]}-${highlightData["prev-start"][1]}`
+            `square-${highlightData["prev-start"][0]}-${highlightData["prev-start"][1]}`,
           );
           previousMoveStartSquare.current.style.cssText = "";
         }
         if (highlightData["prev-end"] && previousMoveEndSquare.current) {
           previousMoveEndSquare.current.classList.add(
-            `square-${highlightData["prev-end"][0]}-${highlightData["prev-end"][1]}`
+            `square-${highlightData["prev-end"][0]}-${highlightData["prev-end"][1]}`,
           );
           previousMoveEndSquare.current.style.cssText = "";
         }
         if (highlightData["check"] && checkSquare.current) {
           checkSquare.current.classList.add(
-            `square-${highlightData["check"][0]}-${highlightData["check"][1]}`
+            `square-${highlightData["check"][0]}-${highlightData["check"][1]}`,
           );
           checkSquare.current.style.cssText = "";
         }
@@ -206,24 +211,28 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
       if (isWhite()) {
         if (suggestedMoveStartSquare.current) {
           suggestedMoveStartSquare.current.classList.add(
-            `square-${suggestedMoveSquares[0][0]}-${suggestedMoveSquares[0][1]}`);
-            suggestedMoveStartSquare.current.style.cssText = "";
+            `square-${suggestedMoveSquares[0][0]}-${suggestedMoveSquares[0][1]}`,
+          );
+          suggestedMoveStartSquare.current.style.cssText = "";
         }
         if (suggestedMoveEndSquare.current) {
           suggestedMoveEndSquare.current.classList.add(
-            `square-${suggestedMoveSquares[1][0]}-${suggestedMoveSquares[1][1]}`);
-            suggestedMoveEndSquare.current.style.cssText = "";
+            `square-${suggestedMoveSquares[1][0]}-${suggestedMoveSquares[1][1]}`,
+          );
+          suggestedMoveEndSquare.current.style.cssText = "";
         }
       } else {
         if (suggestedMoveStartSquare.current) {
           suggestedMoveStartSquare.current.classList.add(
-            `square-${7 - suggestedMoveSquares[0][0]}-${7 - suggestedMoveSquares[0][1]}`);
-            suggestedMoveStartSquare.current.style.cssText = "";
+            `square-${7 - suggestedMoveSquares[0][0]}-${7 - suggestedMoveSquares[0][1]}`,
+          );
+          suggestedMoveStartSquare.current.style.cssText = "";
         }
         if (suggestedMoveEndSquare.current) {
           suggestedMoveEndSquare.current.classList.add(
-            `square-${7 - suggestedMoveSquares[1][0]}-${7 - suggestedMoveSquares[1][1]}`);
-            suggestedMoveEndSquare.current.style.cssText = "";
+            `square-${7 - suggestedMoveSquares[1][0]}-${7 - suggestedMoveSquares[1][1]}`,
+          );
+          suggestedMoveEndSquare.current.style.cssText = "";
         }
       }
     }
@@ -247,26 +256,26 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     if (selectedPiece.current && selectedPieceStartRowCol.current) {
       const data = onValidMovesData(
         selectedPieceStartRowCol.current[0],
-        selectedPieceStartRowCol.current[1]
+        selectedPieceStartRowCol.current[1],
       );
       const divs = Array.from({ length: data.length }, (_, index) => (
-        <div key={`piece-moves-${index}`} className={`dot-square ${data[index]}`}>
+        <div
+          key={`piece-moves-${index}`}
+          className={`dot-square ${data[index]}`}
+        >
           <svg viewBox="0 0 100 100">
-            <circle
-              cx="50"
-              cy="50"
-              r="20"
-              fill="rgba(0, 0, 0, 0.5)"
-            ></circle>
+            <circle cx="50" cy="50" r="20" fill="rgba(0, 0, 0, 0.5)"></circle>
           </svg>
         </div>
       ));
       setValidMoveDivs(divs);
     }
-  }
+  };
 
-
-  const isGrabbable = (piece: string) => piece !== "--" && isInteractive && ((piece[0] === "w" && isWhite()) || (piece[0] === "b" && !isWhite()));
+  const isGrabbable = (piece: string) =>
+    piece !== "--" &&
+    isInteractive &&
+    ((piece[0] === "w" && isWhite()) || (piece[0] === "b" && !isWhite()));
   const clamp = (value: number) => Math.max(-50, Math.min(value, 800));
 
   function checkIfChanged(rowCol: Array<number>, piece: string) {
@@ -318,7 +327,10 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   }
 
   function getRowColFromPercents() {
-    return [getIndexFromPercent(percentY.current), getIndexFromPercent(percentX.current)];
+    return [
+      getIndexFromPercent(percentY.current),
+      getIndexFromPercent(percentX.current),
+    ];
   }
 
   function getRowColFromMouseXY(x: number, y: number) {
@@ -370,12 +382,13 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     if (selectedPiece.current) {
       removeSquareClass(selectedPiece.current);
       if (valid && hoverSquare.current) {
-        selectedPiece.current.classList.add(getSquareClass(hoverSquare.current));
+        selectedPiece.current.classList.add(
+          getSquareClass(hoverSquare.current),
+        );
       } else if (selectedPieceStartRowCol.current) {
         selectedPiece.current?.classList.add(
           `square-${selectedPieceStartRowCol.current[0]}-${selectedPieceStartRowCol.current[1]}`,
         );
-        
       }
       selectedPiece.current.classList.remove("dragging");
       selectedPiece.current.style.cssText = "";
@@ -403,8 +416,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   function selectedNoDragging() {
     state.current = 3;
     removeSquareClass(selectedPiece.current);
-    if (selectedPieceStartRowCol.current)
-    {
+    if (selectedPieceStartRowCol.current) {
       selectedPiece.current?.classList.add(
         `square-${selectedPieceStartRowCol.current[0]}-${selectedPieceStartRowCol.current[1]}`,
       );
@@ -426,7 +438,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     selectedPieceStartRowCol.current = getRowColFromSquareClass(
       getSquareClass(selectedPiece.current),
     );
-    pieceOffset.current = selectedPiece.current.getBoundingClientRect().width / 2;
+    pieceOffset.current =
+      selectedPiece.current.getBoundingClientRect().width / 2;
     state.current = 4;
     removeSquareClass(currentMoveSquare.current);
     if (currentMoveSquare.current && selectedPieceStartRowCol.current) {
@@ -459,7 +472,9 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
       if (state.current === 3) {
         if (selectedPieceStartRowCol.current) {
           var endRowCol = getRowColFromMouseXY(e.clientX, e.clientY);
-          if (await onMoveValidCheck(selectedPieceStartRowCol.current, endRowCol)) {
+          if (
+            await onMoveValidCheck(selectedPieceStartRowCol.current, endRowCol)
+          ) {
             await onMakeMove(selectedPieceStartRowCol.current, endRowCol);
             noSelectedNoDragging();
           }
@@ -481,9 +496,15 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
           selectedNoDragging();
         } else if (
           state.current === 2 &&
-          (await onMoveValidCheck(selectedPieceStartRowCol.current, rowColFromPercents))
+          (await onMoveValidCheck(
+            selectedPieceStartRowCol.current,
+            rowColFromPercents,
+          ))
         ) {
-          await onMakeMove(selectedPieceStartRowCol.current, rowColFromPercents);
+          await onMakeMove(
+            selectedPieceStartRowCol.current,
+            rowColFromPercents,
+          );
           noSelectedNoDragging(true);
         } else if (state.current === 2) {
           selectedNoDragging();
@@ -494,9 +515,15 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
           noSelectedNoDragging();
         } else if (
           state.current === 4 &&
-          (await onMoveValidCheck(selectedPieceStartRowCol.current, rowColFromPercents))
+          (await onMoveValidCheck(
+            selectedPieceStartRowCol.current,
+            rowColFromPercents,
+          ))
         ) {
-          await onMakeMove(selectedPieceStartRowCol.current, rowColFromPercents);
+          await onMakeMove(
+            selectedPieceStartRowCol.current,
+            rowColFromPercents,
+          );
           noSelectedNoDragging(true);
         } else if (state.current === 4) {
           selectedNoDragging();
@@ -510,22 +537,24 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   };
   // #endregion
 
-  const [gridClassName, setGridClassName] = useState("chess-grid rounded-tl-l theme-blue");
+  const [gridClassName, setGridClassName] = useState(
+    "chess-grid rounded-tl-l theme-blue",
+  );
 
   useEffect(() => {
     const updateGridClass = async () => {
       const asyncClass = `theme-${await getBoardTheme()}`;
       setGridClassName(`chess-grid rounded-tl-lg ${asyncClass}`.trim());
-    }
+    };
 
     updateGridClass();
-  }, [getBoardTheme])
+  }, [getBoardTheme]);
 
   return (
     <div
       id="board"
       ref={boardRef}
-      className="chess-board rounded-xl border h-full"
+      className="chess-board h-full rounded-xl border"
       style={
         {
           "--chess-board-size": `${boardSize}%`,

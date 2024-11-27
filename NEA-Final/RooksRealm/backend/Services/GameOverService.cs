@@ -125,14 +125,14 @@ namespace backend.Services
                                         {
                                             newRating = RatingUtilities.GetRatingChange(user.rating, 600, 1.0);
                                             userRepository.UpdateUserRating(user.username, user.rating + newRating);
-                                            ratingChange1 = RatingUtilities.GetRatingChangeString(user.rating + newRating, newRating);
+                                            ratingChange1 = $"{user.username}: {RatingUtilities.GetRatingChangeString(user.rating + newRating, newRating)}";
                                             outcome1 = "win";
                                         }
                                         else
                                         {
                                             newRating = RatingUtilities.GetRatingChange(user.rating, 600, 0.0);
                                             userRepository.UpdateUserRating(user.username, user.rating + newRating);
-                                            ratingChange1 = RatingUtilities.GetRatingChangeString(user.rating + newRating, newRating);
+                                            ratingChange1 = $"{user.username}: {RatingUtilities.GetRatingChangeString(user.rating + newRating, newRating)}";
                                             outcome1 = "loss";
                                         }
                                         break;
