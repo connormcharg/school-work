@@ -1,10 +1,18 @@
-﻿using Npgsql;
-using backend.Classes.Utilities;
-
-namespace backend.Classes.Data
+﻿namespace backend.Classes.Data
 {
+    using backend.Classes.Utilities;
+    using Npgsql;
+
+    /// <summary>
+    /// Defines the <see cref="UserRepository" />
+    /// </summary>
     public class UserRepository : IUserRepository
     {
+        /// <summary>
+        /// The GetUserById
+        /// </summary>
+        /// <param name="id">The id<see cref="int"/></param>
+        /// <returns>The <see cref="User?"/></returns>
         public User? GetUserById(int id)
         {
             User? user = null;
@@ -28,6 +36,11 @@ namespace backend.Classes.Data
             return user;
         }
 
+        /// <summary>
+        /// The GetUserByUsername
+        /// </summary>
+        /// <param name="username">The username<see cref="string"/></param>
+        /// <returns>The <see cref="User?"/></returns>
         public User? GetUserByUsername(string username)
         {
             User? user = null;
@@ -51,6 +64,11 @@ namespace backend.Classes.Data
             return user;
         }
 
+        /// <summary>
+        /// The GetUserByEmail
+        /// </summary>
+        /// <param name="email">The email<see cref="string"/></param>
+        /// <returns>The <see cref="User?"/></returns>
         public User? GetUserByEmail(string email)
         {
             User? user = null;
@@ -74,8 +92,16 @@ namespace backend.Classes.Data
             return user;
         }
 
+        /// <summary>
+        /// The CreateUser
+        /// </summary>
+        /// <param name="username">The username<see cref="string"/></param>
+        /// <param name="email">The email<see cref="string"/></param>
+        /// <param name="password">The password<see cref="string"/></param>
+        /// <param name="role">The role<see cref="string"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool CreateUser(string username, string email, string password, string role = "user")
-        {            
+        {
             if (username == null ||
                 email == null ||
                 password == null)
@@ -119,6 +145,12 @@ namespace backend.Classes.Data
             return true;
         }
 
+        /// <summary>
+        /// The DeleteUser
+        /// </summary>
+        /// <param name="username">The username<see cref="string"/></param>
+        /// <param name="email">The email<see cref="string"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool DeleteUser(string username, string email)
         {
             if (username == null || email == null)
@@ -142,6 +174,12 @@ namespace backend.Classes.Data
             return true;
         }
 
+        /// <summary>
+        /// The UpdateUserNickname
+        /// </summary>
+        /// <param name="email">The email<see cref="string"/></param>
+        /// <param name="username">The username<see cref="string"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool UpdateUserNickname(string email, string username)
         {
             if (email == null || username == null)
@@ -160,13 +198,19 @@ namespace backend.Classes.Data
                 command.Parameters.AddWithValue("email", email);
 
                 command.ExecuteNonQuery();
-                
+
                 connection.Close();
             }
 
             return true;
         }
 
+        /// <summary>
+        /// The UpdateUserEmail
+        /// </summary>
+        /// <param name="email">The email<see cref="string"/></param>
+        /// <param name="newEmail">The newEmail<see cref="string"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool UpdateUserEmail(string email, string newEmail)
         {
             if (email == null || newEmail == null)
@@ -192,9 +236,17 @@ namespace backend.Classes.Data
             return true;
         }
 
+        /// <summary>
+        /// The UpdateUserPassword
+        /// </summary>
+        /// <param name="email">The email<see cref="string"/></param>
+        /// <param name="oldStoredValue">The oldStoredValue<see cref="string"/></param>
+        /// <param name="oldPassword">The oldPassword<see cref="string"/></param>
+        /// <param name="newPassword">The newPassword<see cref="string"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool UpdateUserPassword(string email, string oldStoredValue, string oldPassword, string newPassword)
         {
-            if (email == null ||  oldPassword == null || newPassword == null) { return false; }
+            if (email == null || oldPassword == null || newPassword == null) { return false; }
 
             if (!SecurityUtilities.VerifyPassword(oldPassword, oldStoredValue))
             {
@@ -221,6 +273,12 @@ namespace backend.Classes.Data
             return true;
         }
 
+        /// <summary>
+        /// The UpdateUserBoardTheme
+        /// </summary>
+        /// <param name="email">The email<see cref="string"/></param>
+        /// <param name="newTheme">The newTheme<see cref="string"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool UpdateUserBoardTheme(string email, string newTheme)
         {
             if (email == null || newTheme == null) { return false; }
@@ -243,6 +301,12 @@ namespace backend.Classes.Data
             return true;
         }
 
+        /// <summary>
+        /// The UpdateUserRating
+        /// </summary>
+        /// <param name="username">The username<see cref="string"/></param>
+        /// <param name="newRating">The newRating<see cref="int"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool UpdateUserRating(string username, int newRating)
         {
             if (username == null) { return false; }
@@ -265,6 +329,11 @@ namespace backend.Classes.Data
             return true;
         }
 
+        /// <summary>
+        /// The MapReaderToUser
+        /// </summary>
+        /// <param name="reader">The reader<see cref="NpgsqlDataReader"/></param>
+        /// <returns>The <see cref="User"/></returns>
         private User MapReaderToUser(NpgsqlDataReader reader)
         {
             return new User

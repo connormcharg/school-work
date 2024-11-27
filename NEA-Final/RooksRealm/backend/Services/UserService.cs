@@ -1,16 +1,36 @@
-﻿using backend.Classes.Data;
-using backend.Classes.Utilities;
-using System.Security.Claims;
-
-namespace backend.Services
+﻿namespace backend.Services
 {
+    using backend.Classes.Data;
+    using backend.Classes.Utilities;
+    using System.Security.Claims;
+
+    /// <summary>
+    /// Defines the <see cref="UserService" />
+    /// </summary>
     public class UserService
     {
+        /// <summary>
+        /// Defines the httpContextAccessor
+        /// </summary>
         private readonly IHttpContextAccessor httpContextAccessor;
+
+        /// <summary>
+        /// Defines the connectionMappingService
+        /// </summary>
         private readonly ConnectionMappingService connectionMappingService;
+
+        /// <summary>
+        /// Defines the userRepository
+        /// </summary>
         private readonly IUserRepository userRepository;
 
-        public UserService(IHttpContextAccessor httpContextAccessor, 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserService"/> class.
+        /// </summary>
+        /// <param name="httpContextAccessor">The httpContextAccessor<see cref="IHttpContextAccessor"/></param>
+        /// <param name="connectionMappingService">The connectionMappingService<see cref="ConnectionMappingService"/></param>
+        /// <param name="userRepository">The userRepository<see cref="IUserRepository"/></param>
+        public UserService(IHttpContextAccessor httpContextAccessor,
             ConnectionMappingService connectionMappingService,
             IUserRepository userRepository)
         {
@@ -19,12 +39,21 @@ namespace backend.Services
             this.userRepository = userRepository;
         }
 
+        /// <summary>
+        /// The IsNicknameTaken
+        /// </summary>
+        /// <param name="nickname">The nickname<see cref="string"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool IsNicknameTaken(string nickname)
         {
             var userWithNickname = userRepository.GetUserByUsername(nickname);
             return userWithNickname != null;
         }
 
+        /// <summary>
+        /// The GenerateUniqueNickname
+        /// </summary>
+        /// <returns>The <see cref="string"/></returns>
         public string GenerateUniqueNickname()
         {
             string newNickname;
@@ -40,6 +69,11 @@ namespace backend.Services
             return newNickname;
         }
 
+        /// <summary>
+        /// The GetRating
+        /// </summary>
+        /// <param name="connectionId">The connectionId<see cref="string"/></param>
+        /// <returns>The <see cref="int"/></returns>
         public int GetRating(string connectionId)
         {
             var httpContext = connectionMappingService.GetHttpContext(connectionId);
@@ -74,6 +108,11 @@ namespace backend.Services
             return rating;
         }
 
+        /// <summary>
+        /// The GetNickname
+        /// </summary>
+        /// <param name="connectionId">The connectionId<see cref="string"/></param>
+        /// <returns>The <see cref="string?"/></returns>
         public string? GetNickname(string connectionId)
         {
             var httpContext = connectionMappingService.GetHttpContext(connectionId);

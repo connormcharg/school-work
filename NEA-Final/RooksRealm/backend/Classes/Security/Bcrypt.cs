@@ -1,9 +1,19 @@
-﻿using System.Security.Cryptography;
-
-namespace backend.Classes.Security
+﻿namespace backend.Classes.Security
 {
+    using System.Security.Cryptography;
+
+    /// <summary>
+    /// Defines the <see cref="Bcrypt" />
+    /// </summary>
     public class Bcrypt
     {
+        /// <summary>
+        /// The BcryptHash
+        /// </summary>
+        /// <param name="password">The password<see cref="string"/></param>
+        /// <param name="salt">The salt<see cref="byte[]?"/></param>
+        /// <param name="cost">The cost<see cref="int"/></param>
+        /// <returns>The <see cref="string"/></returns>
         public string BcryptHash(string password, byte[]? salt = null, int cost = 10)
         {
             // Generate a random salt if not provided
@@ -25,6 +35,13 @@ namespace backend.Classes.Security
             return storedValue;
         }
 
+        /// <summary>
+        /// The VerifyPassword
+        /// </summary>
+        /// <param name="password">The password<see cref="string"/></param>
+        /// <param name="storedValue">The storedValue<see cref="string"/></param>
+        /// <param name="cost">The cost<see cref="int"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool VerifyPassword(string password, string storedValue, int cost = 10)
         {
             // Split the stored value into salt and hash
@@ -44,6 +61,13 @@ namespace backend.Classes.Security
             return storedValue == recomputedHash;
         }
 
+        /// <summary>
+        /// The StretchPassword
+        /// </summary>
+        /// <param name="password">The password<see cref="string"/></param>
+        /// <param name="saltString">The saltString<see cref="string"/></param>
+        /// <param name="cost">The cost<see cref="int"/></param>
+        /// <returns>The <see cref="byte[]"/></returns>
         private byte[] StretchPassword(string password, string saltString, int cost)
         {
             byte[] key = System.Text.Encoding.UTF8.GetBytes(password); // Convert password to byte array
@@ -57,6 +81,12 @@ namespace backend.Classes.Security
             return key;
         }
 
+        /// <summary>
+        /// The Crypt
+        /// </summary>
+        /// <param name="key">The key<see cref="byte[]"/></param>
+        /// <param name="saltString">The saltString<see cref="string"/></param>
+        /// <returns>The <see cref="byte[]"/></returns>
         private byte[] Crypt(byte[] key, string saltString)
         {
             // Use the ComputeHash method of the SHA256 class on the key and salt
@@ -67,6 +97,10 @@ namespace backend.Classes.Security
             return Sha256.ComputeHash(combined);
         }
 
+        /// <summary>
+        /// The GenerateRandomSalt
+        /// </summary>
+        /// <returns>The <see cref="byte[]"/></returns>
         private byte[] GenerateRandomSalt()
         {
             byte[] salt = new byte[16]; // Create a byte array of length 16
@@ -77,6 +111,12 @@ namespace backend.Classes.Security
             return salt;
         }
 
+        /// <summary>
+        /// The EncodeSalt
+        /// </summary>
+        /// <param name="salt">The salt<see cref="byte[]"/></param>
+        /// <param name="cost">The cost<see cref="int"/></param>
+        /// <returns>The <see cref="string"/></returns>
         private string EncodeSalt(byte[] salt, int cost)
         {
             // Convert the salt to a Base64 string (or another encoding as needed)

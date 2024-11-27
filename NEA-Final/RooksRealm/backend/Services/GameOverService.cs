@@ -1,16 +1,36 @@
-﻿using backend.Classes.Data;
-using backend.Classes.Utilities;
-using Newtonsoft.Json;
-
-namespace backend.Services
+﻿namespace backend.Services
 {
+    using backend.Classes.Data;
+    using backend.Classes.Utilities;
+    using Newtonsoft.Json;
+
+    /// <summary>
+    /// Defines the <see cref="GameOverService" />
+    /// </summary>
     public class GameOverService : IHostedService, IDisposable
     {
+        /// <summary>
+        /// Defines the timer
+        /// </summary>
         private Timer? timer;
+
+        /// <summary>
+        /// Defines the chessService
+        /// </summary>
         private readonly ChessService chessService;
+
+        /// <summary>
+        /// Defines the serviceProvider
+        /// </summary>
         private readonly IServiceProvider serviceProvider;
+
         /*private readonly IUserRepository userRepository;*/
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameOverService"/> class.
+        /// </summary>
+        /// <param name="chessService">The chessService<see cref="ChessService"/></param>
+        /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/></param>
         public GameOverService(ChessService chessService/*, IUserRepository userRepository*/, IServiceProvider serviceProvider)
         {
             this.chessService = chessService;
@@ -18,12 +38,21 @@ namespace backend.Services
             this.serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// The StartAsync
+        /// </summary>
+        /// <param name="cancellationToken">The cancellationToken<see cref="CancellationToken"/></param>
+        /// <returns>The <see cref="Task"/></returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
             timer = new Timer(CheckGames, null, TimeSpan.Zero, TimeSpan.FromSeconds(0.5));
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// The CheckGames
+        /// </summary>
+        /// <param name="state">The state<see cref="object"/></param>
         private async void CheckGames(object state)
         {
             using (var scope = serviceProvider.CreateScope())
@@ -276,12 +305,20 @@ namespace backend.Services
             }
         }
 
+        /// <summary>
+        /// The StopAsync
+        /// </summary>
+        /// <param name="cancellationToken">The cancellationToken<see cref="CancellationToken"/></param>
+        /// <returns>The <see cref="Task"/></returns>
         public Task StopAsync(CancellationToken cancellationToken)
         {
             timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// The Dispose
+        /// </summary>
         public void Dispose()
         {
             timer?.Dispose();

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { XMarkIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useAuth } from "../contexts/AuthProvider";
 
-interface Message {
+interface Statistic {
   id: number;
   username: string;
   title: string;
@@ -11,7 +10,7 @@ interface Message {
 }
 
 const AnnouncementBoard: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [statistics, setStatistics] = useState<Statistic[]>([]);
   const daysAgo = 5;
   const [showPopup, setShowPopup] = useState(false);
   const [role, setRole] = useState("user");

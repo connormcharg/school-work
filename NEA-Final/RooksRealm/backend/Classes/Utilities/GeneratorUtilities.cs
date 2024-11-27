@@ -1,13 +1,25 @@
 ﻿namespace backend.Classes.Utilities
 {
+    /// <summary>
+    /// Defines the <see cref="GeneratorUtilities" />
+    /// </summary>
     public static class GeneratorUtilities
     {
+        /// <summary>
+        /// The GenerateNickname
+        /// </summary>
+        /// <returns>The <see cref="string"/></returns>
         public static string GenerateNickname()
         {
             var rng = new Random();
             return $"{GetRandomWord(rng)}{GetRandomWord(rng)}{rng.Next(10, 100)}";
         }
 
+        /// <summary>
+        /// The GetRandomWord
+        /// </summary>
+        /// <param name="rng">The rng<see cref="Random"/></param>
+        /// <returns>The <see cref="string"/></returns>
         private static string GetRandomWord(Random rng)
         {
             List<string> words = new List<string>
@@ -60,11 +72,20 @@
             return words[rng.Next(0, words.Count())];
         }
 
+        /// <summary>
+        /// The GetNewId
+        /// </summary>
+        /// <returns>The <see cref="string"/></returns>
         public static string GetNewId()
         {
             return GenerateShortGuid(6);
         }
 
+        /// <summary>
+        /// The GenerateShortGuid
+        /// </summary>
+        /// <param name="length">The length<see cref="int"/></param>
+        /// <returns>The <see cref="string"/></returns>
         private static string GenerateShortGuid(int length)
         {
             var rng = new Random();

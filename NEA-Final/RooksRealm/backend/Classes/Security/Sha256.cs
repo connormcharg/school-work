@@ -1,7 +1,13 @@
 ﻿namespace backend.Classes.Security
 {
+    /// <summary>
+    /// Defines the <see cref="Sha256" />
+    /// </summary>
     public static class Sha256
     {
+        /// <summary>
+        /// Defines the K
+        /// </summary>
         private static readonly uint[] K = new uint[]
         {
             0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -22,12 +28,20 @@
             0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
         };
 
+        /// <summary>
+        /// Defines the H
+        /// </summary>
         private static readonly uint[] H = new uint[]
         {
             0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
             0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
         };
 
+        /// <summary>
+        /// The ComputeHash
+        /// </summary>
+        /// <param name="data">The data<see cref="byte[]"/></param>
+        /// <returns>The <see cref="byte[]"/></returns>
         public static byte[] ComputeHash(byte[] data)
         {
             // preprocessing: padding the message
@@ -89,6 +103,11 @@
             return hashValues.SelectMany(BitConverter.GetBytes).ToArray();
         }
 
+        /// <summary>
+        /// The PadMessage
+        /// </summary>
+        /// <param name="data">The data<see cref="byte[]"/></param>
+        /// <returns>The <see cref="byte[]"/></returns>
         private static byte[] PadMessage(byte[] data)
         {
             long originalLength = data.Length * 8;
@@ -105,12 +124,58 @@
             return paddedData;
         }
 
+        /// <summary>
+        /// The Ch
+        /// </summary>
+        /// <param name="x">The x<see cref="uint"/></param>
+        /// <param name="y">The y<see cref="uint"/></param>
+        /// <param name="z">The z<see cref="uint"/></param>
+        /// <returns>The <see cref="uint"/></returns>
         private static uint Ch(uint x, uint y, uint z) => (x & y) ^ (~x & z);
+
+        /// <summary>
+        /// The Maj
+        /// </summary>
+        /// <param name="x">The x<see cref="uint"/></param>
+        /// <param name="y">The y<see cref="uint"/></param>
+        /// <param name="z">The z<see cref="uint"/></param>
+        /// <returns>The <see cref="uint"/></returns>
         private static uint Maj(uint x, uint y, uint z) => (x & y) ^ (x & z) ^ (y & z);
+
+        /// <summary>
+        /// The Sigma0
+        /// </summary>
+        /// <param name="x">The x<see cref="uint"/></param>
+        /// <returns>The <see cref="uint"/></returns>
         private static uint Sigma0(uint x) => (RotateRight(x, 7) ^ RotateRight(x, 18) ^ (x >> 3));
+
+        /// <summary>
+        /// The Sigma1
+        /// </summary>
+        /// <param name="x">The x<see cref="uint"/></param>
+        /// <returns>The <see cref="uint"/></returns>
         private static uint Sigma1(uint x) => (RotateRight(x, 17) ^ RotateRight(x, 19) ^ (x >> 10));
+
+        /// <summary>
+        /// The RotateRight
+        /// </summary>
+        /// <param name="value">The value<see cref="uint"/></param>
+        /// <param name="amount">The amount<see cref="int"/></param>
+        /// <returns>The <see cref="uint"/></returns>
         private static uint RotateRight(uint value, int amount) => (value >> amount) | (value << (32 - amount));
+
+        /// <summary>
+        /// The σ0
+        /// </summary>
+        /// <param name="x">The x<see cref="uint"/></param>
+        /// <returns>The <see cref="uint"/></returns>
         private static uint σ0(uint x) => (RotateRight(x, 1) ^ RotateRight(x, 8) ^ (x >> 7));
+
+        /// <summary>
+        /// The σ1
+        /// </summary>
+        /// <param name="x">The x<see cref="uint"/></param>
+        /// <returns>The <see cref="uint"/></returns>
         private static uint σ1(uint x) => (RotateRight(x, 19) ^ RotateRight(x, 61) ^ (x >> 6));
     }
 }

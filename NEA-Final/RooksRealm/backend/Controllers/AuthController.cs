@@ -1,20 +1,40 @@
-﻿using backend.Classes.Data;
-using backend.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Security.Claims;
-
-namespace backend.Controllers
+﻿namespace backend.Controllers
 {
+    using backend.Classes.Data;
+    using backend.Services;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Diagnostics;
+    using System.Security.Claims;
+
+    /// <summary>
+    /// Defines the <see cref="AuthController" />
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")] // "api/auth"
     public class AuthController : ControllerBase
     {
+        /// <summary>
+        /// Defines the authenticationService
+        /// </summary>
         private readonly IAuthenticationService authenticationService;
+
+        /// <summary>
+        /// Defines the userRepository
+        /// </summary>
         private readonly IUserRepository userRepository;
+
+        /// <summary>
+        /// Defines the userService
+        /// </summary>
         private readonly UserService userService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthController"/> class.
+        /// </summary>
+        /// <param name="authenticationService">The authenticationService<see cref="IAuthenticationService"/></param>
+        /// <param name="userRepository">The userRepository<see cref="IUserRepository"/></param>
+        /// <param name="userService">The userService<see cref="UserService"/></param>
         public AuthController(IAuthenticationService authenticationService, IUserRepository userRepository,
             UserService userService)
         {
@@ -23,6 +43,11 @@ namespace backend.Controllers
             this.userService = userService;
         }
 
+        /// <summary>
+        /// The Register
+        /// </summary>
+        /// <param name="request">The request<see cref="AuthRequest"/></param>
+        /// <returns>The <see cref="IActionResult"/></returns>
         [HttpPost("register")]
         public IActionResult Register([FromBody] AuthRequest request)
         {
@@ -31,7 +56,7 @@ namespace backend.Controllers
             {
                 return BadRequest(new { message = "User already registered with that email" });
             }
-            
+
             var result = userRepository.CreateUser(userService.GenerateUniqueNickname(), request.email, request.password);
 
             if (!result)
@@ -43,6 +68,12 @@ namespace backend.Controllers
         }
 
         // Endpoint for user login
+
+        /// <summary>
+        /// The Login
+        /// </summary>
+        /// <param name="request">The request<see cref="AuthRequest"/></param>
+        /// <returns>The <see cref="IActionResult"/></returns>
         [HttpPost("login")]
         public IActionResult Login([FromBody] AuthRequest request)
         {
@@ -56,6 +87,11 @@ namespace backend.Controllers
             return Ok(new { token });
         }
 
+        /// <summary>
+        /// The ChangeUsername
+        /// </summary>
+        /// <param name="request">The request<see cref="UsernameUpdateRequest"/></param>
+        /// <returns>The <see cref="IActionResult"/></returns>
         [Authorize]
         [HttpPost("changeUsername")]
         public IActionResult ChangeUsername([FromBody] UsernameUpdateRequest request)
@@ -89,7 +125,11 @@ namespace backend.Controllers
             return BadRequest();
         }
 
-
+        /// <summary>
+        /// The ChangeEmail
+        /// </summary>
+        /// <param name="request">The request<see cref="EmailUpdateRequest"/></param>
+        /// <returns>The <see cref="IActionResult"/></returns>
         [Authorize]
         [HttpPost("changeEmail")]
         public IActionResult ChangeEmail([FromBody] EmailUpdateRequest request)
@@ -114,6 +154,11 @@ namespace backend.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// The ChangePassword
+        /// </summary>
+        /// <param name="request">The request<see cref="PasswordUpdateRequest"/></param>
+        /// <returns>The <see cref="IActionResult"/></returns>
         [Authorize]
         [HttpPost("changePassword")]
         public IActionResult ChangePassword([FromBody] PasswordUpdateRequest request)
@@ -138,6 +183,11 @@ namespace backend.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// The UpdateTheme
+        /// </summary>
+        /// <param name="request">The request<see cref="ThemeUpdateRequest"/></param>
+        /// <returns>The <see cref="IActionResult"/></returns>
         [Authorize]
         [HttpPost("changeTheme")]
         public IActionResult UpdateTheme([FromBody] ThemeUpdateRequest request)
@@ -162,6 +212,10 @@ namespace backend.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// The DeleteAccount
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/></returns>
         [Authorize]
         [HttpPost("delete")]
         public IActionResult DeleteAccount()
@@ -186,6 +240,10 @@ namespace backend.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// The GetDetails
+        /// </summary>
+        /// <returns>The <see cref="IActionResult"/></returns>
         [Authorize]
         [HttpGet("details")]
         public IActionResult GetDetails()
@@ -207,35 +265,74 @@ namespace backend.Controllers
                 username = user.username,
                 email = user.email,
                 boardTheme = user.boardTheme,
-                user.rating,
+                rating = user.rating,
+                role = user.role,
             });
         }
     }
 
+    /// <summary>
+    /// Defines the <see cref="AuthRequest" />
+    /// </summary>
     public class AuthRequest
     {
+        /// <summary>
+        /// Gets or sets the email
+        /// </summary>
         public string email { get; set; }
+
+        /// <summary>
+        /// Gets or sets the password
+        /// </summary>
         public string password { get; set; }
     }
 
+    /// <summary>
+    /// Defines the <see cref="EmailUpdateRequest" />
+    /// </summary>
     public class EmailUpdateRequest
     {
+        /// <summary>
+        /// Gets or sets the newEmail
+        /// </summary>
         public string newEmail { get; set; }
     }
 
+    /// <summary>
+    /// Defines the <see cref="UsernameUpdateRequest" />
+    /// </summary>
     public class UsernameUpdateRequest
     {
+        /// <summary>
+        /// Gets or sets the newUsername
+        /// </summary>
         public string newUsername { get; set; }
     }
 
+    /// <summary>
+    /// Defines the <see cref="PasswordUpdateRequest" />
+    /// </summary>
     public class PasswordUpdateRequest
     {
+        /// <summary>
+        /// Gets or sets the oldPassword
+        /// </summary>
         public string oldPassword { get; set; }
+
+        /// <summary>
+        /// Gets or sets the newPassword
+        /// </summary>
         public string newPassword { get; set; }
     }
 
+    /// <summary>
+    /// Defines the <see cref="ThemeUpdateRequest" />
+    /// </summary>
     public class ThemeUpdateRequest
     {
+        /// <summary>
+        /// Gets or sets the newTheme
+        /// </summary>
         public string newTheme { get; set; }
     }
 }

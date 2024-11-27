@@ -37,7 +37,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/account" element={<Navigate to="/" replace />} />
           <Route path="/play/:id" element={<Navigate to="/" replace />} />
           <Route path="/start" element={<Navigate to="/" replace />} />
-          <Route path="/messages" element={<AnnouncementBoard />} />
+          <Route path="/messages" element={<Navigate to="/" replace />} />
         </>
       )}
       <Route path="*" element={<Navigate to="/" replace />} />

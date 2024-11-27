@@ -1,15 +1,22 @@
-using backend.Classes.Data;
-using backend.Hubs;
-using backend.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Newtonsoft.Json;
-
 namespace backend
 {
+    using backend.Classes.Data;
+    using backend.Hubs;
+    using backend.Services;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.IdentityModel.Tokens;
+    using Newtonsoft.Json;
+    using System.Text;
+
+    /// <summary>
+    /// Defines the <see cref="Program" />
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// The Main
+        /// </summary>
+        /// <param name="args">The args<see cref="string[]"/></param>
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);

@@ -1,28 +1,82 @@
-﻿using Npgsql;
-using System.Data;
-
-namespace backend.Classes.Data
+﻿namespace backend.Classes.Data
 {
+    using Npgsql;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="StatisticsRepository" />
+    /// </summary>
     public class StatisticsRepository : IStatisticsRepository
     {
-        public bool CreateStatistic(int numberOfMoves, int userId, int gameId, string outcome)
+        /// <summary>
+        /// The GetStatistics
+        /// </summary>
+        /// <param name="daysAgo">The daysAgo<see cref="int"/></param>
+        /// <param name="userId">The userId<see cref="int"/></param>
+        /// <returns>The <see cref="List{Statistic}"/></returns>
+        public List<Statistic> GetStatistics(int daysAgo, int userId)
+        {
+            var statistics = new List<Statistic>();
+
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            {
+                connection.Open();
+
+                var dateThreshold = DateTime.Now.AddDays(-daysAgo);
+
+                var command = new NpgsqlCommand(
+                    @"SELECT s.id, s.avgmovetime, s.numberofmoves, s.gameid, s.outcome, s.datetime 
+              FROM tblstatistics s
+              WHERE s.datetime >= @dateThreshold
+              AND s.userid = @userid;",
+                    connection);
+
+                command.Parameters.AddWithValue("dateThreshold", dateThreshold);
+                command.Parameters.AddWithValue("userid", userId);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        statistics.Add(MapReaderToStatistic(reader));
+                    }
+                }
+
+                connection.Close();
+            }
+
+            return statistics;
+        }
+
+        /// <summary>
+        /// The CreateStatistic
+        /// </summary>
+        /// <param name="numberOfMoves">The numberOfMoves<see cref="int"/></param>
+        /// <param name="userId">The userId<see cref="int"/></param>
+        /// <param name="gameId">The gameId<see cref="int"/></param>
+        /// <param name="outcome">The outcome<see cref="string"/></param>
+        /// <param name="dateTime">The dateTime<see cref="DateTime?"/></param>
+        /// <returns>The <see cref="bool"/></returns>
+        public bool CreateStatistic(int numberOfMoves, int userId, int gameId, string outcome, DateTime? dateTime = null)
         {
             if (outcome == null)
             {
                 return false;
             }
 
+            var timestamp = dateTime ?? DateTime.Now;
+
             using (var connection = new NpgsqlConnection(dbConstants.connectionString))
             {
                 connection.Open();
 
                 var command = new NpgsqlCommand(
-                    "INSERT INTO tblstatistics (numberofmoves, userid, gameid, outcome) VALUES (@numberOfMoves, @userId, @gameId, @outcome);",
+                    "INSERT INTO tblstatistics (numberofmoves, userid, gameid, outcome, datetime) VALUES (@numberOfMoves, @userId, @gameId, @outcome, @datetime);",
                     connection);
                 command.Parameters.AddWithValue("numberOfMoves", numberOfMoves);
                 command.Parameters.AddWithValue("userId", userId);
                 command.Parameters.AddWithValue("gameId", gameId);
-                command.Parameters.AddWithValue("outcome", outcome);
+                command.Parameters.AddWithValue("datetime", timestamp);
 
                 command.ExecuteNonQuery();
 
@@ -32,6 +86,11 @@ namespace backend.Classes.Data
             return true;
         }
 
+        /// <summary>
+        /// The MapReaderToStatistic
+        /// </summary>
+        /// <param name="reader">The reader<see cref="NpgsqlDataReader"/></param>
+        /// <returns>The <see cref="Statistic"/></returns>
         private Statistic MapReaderToStatistic(NpgsqlDataReader reader)
         {
             return new Statistic
@@ -41,7 +100,8 @@ namespace backend.Classes.Data
                 numberOfMoves = reader.GetInt32(reader.GetOrdinal("numberofmoves")),
                 userId = reader.GetInt32(reader.GetOrdinal("userid")),
                 gameId = reader.GetInt32(reader.GetOrdinal("gameid")),
-                outcome = reader.GetString(reader.GetOrdinal("outcome"))
+                outcome = reader.GetString(reader.GetOrdinal("outcome")),
+                datetime = reader.GetDateTime(reader.GetOrdinal("datetime"))
             };
         }
     }

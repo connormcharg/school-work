@@ -1,15 +1,33 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using System.Text;
-using System.Net.Http.Headers;
-
-namespace backend.Services
+﻿namespace backend.Services
 {
+    using Microsoft.AspNetCore.Identity.UI.Services;
+    using System.Net.Http.Headers;
+    using System.Text;
+
+    /// <summary>
+    /// Defines the <see cref="EmailService" />
+    /// </summary>
     public class EmailService : IEmailSender
     {
+        /// <summary>
+        /// Defines the apiKey
+        /// </summary>
         private readonly string? apiKey;
+
+        /// <summary>
+        /// Defines the domain
+        /// </summary>
         private readonly string domain;
+
+        /// <summary>
+        /// Defines the httpClient
+        /// </summary>
         private readonly HttpClient httpClient;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmailService"/> class.
+        /// </summary>
+        /// <param name="httpClient">The httpClient<see cref="HttpClient"/></param>
         public EmailService(HttpClient httpClient)
         {
             this.apiKey = Environment.GetEnvironmentVariable("MAILGUN_API_KEY");
@@ -17,6 +35,13 @@ namespace backend.Services
             this.httpClient = httpClient;
         }
 
+        /// <summary>
+        /// The SendEmailAsync
+        /// </summary>
+        /// <param name="to">The to<see cref="string"/></param>
+        /// <param name="subject">The subject<see cref="string"/></param>
+        /// <param name="message">The message<see cref="string"/></param>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task SendEmailAsync(string to, string subject, string message)
         {
             if (string.IsNullOrWhiteSpace(apiKey))

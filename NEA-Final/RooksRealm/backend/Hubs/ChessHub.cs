@@ -1,20 +1,40 @@
-﻿using backend.Classes.Handlers;
-using backend.Classes.State;
-using backend.Classes.Utilities;
-using backend.Services;
-using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
-
-namespace backend.Hubs
+﻿namespace backend.Hubs
 {
+    using backend.Classes.Handlers;
+    using backend.Classes.State;
+    using backend.Classes.Utilities;
+    using backend.Services;
+    using Microsoft.AspNetCore.SignalR;
+    using Newtonsoft.Json;
+
+    /// <summary>
+    /// Defines the <see cref="ChessHub" />
+    /// </summary>
     public class ChessHub : Hub
     {
+        /// <summary>
+        /// Defines the chessService
+        /// </summary>
         private readonly ChessService chessService;
+
+        /// <summary>
+        /// Defines the connectionMappingService
+        /// </summary>
         private readonly ConnectionMappingService connectionMappingService;
+
+        /// <summary>
+        /// Defines the userService
+        /// </summary>
         private readonly UserService userService;
 
-        public ChessHub(ChessService chessService, 
-            ConnectionMappingService connectionMappingService, 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChessHub"/> class.
+        /// </summary>
+        /// <param name="chessService">The chessService<see cref="ChessService"/></param>
+        /// <param name="connectionMappingService">The connectionMappingService<see cref="ConnectionMappingService"/></param>
+        /// <param name="userService">The userService<see cref="UserService"/></param>
+        public ChessHub(ChessService chessService,
+            ConnectionMappingService connectionMappingService,
             UserService userService)
         {
             this.chessService = chessService;
@@ -22,6 +42,10 @@ namespace backend.Hubs
             this.userService = userService;
         }
 
+        /// <summary>
+        /// The OnConnectedAsync
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public override Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();
@@ -32,6 +56,11 @@ namespace backend.Hubs
             return base.OnConnectedAsync();
         }
 
+        /// <summary>
+        /// The OnDisconnectedAsync
+        /// </summary>
+        /// <param name="exception">The exception<see cref="Exception?"/></param>
+        /// <returns>The <see cref="Task"/></returns>
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var game = chessService.GetAllGames().
@@ -54,6 +83,11 @@ namespace backend.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
+        /// <summary>
+        /// The JoinGameAsPlayer
+        /// </summary>
+        /// <param name="gameId">The gameId<see cref="string"/></param>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task JoinGameAsPlayer(string gameId)
         {
             var game = chessService.GetGame(gameId);
@@ -69,7 +103,7 @@ namespace backend.Hubs
             {
                 throw new HubException("No nickname found for the given connection id");
             }
-            
+
             int rating = userService.GetRating(Context.ConnectionId);
 
             if (game.players.Count >= 2)
@@ -121,6 +155,10 @@ namespace backend.Hubs
             }
         }
 
+        /// <summary>
+        /// The LeaveGameAsPlayer
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task LeaveGameAsPlayer()
         {
             var game = chessService.GetAllGames().
@@ -141,6 +179,11 @@ namespace backend.Hubs
             await chessService.RemovePlayer(game.id, player);
         }
 
+        /// <summary>
+        /// The JoinGameAsWatcher
+        /// </summary>
+        /// <param name="gameId">The gameId<see cref="string"/></param>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task JoinGameAsWatcher(string gameId)
         {
             var game = chessService.GetGame(gameId);
@@ -158,6 +201,10 @@ namespace backend.Hubs
             await chessService.AddWatcher(game.id, Context.ConnectionId);
         }
 
+        /// <summary>
+        /// The LeaveGameAsWatcher
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task LeaveGameAsWatcher()
         {
             var game = chessService.GetAllGames().
@@ -172,6 +219,11 @@ namespace backend.Hubs
             await chessService.RemoveWatcher(game.id, Context.ConnectionId);
         }
 
+        /// <summary>
+        /// The SendMove
+        /// </summary>
+        /// <param name="moveJson">The moveJson<see cref="string"/></param>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task SendMove(string moveJson)
         {
             Move? move = JsonConvert.DeserializeObject<Move>(moveJson);
@@ -208,6 +260,10 @@ namespace backend.Hubs
             }
         }
 
+        /// <summary>
+        /// The SendResignation
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task SendResignation()
         {
             var game = chessService.GetAllGames().
@@ -226,6 +282,10 @@ namespace backend.Hubs
             await chessService.PushResign(game.id, player.isWhite);
         }
 
+        /// <summary>
+        /// The SendPauseRequest
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task SendPauseRequest()
         {
             var game = chessService.GetAllGames().
@@ -244,6 +304,10 @@ namespace backend.Hubs
             await chessService.PushPauseRequest(game.id, player.nickName);
         }
 
+        /// <summary>
+        /// The SendDrawOffer
+        /// </summary>
+        /// <returns>The <see cref="Task"/></returns>
         public async Task SendDrawOffer()
         {
             var game = chessService.GetAllGames().

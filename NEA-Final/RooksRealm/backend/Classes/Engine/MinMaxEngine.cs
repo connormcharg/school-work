@@ -1,17 +1,30 @@
-﻿using backend.Classes.Handlers;
-using backend.Classes.State;
-using backend.Classes.Utilities;
-
-namespace backend.Classes.Engine
+﻿namespace backend.Classes.Engine
 {
+    using backend.Classes.Handlers;
+    using backend.Classes.State;
+    using backend.Classes.Utilities;
+
+    /// <summary>
+    /// Defines the <see cref="MinMaxEngine" />
+    /// </summary>
     public class MinMaxEngine
     {
+        /// <summary>
+        /// Defines the rng
+        /// </summary>
         private Random rng = new Random();
+
+        /// <summary>
+        /// Defines the pieceScores
+        /// </summary>
         private Dictionary<string, int> pieceScores = new Dictionary<string, int>
         {
             { "K", 0 }, { "Q", 9 }, { "R", 5 }, { "B", 3 }, { "N", 3 }, { "P", 1 }
         };
 
+        /// <summary>
+        /// Defines the knightScores
+        /// </summary>
         private List<List<double>> knightScores = new List<List<double>>
         {
             new List<double> { 0.0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.0 },
@@ -23,6 +36,10 @@ namespace backend.Classes.Engine
             new List<double> { 0.1, 0.3, 0.5, 0.55, 0.55, 0.5, 0.3, 0.1 },
             new List<double> { 0.0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.0 },
         };
+
+        /// <summary>
+        /// Defines the bishopScores
+        /// </summary>
         private List<List<double>> bishopScores = new List<List<double>>
         {
             new List<double> { 0.0, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.0 },
@@ -34,6 +51,10 @@ namespace backend.Classes.Engine
             new List<double> { 0.2, 0.5, 0.4, 0.4, 0.4, 0.4, 0.5, 0.2 },
             new List<double> { 0.0, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.0 },
         };
+
+        /// <summary>
+        /// Defines the rookScores
+        /// </summary>
         private List<List<double>> rookScores = new List<List<double>>
         {
             new List<double> { 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25 },
@@ -45,6 +66,10 @@ namespace backend.Classes.Engine
             new List<double> { 0.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.0 },
             new List<double> { 0.25, 0.25, 0.25, 0.5, 0.5, 0.25, 0.25, 0.25 },
         };
+
+        /// <summary>
+        /// Defines the queenScores
+        /// </summary>
         private List<List<double>> queenScores = new List<List<double>>
         {
             new List<double> { 0.0, 0.2, 0.2, 0.3, 0.3, 0.2, 0.2, 0.0 },
@@ -56,6 +81,10 @@ namespace backend.Classes.Engine
             new List<double> { 0.2, 0.4, 0.5, 0.4, 0.4, 0.4, 0.4, 0.2 },
             new List<double> { 0.0, 0.2, 0.2, 0.3, 0.3, 0.2, 0.2, 0.0 },
         };
+
+        /// <summary>
+        /// Defines the pawnScores
+        /// </summary>
         private List<List<double>> pawnScores = new List<List<double>>
         {
             new List<double> { 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8 },
@@ -68,14 +97,34 @@ namespace backend.Classes.Engine
             new List<double> { 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2 },
         };
 
+        /// <summary>
+        /// Defines the piecePositionScores
+        /// </summary>
         private Dictionary<string, List<List<double>>> piecePositionScores = new();
 
+        /// <summary>
+        /// Defines the CHECKMATE
+        /// </summary>
         private const int CHECKMATE = 1000;
+
+        /// <summary>
+        /// Defines the STALEMATE
+        /// </summary>
         private const int STALEMATE = 0;
+
+        /// <summary>
+        /// Defines the DEPTH
+        /// </summary>
         private const int DEPTH = 4;
 
+        /// <summary>
+        /// Defines the nextMove
+        /// </summary>
         public Move? nextMove = null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MinMaxEngine"/> class.
+        /// </summary>
         public MinMaxEngine()
         {
             piecePositionScores = new Dictionary<string, List<List<double>>>
@@ -93,6 +142,11 @@ namespace backend.Classes.Engine
             };
         }
 
+        /// <summary>
+        /// The FindBestMove
+        /// </summary>
+        /// <param name="game">The game<see cref="Game"/></param>
+        /// <param name="validMoves">The validMoves<see cref="List{Move}"/></param>
         public void FindBestMove(Game game, List<Move> validMoves)
         {
             nextMove = null;
@@ -100,12 +154,27 @@ namespace backend.Classes.Engine
             FindMoveNegaMaxAlphaBeta(game, validMoves, DEPTH, -CHECKMATE, CHECKMATE, game.state.whiteToMove ? 1 : -1);
         }
 
+        /// <summary>
+        /// The FindRandomMove
+        /// </summary>
+        /// <param name="game">The game<see cref="Game"/></param>
+        /// <param name="validMoves">The validMoves<see cref="List{Move}"/></param>
         public void FindRandomMove(Game game, List<Move> validMoves)
         {
             ListUtilities.Shuffle(validMoves);
             nextMove = validMoves[0];
         }
 
+        /// <summary>
+        /// The FindMoveNegaMaxAlphaBeta
+        /// </summary>
+        /// <param name="game">The game<see cref="Game"/></param>
+        /// <param name="validMoves">The validMoves<see cref="List{Move}"/></param>
+        /// <param name="depth">The depth<see cref="int"/></param>
+        /// <param name="alpha">The alpha<see cref="double"/></param>
+        /// <param name="beta">The beta<see cref="double"/></param>
+        /// <param name="turnMultiplier">The turnMultiplier<see cref="int"/></param>
+        /// <returns>The <see cref="Double"/></returns>
         private Double FindMoveNegaMaxAlphaBeta(Game game, List<Move> validMoves, int depth, double alpha, double beta, int turnMultiplier)
         {
             if (depth == 0)
@@ -139,6 +208,11 @@ namespace backend.Classes.Engine
             return maxScore;
         }
 
+        /// <summary>
+        /// The ScoreBoard
+        /// </summary>
+        /// <param name="game">The game<see cref="Game"/></param>
+        /// <returns>The <see cref="Double"/></returns>
         private Double ScoreBoard(Game game)
         {
             if (game.state.checkMate)

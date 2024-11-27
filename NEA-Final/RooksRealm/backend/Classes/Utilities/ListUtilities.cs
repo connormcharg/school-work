@@ -1,7 +1,16 @@
 ﻿namespace backend.Classes.Utilities
 {
+    /// <summary>
+    /// Defines the <see cref="ListUtilities" />
+    /// </summary>
     public static class ListUtilities
     {
+        /// <summary>
+        /// The Copy2dList
+        /// </summary>
+        /// <param name="list">The list<see cref="List{List{double}}"/></param>
+        /// <param name="reverse">The reverse<see cref="bool"/></param>
+        /// <returns>The <see cref="List{List{double}}"/></returns>
         public static List<List<double>> Copy2dList(List<List<double>> list, bool reverse = false)
         {
             List<List<double>> newList = new List<List<double>>();
@@ -29,6 +38,11 @@
             return newList;
         }
 
+        /// <summary>
+        /// The Shuffle
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list">The list<see cref="IList{T}"/></param>
         public static void Shuffle<T>(IList<T> list)
         {
             int n = list.Count;

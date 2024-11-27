@@ -1,9 +1,19 @@
-﻿using Npgsql;
-
-namespace backend.Classes.Data
+﻿namespace backend.Classes.Data
 {
+    using Npgsql;
+
+    /// <summary>
+    /// Defines the <see cref="GameRepository" />
+    /// </summary>
     public class GameRepository : IGameRepository
     {
+        /// <summary>
+        /// The CreateGame
+        /// </summary>
+        /// <param name="playerOneId">The playerOneId<see cref="int"/></param>
+        /// <param name="playerTwoId">The playerTwoId<see cref="int"/></param>
+        /// <param name="gameData">The gameData<see cref="string"/></param>
+        /// <returns>The <see cref="int"/></returns>
         public int CreateGame(int playerOneId, int playerTwoId, string gameData)
         {
             if (string.IsNullOrWhiteSpace(gameData))
@@ -44,6 +54,11 @@ namespace backend.Classes.Data
             return -1;
         }
 
+        /// <summary>
+        /// The MapReaderToGame
+        /// </summary>
+        /// <param name="reader">The reader<see cref="NpgsqlDataReader"/></param>
+        /// <returns>The <see cref="Game"/></returns>
         private Game MapReaderToGame(NpgsqlDataReader reader)
         {
             return new Game

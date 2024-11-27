@@ -115,14 +115,14 @@ const Sidebar: React.FC = () => {
           to="/"
           isExpanded={isExpanded}
         />
-        <SidebarItem
-          icon={EnvelopeIcon}
-          text="Messages"
-          to="/messages"
-          isExpanded={isExpanded}
-        />
         {isLoggedIn ? (
           <>
+            <SidebarItem
+              icon={EnvelopeIcon}
+              text="Messages"
+              to="/messages"
+              isExpanded={isExpanded}
+            />
             <SidebarItem
               icon={UserCircleIcon}
               text="Account"

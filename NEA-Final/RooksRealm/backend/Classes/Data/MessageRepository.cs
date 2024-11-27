@@ -1,9 +1,17 @@
-﻿using Npgsql;
-
-namespace backend.Classes.Data
+﻿namespace backend.Classes.Data
 {
+    using Npgsql;
+
+    /// <summary>
+    /// Defines the <see cref="MessageRepository" />
+    /// </summary>
     public class MessageRepository : IMessageRepository
     {
+        /// <summary>
+        /// The GetMessages
+        /// </summary>
+        /// <param name="daysAgo">The daysAgo<see cref="int"/></param>
+        /// <returns>The <see cref="List{Message}"/></returns>
         public List<Message> GetMessages(int daysAgo)
         {
             var messages = new List<Message>();
@@ -37,6 +45,14 @@ namespace backend.Classes.Data
             return messages;
         }
 
+        /// <summary>
+        /// The CreateMessage
+        /// </summary>
+        /// <param name="title">The title<see cref="string"/></param>
+        /// <param name="content">The content<see cref="string"/></param>
+        /// <param name="userId">The userId<see cref="int"/></param>
+        /// <param name="dateTime">The dateTime<see cref="DateTime?"/></param>
+        /// <returns>The <see cref="bool"/></returns>
         public bool CreateMessage(string title, string content, int userId, DateTime? dateTime = null)
         {
             if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content) || userId == -1)
@@ -67,7 +83,38 @@ namespace backend.Classes.Data
             return true;
         }
 
+        /// <summary>
+        /// The DeleteMessage
+        /// </summary>
+        /// <param name="id">The id<see cref="int"/></param>
+        /// <returns>The <see cref="bool"/></returns>
+        public bool DeleteMessage(int id)
+        {
+            int rowsAffected;
 
+            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            {
+                connection.Open();
+
+                var command = new NpgsqlCommand(
+                    "DELETE FROM tblMessages WHERE id = @id;",
+                    connection);
+
+                command.Parameters.AddWithValue("id", id);
+
+                rowsAffected = command.ExecuteNonQuery();
+
+                connection.Close();
+            }
+
+            return rowsAffected >= 1;
+        }
+
+        /// <summary>
+        /// The MapReaderToMessage
+        /// </summary>
+        /// <param name="reader">The reader<see cref="NpgsqlDataReader"/></param>
+        /// <returns>The <see cref="Message"/></returns>
         private Message MapReaderToMessage(NpgsqlDataReader reader)
         {
             return new Message
