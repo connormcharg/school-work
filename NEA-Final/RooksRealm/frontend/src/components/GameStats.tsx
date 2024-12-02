@@ -3,10 +3,12 @@ import { useAuth } from "../contexts/AuthProvider";
 
 interface Statistic {
   id: number;
-  username: string;
-  title: string;
-  content: string;
+  avgMoveTime: number;
+  numberOfMoves: number;
+  outcome: string;
   datetime: string;
+  playerOneUsername: string;
+  playerTwoUsername: string | null;
 }
 
 const GameStatsBoard: React.FC = () => {
@@ -44,37 +46,50 @@ const GameStatsBoard: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full flex-col items-center">
-      <h1 className="py-4 text-2xl font-bold">Statistics</h1>
-      <div className="w-full max-w-4xl flex-grow space-y-4 overflow-y-auto rounded bg-gray-800 p-4 text-gray-300 shadow">
+    <div className="flex h-full flex-col bg-gray-200 p-4 text-gray-900">
+      <h1 className="mb-4 text-2xl font-bold">Statistics</h1>
+      <div className="flex-1 overflow-auto rounded-lg bg-white shadow">
         {statistics.length > 0 ? (
-          statistics
-            .sort(
-              (a, b) =>
-                new Date(b.datetime).getTime() - new Date(a.datetime).getTime(),
-            )
-            .map((statistic) => (
-              <div
-                className="rounded-lg border border-gray-500 bg-gray-600 p-4 shadow"
-                key={statistic.id}
-              >
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-lg font-semibold text-white">
-                    {statistic.title}
-                  </span>
-                  <span className="text-sm">
-                    {parseTimestamp(statistic.datetime)}
-                  </span>
+          <div className="space-y-4">
+            {statistics
+              .sort(
+                (a, b) =>
+                  new Date(b.datetime).getTime() -
+                  new Date(a.datetime).getTime(),
+              )
+              .map((statistic) => (
+                <div
+                  key={statistic.id}
+                  className="m-3 flex flex-col gap-4 rounded-lg border-2 border-gray-300 p-4 hover:bg-gray-50"
+                >
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-bold">
+                      {statistic.playerOneUsername}
+                      {statistic.playerTwoUsername ? (
+                        <span> vs {statistic.playerTwoUsername}</span>
+                      ) : (
+                        <span> vs Computer Player</span>
+                      )}
+                    </h2>
+                    <span className="text-sm text-gray-500">
+                      {parseTimestamp(statistic.datetime)}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 text-gray-700">
+                    <p>
+                      <span className="font-medium">Moves:</span>{" "}
+                      {statistic.numberOfMoves}
+                    </p>
+                    <p>
+                      <span className="font-medium">Outcome:</span>{" "}
+                      {statistic.outcome}
+                    </p>
+                  </div>
                 </div>
-                <div className="mb-4 text-base text-white">
-                  {statistic.content}
-                </div>
-              </div>
-            ))
+              ))}
+          </div>
         ) : (
-          <p className="text-center text-lg text-gray-500">
-            No statistics available
-          </p>
+          <p className="text-center text-gray-500">No statistics available</p>
         )}
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthProvider";
 import { useToast } from "@chakra-ui/react";
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 interface UserDetails {
   username: string;
   email: string;
@@ -107,7 +107,9 @@ const Account: React.FC = () => {
     setTheme(selectedTheme);
     const isValidTheme = await validateTheme(selectedTheme);
     if (isValidTheme) {
-      setThemePreview(DOMPurify.sanitize(`/images/boards/${selectedTheme}.png`));
+      setThemePreview(
+        DOMPurify.sanitize(`/images/boards/${selectedTheme}.png`),
+      );
     } else {
       setThemePreview("");
     }

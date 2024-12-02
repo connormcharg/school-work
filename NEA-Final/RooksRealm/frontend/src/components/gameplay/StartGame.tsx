@@ -31,8 +31,8 @@ const StartGame: React.FC = () => {
       formData.colour &&
       formData.time &&
       formData.privacy &&
-      formData.rated &&
-      formData.watchable
+      formData.rated
+      // && formData.watchable
     );
   };
 
@@ -75,16 +75,16 @@ const StartGame: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1 className="mb-6 text-xl font-semibold">Start a game!</h1>
+    <div className="flex h-full flex-col bg-gray-100 p-6">
+      <h1 className="mb-4 text-2xl font-bold">Start a Game</h1>
       {errorMessage && <p className="mb-4 text-red-500">{errorMessage}</p>}
-      <div className="flex">
-        <div className="flex flex-1 flex-col items-center justify-center p-4">
+      <div className="flex flex-wrap justify-center gap-6">
+        <div className="flex w-full max-w-lg flex-col rounded bg-white p-6 shadow-md">
           <select
             name="mode"
             value={formData.mode}
             onChange={handleInputChange}
-            className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
+            className="mb-4 rounded border border-gray-300 p-2"
           >
             <option value="">Select Mode</option>
             <option value="single">Single Player</option>
@@ -95,7 +95,7 @@ const StartGame: React.FC = () => {
             name="colour"
             value={formData.colour}
             onChange={handleInputChange}
-            className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
+            className="mb-4 rounded border border-gray-300 p-2"
           >
             <option value="">Select Starting Colour</option>
             <option value="white">White</option>
@@ -106,7 +106,7 @@ const StartGame: React.FC = () => {
             name="time"
             value={formData.time}
             onChange={handleInputChange}
-            className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
+            className="mb-4 rounded border border-gray-300 p-2"
           >
             <option value="">Select Time Control</option>
             <option value="timed">Timed</option>
@@ -117,7 +117,7 @@ const StartGame: React.FC = () => {
             name="privacy"
             value={formData.privacy}
             onChange={handleInputChange}
-            className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
+            className="mb-4 rounded border border-gray-300 p-2"
           >
             <option value="">Select Visibility</option>
             <option value="public">Public</option>
@@ -128,23 +128,23 @@ const StartGame: React.FC = () => {
             name="rated"
             value={formData.rated}
             onChange={handleInputChange}
-            className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
+            className="mb-4 rounded border border-gray-300 p-2"
           >
             <option value="">Is It Rated?</option>
             <option value="rated">Rated</option>
             <option value="unrated">Unrated</option>
           </select>
 
-          <select
+          {/* <select
             name="watchable"
             value={formData.watchable}
             onChange={handleInputChange}
-            className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
+            className="mb-4 rounded border border-gray-300 p-2"
           >
             <option value="">Can It Be Watched?</option>
             <option value="yes">Yes</option>
             <option value="no">No</option>
-          </select>
+          </select> */}
 
           <input
             type="text"
@@ -152,7 +152,7 @@ const StartGame: React.FC = () => {
             value={formData.title}
             onChange={handleInputChange}
             placeholder="Enter Game Title"
-            className="mb-4 w-full rounded border border-gray-300 p-2 md:w-60"
+            className="mb-4 rounded border border-gray-300 p-2"
           />
 
           <button
@@ -163,12 +163,12 @@ const StartGame: React.FC = () => {
           </button>
         </div>
 
-        <div className="flex h-full flex-1 items-center justify-center">
+        <div className="flex w-full max-w-lg items-center justify-center rounded bg-white p-4 shadow-md">
           <img
             draggable="false"
             src="/images/static-game-board.png"
             alt="Chess Board Starting Position"
-            className="max-h-full max-w-full object-cover"
+            className="h-auto max-w-full object-cover"
           />
         </div>
       </div>

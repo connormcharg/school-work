@@ -49,36 +49,58 @@
         /// </summary>
         /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet("public")]
-        public IActionResult GetPublicGames()
+        public IActionResult GetPublicGameDetails()
         {
             var games = chessService.GetAllGames();
-            var publicGames = new List<Game>();
+            var publicGames = games.Where((g) => !g.settings.isPrivate && g.players.Count < 2 && !g.settings.isSinglePlayer);
 
-            foreach (Game g in games)
+            var details = new List<object>();
+
+            foreach (var game in publicGames)
             {
-                if (!g.settings.isPrivate)
+                details.Add(new
                 {
-                    publicGames.Add(g);
-                }
+                    game.id,
+                    title = game.settings.gameTitle,
+                    playerCount = game.players.Count,
+                    players = game.players.Select(p => p.nickName).ToList(),
+                    game.settings
+                });
             }
 
-            return Ok(publicGames);
+            return Ok(details);
         }
 
         /// <summary>
-        /// The GetGameDetails
+        /// The GetPrivateGameDetails
         /// </summary>
         /// <param name="id">The id<see cref="string"/></param>
         /// <returns>The <see cref="IActionResult"/></returns>
-        [HttpGet("{id}")]
-        public IActionResult GetGameDetails(string id)
+        [HttpGet("details")]
+        public IActionResult GetPrivateGameDetails([FromQuery] string id)
         {
-            var game = chessService.GetGame(id);
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("Game ID is required.");
+            }
+
+            var game = chessService.GetAllGames().FirstOrDefault(g => g.id == id);
+
             if (game == null)
             {
-                return NotFound();
+                return NotFound("Game not found.");
             }
-            return Ok(game);
+
+            var details = new
+            {
+                game.id,
+                title = game.settings.gameTitle,
+                playerCount = game.players.Count,
+                players = game.players.Select(p => p.nickName).ToList(),
+                game.settings
+            };
+
+            return Ok(details);
         }
 
         /// <summary>
@@ -135,6 +157,35 @@
             {
                 return BadRequest();
             }
+        }
+
+        /// <summary>
+        /// The JoinGame
+        /// </summary>
+        /// <param name="id">The id<see cref="string"/></param>
+        /// <returns>The <see cref="IActionResult"/></returns>
+        [HttpGet("join")]
+        public IActionResult JoinGame([FromQuery] string id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            var games = chessService.GetAllGames();
+            var game = games.FirstOrDefault(g => g.id == id);
+
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            if (game.players.Count < 2 && !game.settings.isSinglePlayer)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

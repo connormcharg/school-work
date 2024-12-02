@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr";
 import ChessBoard from "./ChessBoard";
-import MessageBox from "./MessageBox";
 import { useAuth } from "../../contexts/AuthProvider";
 import ControlStack from "./ControlStack";
 import { useNavigate } from "react-router-dom";
@@ -590,9 +589,8 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           </div>
         </div>
       )}
-      <h1 className="mb-6 text-xl font-semibold">Play Game!</h1>
+      <h1 className="mb-4 text-2xl font-bold">Play Game! (ID: {id})</h1>
       <div className="flex">
-        {/* <MessageBox boxSize={(96 - boardSize) / 2} /> */}
         <ChessBoard
           boardSize={boardSize}
           isWhite={isWhite}
@@ -606,7 +604,7 @@ const PlayGame: React.FC<PlayGameProps> = ({ boardSize }) => {
           getBoardTheme={getBoardTheme}
         />
         <ControlStack
-          boxSize={(96 - boardSize)}
+          boxSize={96 - boardSize}
           suggestedMoveButton={isSinglePlayer}
           displaySuggestedMove={displaySuggestedMove}
           playerData={playerData}

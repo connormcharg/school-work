@@ -25,11 +25,16 @@
                 var dateThreshold = DateTime.Now.AddDays(-daysAgo);
 
                 var command = new NpgsqlCommand(
-                    @"SELECT s.id, s.avgmovetime, s.numberofmoves, u.username, s.gameid, s.outcome, s.datetime 
-                      FROM tblstatistics s
-                      INNER JOIN tblusers u on u.id = s.userid
-                      WHERE s.datetime >= @dateThreshold
-                      AND s.userid = @userid;",
+                    @"SELECT s.id, s.avgmovetime, s.numberofmoves, s.outcome, s.datetime,
+                     g.playeroneid, g.playertwoid,
+                     u1.username AS playerOneUsername,
+                     u2.username AS playerTwoUsername
+                    FROM tblstatistics s
+                    INNER JOIN tblgames g ON g.id = s.gameid
+                    INNER JOIN tblusers u1 ON u1.id = g.playeroneid
+                    LEFT JOIN tblusers u2 ON u2.id = g.playertwoid
+                    WHERE s.datetime >= @dateThreshold
+                    AND s.userid = @userid;",
                     connection);
 
                 command.Parameters.AddWithValue("dateThreshold", dateThreshold);
@@ -96,15 +101,19 @@
         /// <returns>The <see cref="Statistic"/></returns>
         private Statistic MapReaderToStatistic(NpgsqlDataReader reader)
         {
+            var playerTwoId = reader.IsDBNull(reader.GetOrdinal("playertwoid"))
+                              ? -1
+                              : reader.GetInt32(reader.GetOrdinal("playertwoid"));
+
             return new Statistic
             {
                 id = reader.GetInt32(reader.GetOrdinal("id")),
                 avgMoveTime = reader.GetDouble(reader.GetOrdinal("avgmovetime")),
                 numberOfMoves = reader.GetInt32(reader.GetOrdinal("numberofmoves")),
-                username = reader.GetString(reader.GetOrdinal("username")),
-                gameId = reader.GetInt32(reader.GetOrdinal("gameid")),
                 outcome = reader.GetString(reader.GetOrdinal("outcome")),
-                datetime = reader.GetDateTime(reader.GetOrdinal("datetime"))
+                datetime = reader.GetDateTime(reader.GetOrdinal("datetime")),
+                playerOneUsername = reader.GetString(reader.GetOrdinal("playerOneUsername")),
+                playerTwoUsername = playerTwoId == -1 ? null : reader.GetString(reader.GetOrdinal("playerTwoUsername"))
             };
         }
     }

@@ -21,16 +21,6 @@
         public int numberOfMoves { get; set; }
 
         /// <summary>
-        /// Gets or sets the username
-        /// </summary>
-        public string? username { get; set; }
-
-        /// <summary>
-        /// Gets or sets the gameId
-        /// </summary>
-        public int gameId { get; set; }
-
-        /// <summary>
         /// Gets or sets the outcome
         /// </summary>
         public string? outcome { get; set; }
@@ -39,5 +29,15 @@
         /// Gets or sets the datetime
         /// </summary>
         public DateTime datetime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the playerOneUsername
+        /// </summary>
+        public string? playerOneUsername { get; set; }
+
+        /// <summary>
+        /// Gets or sets the playerTwoUsername
+        /// </summary>
+        public string? playerTwoUsername { get; set; }
     }
 }

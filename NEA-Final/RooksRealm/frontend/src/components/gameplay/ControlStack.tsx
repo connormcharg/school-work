@@ -195,7 +195,7 @@ const ControlStack: React.FC<ControlStackProps> = ({
 
   return (
     <div
-      className="ml-2 mr-2 flex h-full flex-col rounded-lg bg-gray-800 p-4 text-white max-w-lg"
+      className="ml-2 mr-2 flex h-full max-w-lg flex-col rounded-lg bg-gray-800 p-4 text-white"
       style={{ width: `${boxSize}%` }}
     >
       {renderPlayerInfo(0)}

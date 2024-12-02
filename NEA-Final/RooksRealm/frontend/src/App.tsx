@@ -16,6 +16,7 @@ import StartGame from "./components/gameplay/StartGame";
 import "./App.css";
 import AnnouncementBoard from "./components/AnnouncementBoard";
 import GameStatsBoard from "./components/GameStats";
+import JoinGame from "./components/gameplay/JoinGame";
 
 const AppRoutes: React.FC = () => {
   const { isLoggedIn } = useAuth();
@@ -29,6 +30,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/account" element={<Account />} />
           <Route path="/play/:id" element={<PlayGame boardSize={40} />} />
           <Route path="/start" element={<StartGame />} />
+          <Route path="/join" element={<JoinGame />} />
           <Route path="/messages" element={<AnnouncementBoard />} />
           <Route path="/stats" element={<GameStatsBoard />} />
         </>
@@ -39,6 +41,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/account" element={<Navigate to="/" replace />} />
           <Route path="/play/:id" element={<Navigate to="/" replace />} />
           <Route path="/start" element={<Navigate to="/" replace />} />
+          <Route path="/join" element={<Navigate to="/" replace />} />
           <Route path="/messages" element={<Navigate to="/" replace />} />
           <Route path="/stats" element={<Navigate to="/" replace />} />
         </>
