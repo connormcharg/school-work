@@ -317,6 +317,10 @@
                             }
                             else
                             {
+                                if (game.players.Count != 2)
+                                {
+                                    break;
+                                }
                                 var user1 = userRepository.GetUserByUsername(game.players[0].nickName);
                                 var user2 = userRepository.GetUserByUsername(game.players[1].nickName);
                                 if (user1 == null || user2 == null)
