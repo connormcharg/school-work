@@ -1,0 +1,75 @@
+---
+title: Classes.State
+config:
+  theme: dark
+  themeVariables:
+    fontFamily: Trebuchet MS
+    fontSize: 16px
+  markdownAutoWrap: true
+  wrap: true
+  wrappingWidth: 100
+---
+
+classDiagram
+class Game {
+  +GameState state
+  +List~Move~ currentValidMoves
+  +string id
+  +List~Player~ players
+  +Settings settings
+  +int suggestedMoveId
+
+  +Game(Settings settings)
+  +Game(Game original)
+  +Game(properties...)
+}
+class GameState {
+  +List~List~string~~ board
+  +bool whiteToMove
+  +List~Move~ moveLog
+  +List~int~ whiteKingLocation
+  +List~int~ blackKingLocation
+  +bool inCheck
+  +List~List~int~~ pins
+  +List~List~int~~ checks
+  +bool checkMate
+  +bool staleMate
+  +List~int~? enPassantPossible
+  +CastleRights currentCastlingRight
+  +List~CastleRights~ castleRightsLog
+  +int whiteTime
+  +int blackTime
+  +bool whiteTimeRunning
+  +bool blackTimeRunning
+  +bool gameOver
+  +int fiftyMoveCounter
+  +bool drawAgreed
+  +bool playerResigned
+  +bool isWhiteResignation
+  +List~string~ drawOffers
+  +List~string~ pauseRequests
+  +bool pauseAgreed
+
+  +GameState()
+  +GameState(GameState original)
+  +GameState(properties...)
+}
+class Move {
+  +int startRow
+  +int startCol
+  +int endRow
+  +int endCol
+  +string pieceMoved
+  +string pieceCaptured
+  +bool enPassant
+  +bool pawnPromotion
+  +bool isCastleMove
+  +int moveID
+
+  +Move(int startRow, int startCol, int endRow, int endCol, ...)
+  +Move(Move original)
+  +Move(properties...)
+}
+
+Game o-- GameState
+Game o-- Move
