@@ -8,6 +8,13 @@
     /// </summary>
     public class UserRepository : IUserRepository
     {
+        private readonly IConfiguration configuration;
+
+        public UserRepository(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         /// <summary>
         /// The GetUserById
         /// </summary>
@@ -17,7 +24,7 @@
         {
             User? user = null;
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -45,7 +52,7 @@
         {
             User? user = null;
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -73,7 +80,7 @@
         {
             User? user = null;
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -111,7 +118,7 @@
 
             string storedHashValue = SecurityUtilities.GetHash(password);
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -158,7 +165,7 @@
                 return false;
             }
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -187,7 +194,7 @@
                 return false;
             }
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -218,7 +225,7 @@
                 return false;
             }
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -255,7 +262,7 @@
 
             string newStoredValue = SecurityUtilities.GetHash(newPassword);
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -283,7 +290,7 @@
         {
             if (email == null || newTheme == null) { return false; }
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -311,7 +318,7 @@
         {
             if (username == null) { return false; }
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 

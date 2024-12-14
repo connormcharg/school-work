@@ -8,6 +8,13 @@
     /// </summary>
     public class StatisticsRepository : IStatisticsRepository
     {
+        private readonly IConfiguration configuration;
+
+        public StatisticsRepository(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         /// <summary>
         /// The GetStatistics
         /// </summary>
@@ -18,7 +25,7 @@
         {
             var statistics = new List<Statistic>();
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -72,7 +79,7 @@
 
             var timestamp = dateTime ?? DateTime.Now;
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 

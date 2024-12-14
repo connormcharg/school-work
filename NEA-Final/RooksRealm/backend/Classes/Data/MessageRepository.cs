@@ -7,6 +7,13 @@
     /// </summary>
     public class MessageRepository : IMessageRepository
     {
+        private readonly IConfiguration configuration;
+
+        public MessageRepository(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         /// <summary>
         /// The GetMessages
         /// </summary>
@@ -16,7 +23,7 @@
         {
             var messages = new List<Message>();
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -62,7 +69,7 @@
 
             var timestamp = dateTime ?? DateTime.Now;
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 
@@ -92,7 +99,7 @@
         {
             int rowsAffected;
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 

@@ -7,6 +7,13 @@
     /// </summary>
     public class GameRepository : IGameRepository
     {
+        private readonly IConfiguration configuration;
+        
+        public GameRepository(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         /// <summary>
         /// The CreateGame
         /// </summary>
@@ -30,7 +37,7 @@
                 return -1;
             }
 
-            using (var connection = new NpgsqlConnection(dbConstants.connectionString))
+            using (var connection = new NpgsqlConnection(dbConstants.GetConnectionString(configuration)))
             {
                 connection.Open();
 

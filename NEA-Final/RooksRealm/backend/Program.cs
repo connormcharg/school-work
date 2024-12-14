@@ -20,7 +20,11 @@ namespace backend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Configuration.AddUserSecrets<Program>();
+            var postgresPassword = builder.Configuration["postgres_password"];
+            var connectionString = $"Host=mcharg.uk:5432;Database=rooksrealm;Username=root;Password={postgresPassword}";
+
+            builder.Configuration["ConnectionString"] = connectionString;
 
             builder.Services.AddControllers();
             builder.Services.AddSignalR(options =>
@@ -32,7 +36,8 @@ namespace backend
                 options.PayloadSerializerOptions.PropertyNamingPolicy = null;
             });
 
-            var keyString = "F&dA7W3FLVAcR7KPy9Jac*z5eKnS$cV#";
+            var keyString = builder.Configuration["JwtKey"];
+            if (keyString == null) { keyString = "AAAAA"; }
             var key = Encoding.UTF8.GetBytes(keyString);
             builder.Services.AddAuthentication(options =>
             {
