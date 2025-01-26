@@ -1,0 +1,44 @@
+@startuml NEA
+skinparam classAttributeIconSize 0
+skinparam classFontSize 16
+skinparam classFontName Trebuchet MS
+skinparam classBackgroundColor #F0F0F0
+skinparam classBorderColor #585858
+skinparam classArrowColor #585858
+skinparam wrapWidth 400
+skinparam RoundCorner 0
+skinparam DefaultFontName Trebuchet MS
+skinparam DefaultFontSize 16
+skinparam ClassFontSize 16
+skinparam TitleFontSize 20
+skinparam ClassAttributeFontSize 12
+skinparam Dpi 300
+skinparam svgAntiAlias true
+skinparam Linetype ortho
+skinparam Nodesep 50
+skinparam ranksep 50
+
+top to bottom direction
+
+title Classes.State
+
+namespace Classes {
+    namespace State {
+        class Game
+        class GameState
+        class Move
+        class Settings
+        class Player
+        class CastleRights
+    }
+}
+
+Classes.State.Game o-- Classes.State.GameState
+Classes.State.Game o-- Classes.State.Move
+Classes.State.Game o-- Classes.State.Player
+Classes.State.Game o-- Classes.State.Settings
+Classes.State.GameState o-- Classes.State.Move
+Classes.State.GameState o-- Classes.State.CastleRights
+
+hide members
+@enduml
