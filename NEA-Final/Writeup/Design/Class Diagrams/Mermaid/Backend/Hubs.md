@@ -1,8 +1,11 @@
 ```mermaid
 ---
-  config:
-    class:
-      hideEmptyMembersBox: true
+config:
+  layout: elk
+  theme: mc
+  class:
+    hideEmptyMembersBox: true
+  look: neo
 ---
 classDiagram
 direction LR
