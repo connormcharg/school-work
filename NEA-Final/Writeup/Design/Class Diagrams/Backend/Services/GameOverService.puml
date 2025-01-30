@@ -1,0 +1,42 @@
+@startuml GameOverService
+skinparam classAttributeIconSize 0
+skinparam classFontSize 16
+skinparam classFontName Trebuchet MS
+skinparam classBackgroundColor #F0F0F0
+skinparam classBorderColor #585858
+skinparam classArrowColor #585858
+skinparam wrapWidth 400
+skinparam RoundCorner 0
+skinparam DefaultFontName Trebuchet MS
+skinparam DefaultFontSize 16
+skinparam ClassFontSize 16
+skinparam TitleFontSize 20
+skinparam ClassAttributeFontSize 12
+skinparam ClassStereotypeFontSize 10
+skinparam ArrowFontSize 10
+skinparam Dpi 300
+skinparam svgAntiAlias true
+skinparam Linetype ortho
+skinparam Nodesep 50
+skinparam ranksep 75
+skinparam groupInheritance 2
+skinparam packageStyle Rectangle
+!pragma layout elk
+
+left to right direction
+
+package Services <<Rectangle>> {
+    class ChessService
+    class GameOverService
+}
+
+GameOverService ..> ChessService
+GameOverService ..> Classes.Data.UserRepository
+GameOverService ..> Classes.Data.StatisticsRepository
+GameOverService ..> Classes.Data.GameRepository
+GameOverService --> Classes.State.Game
+GameOverService --> Classes.Data.User
+GameOverService ..> Classes.Utilities.RatingUtilities
+
+hide members
+@enduml
