@@ -1,4 +1,4 @@
-@startuml NEA
+@startuml Test
 skinparam classAttributeIconSize 0
 skinparam classFontSize 16
 skinparam classFontName Trebuchet MS
@@ -12,16 +12,24 @@ skinparam DefaultFontSize 16
 skinparam ClassFontSize 16
 skinparam TitleFontSize 20
 skinparam ClassAttributeFontSize 12
+skinparam ClassStereotypeFontSize 10
+skinparam ArrowFontSize 10
 skinparam Dpi 300
 skinparam svgAntiAlias true
 skinparam Linetype ortho
 skinparam Nodesep 50
-skinparam ranksep 50
+skinparam ranksep 75
+skinparam groupInheritance 2
+skinparam packageStyle Rectangle
+!pragma layout elk
 
-top to bottom direction
+left to right direction
 
-title Classes.Data
-
+package Classes <<Rectangle>> {
+}
 
 hide members
 @enduml
+
+A --> B means A uses B in a function or parameter or return value
+A ..> B means A calls B (B is static) or A depends on B

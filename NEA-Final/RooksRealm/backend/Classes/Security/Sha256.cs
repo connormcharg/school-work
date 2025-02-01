@@ -163,19 +163,5 @@
         /// <param name="amount">The amount<see cref="int"/></param>
         /// <returns>The <see cref="uint"/></returns>
         private static uint RotateRight(uint value, int amount) => (value >> amount) | (value << (32 - amount));
-
-        /// <summary>
-        /// The σ0
-        /// </summary>
-        /// <param name="x">The x<see cref="uint"/></param>
-        /// <returns>The <see cref="uint"/></returns>
-        private static uint σ0(uint x) => (RotateRight(x, 1) ^ RotateRight(x, 8) ^ (x >> 7));
-
-        /// <summary>
-        /// The σ1
-        /// </summary>
-        /// <param name="x">The x<see cref="uint"/></param>
-        /// <returns>The <see cref="uint"/></returns>
-        private static uint σ1(uint x) => (RotateRight(x, 19) ^ RotateRight(x, 61) ^ (x >> 6));
     }
 }
