@@ -10,11 +10,6 @@
     public class UserService
     {
         /// <summary>
-        /// Defines the httpContextAccessor
-        /// </summary>
-        private readonly IHttpContextAccessor httpContextAccessor;
-
-        /// <summary>
         /// Defines the connectionMappingService
         /// </summary>
         private readonly ConnectionMappingService connectionMappingService;
@@ -27,14 +22,11 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
-        /// <param name="httpContextAccessor">The httpContextAccessor<see cref="IHttpContextAccessor"/></param>
         /// <param name="connectionMappingService">The connectionMappingService<see cref="ConnectionMappingService"/></param>
         /// <param name="userRepository">The userRepository<see cref="IUserRepository"/></param>
-        public UserService(IHttpContextAccessor httpContextAccessor,
-            ConnectionMappingService connectionMappingService,
+        public UserService(ConnectionMappingService connectionMappingService,
             IUserRepository userRepository)
         {
-            this.httpContextAccessor = httpContextAccessor;
             this.connectionMappingService = connectionMappingService;
             this.userRepository = userRepository;
         }

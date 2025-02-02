@@ -7,8 +7,15 @@
     /// </summary>
     public class GameRepository : IGameRepository
     {
+        /// <summary>
+        /// Defines the configuration
+        /// </summary>
         private readonly IConfiguration configuration;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameRepository"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration<see cref="IConfiguration"/></param>
         public GameRepository(IConfiguration configuration)
         {
             this.configuration = configuration;

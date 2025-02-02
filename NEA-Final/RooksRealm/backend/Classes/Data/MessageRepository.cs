@@ -7,8 +7,15 @@
     /// </summary>
     public class MessageRepository : IMessageRepository
     {
+        /// <summary>
+        /// Defines the configuration
+        /// </summary>
         private readonly IConfiguration configuration;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageRepository"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration<see cref="IConfiguration"/></param>
         public MessageRepository(IConfiguration configuration)
         {
             this.configuration = configuration;

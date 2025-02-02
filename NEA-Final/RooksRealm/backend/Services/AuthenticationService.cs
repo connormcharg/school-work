@@ -23,21 +23,14 @@
         private readonly string jwtSecret;
 
         /// <summary>
-        /// Defines the jwtExpirationMinutes
-        /// </summary>
-        private readonly int jwtExpirationMinutes;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="AuthenticationService"/> class.
         /// </summary>
         /// <param name="userRepository">The userRepository<see cref="IUserRepository"/></param>
         /// <param name="jwtSecret">The jwtSecret<see cref="string"/></param>
-        /// <param name="jwtExpirationMinutes">The jwtExpirationMinutes<see cref="int"/></param>
-        public AuthenticationService(IUserRepository userRepository, string jwtSecret, int jwtExpirationMinutes)
+        public AuthenticationService(IUserRepository userRepository, string jwtSecret)
         {
             this.userRepository = userRepository;
             this.jwtSecret = jwtSecret;
-            this.jwtExpirationMinutes = jwtExpirationMinutes;
         }
 
         /// <summary>

@@ -24,11 +24,6 @@
         private readonly IUserRepository userRepository;
 
         /// <summary>
-        /// Defines the userService
-        /// </summary>
-        private readonly UserService userService;
-
-        /// <summary>
         /// Defines the authenticationService
         /// </summary>
         private readonly IAuthenticationService authenticationService;
@@ -38,13 +33,11 @@
         /// </summary>
         /// <param name="messageRepository">The messageRepository<see cref="IMessageRepository"/></param>
         /// <param name="userRepository">The userRepository<see cref="IUserRepository"/></param>
-        /// <param name="userService">The userService<see cref="UserService"/></param>
         /// <param name="authenticationService">The authenticationService<see cref="IAuthenticationService"/></param>
-        public MessageController(IMessageRepository messageRepository, IUserRepository userRepository, UserService userService, IAuthenticationService authenticationService)
+        public MessageController(IMessageRepository messageRepository, IUserRepository userRepository, IAuthenticationService authenticationService)
         {
             this.messageRepository = messageRepository;
             this.userRepository = userRepository;
-            this.userService = userService;
             this.authenticationService = authenticationService;
         }
 

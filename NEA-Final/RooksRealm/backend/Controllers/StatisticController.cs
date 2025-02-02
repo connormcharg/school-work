@@ -1,7 +1,6 @@
 ﻿namespace backend.Controllers
 {
     using backend.Classes.Data;
-    using backend.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
@@ -24,28 +23,14 @@
         private readonly IUserRepository userRepository;
 
         /// <summary>
-        /// Defines the userService
-        /// </summary>
-        private readonly UserService userService;
-
-        /// <summary>
-        /// Defines the authenticationService
-        /// </summary>
-        private readonly IAuthenticationService authenticationService;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="StatisticController"/> class.
         /// </summary>
         /// <param name="userRepository">The userRepository<see cref="IUserRepository"/></param>
         /// <param name="statisticsRepository">The statisticsRepository<see cref="IStatisticsRepository"/></param>
-        /// <param name="userService">The userService<see cref="UserService"/></param>
-        /// <param name="authenticationService">The authenticationService<see cref="IAuthenticationService"/></param>
-        public StatisticController(IUserRepository userRepository, IStatisticsRepository statisticsRepository, UserService userService, IAuthenticationService authenticationService)
+        public StatisticController(IUserRepository userRepository, IStatisticsRepository statisticsRepository)
         {
             this.userRepository = userRepository;
             this.statisticsRepository = statisticsRepository;
-            this.userService = userService;
-            this.authenticationService = authenticationService;
         }
 
         /// <summary>

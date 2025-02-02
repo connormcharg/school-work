@@ -8,8 +8,15 @@
     /// </summary>
     public class UserRepository : IUserRepository
     {
+        /// <summary>
+        /// Defines the configuration
+        /// </summary>
         private readonly IConfiguration configuration;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserRepository"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration<see cref="IConfiguration"/></param>
         public UserRepository(IConfiguration configuration)
         {
             this.configuration = configuration;

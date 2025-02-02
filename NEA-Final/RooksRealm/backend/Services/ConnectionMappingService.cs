@@ -10,8 +10,7 @@
         /// <summary>
         /// Defines the connectionHttpContexts
         /// </summary>
-        private readonly ConcurrentDictionary<string, HttpContext> connectionHttpContexts =
-            new ConcurrentDictionary<string, HttpContext>();
+        private readonly ConcurrentDictionary<string, HttpContext> connectionHttpContexts = new();
 
         /// <summary>
         /// The AddConnection
