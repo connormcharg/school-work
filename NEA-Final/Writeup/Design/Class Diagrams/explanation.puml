@@ -1,4 +1,4 @@
-@startuml Test
+@startuml Explanation
 skinparam classAttributeIconSize 0
 skinparam classFontSize 16
 skinparam classFontName Trebuchet MS
@@ -11,6 +11,8 @@ skinparam DefaultFontName Trebuchet MS
 skinparam DefaultFontSize 16
 skinparam ClassFontSize 16
 skinparam TitleFontSize 20
+skinparam notefontsize 10
+skinparam NoteBackgroundColor #F0F0F0
 skinparam ClassAttributeFontSize 12
 skinparam ClassStereotypeFontSize 10
 skinparam ArrowFontSize 10
@@ -21,12 +23,33 @@ skinparam Nodesep 50
 skinparam ranksep 75
 skinparam groupInheritance 2
 skinparam packageStyle Rectangle
-!pragma layout elk
 
-left to right direction
+top to bottom direction
 
 class Class
 interface Interface
+
+Class ..|> Interface : Implements
+
+class A
+class B
+
+A --> B : Uses
+
+class C
+class D
+
+C ..> D : Depends on
+
+class E
+class F
+
+E *-- F : Composition
+
+class G
+class H
+
+G o-- H : Aggregation
 
 hide members
 @enduml
