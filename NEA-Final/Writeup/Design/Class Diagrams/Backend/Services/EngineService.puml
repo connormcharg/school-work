@@ -21,7 +21,6 @@ skinparam Nodesep 50
 skinparam ranksep 75
 skinparam groupInheritance 2
 skinparam packageStyle Rectangle
-!pragma layout elk
 
 left to right direction
 
@@ -30,7 +29,7 @@ package Services <<Rectangle>> {
     class ChessService
 }
 
-EngineService ..> ChessService
+EngineService o-- ChessService
 EngineService --> Classes.State.Game
 EngineService --> Classes.Engine.MinMaxEngine
 EngineService ..> Classes.Handlers.GameHandler

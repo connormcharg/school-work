@@ -21,7 +21,6 @@ skinparam Nodesep 50
 skinparam ranksep 75
 skinparam groupInheritance 2
 skinparam packageStyle Rectangle
-!pragma layout elk
 
 left to right direction
 
@@ -29,7 +28,7 @@ package Services <<Rectangle>> {
     class ChessService
 }
 
-ChessService ..> Hubs.ChessHub
+ChessService o-- Hubs.ChessHub
 ChessService *-- Classes.State.Game
 ChessService ..> Classes.Handlers.GameHandler
 ChessService --> Classes.State.Player

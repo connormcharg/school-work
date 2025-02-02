@@ -21,7 +21,6 @@ skinparam Nodesep 50
 skinparam ranksep 75
 skinparam groupInheritance 2
 skinparam packageStyle Rectangle
-!pragma layout elk
 
 left to right direction
 
@@ -29,8 +28,8 @@ package Controllers <<Rectangle>> {
     class ChessController
 }
 
-ChessController ..> Services.ChessService
-ChessController ..> Services.UserService
+ChessController o-- Services.ChessService
+ChessController o-- Services.UserService
 ChessController ..> Classes.Utilities.GeneratorUtilities
 ChessController --> Classes.State.Game
 

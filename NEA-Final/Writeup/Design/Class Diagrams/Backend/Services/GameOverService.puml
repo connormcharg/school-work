@@ -21,7 +21,6 @@ skinparam Nodesep 50
 skinparam ranksep 75
 skinparam groupInheritance 2
 skinparam packageStyle Rectangle
-!pragma layout elk
 
 left to right direction
 
@@ -30,10 +29,10 @@ package Services <<Rectangle>> {
     class GameOverService
 }
 
-GameOverService ..> ChessService
-GameOverService ..> Classes.Data.UserRepository
-GameOverService ..> Classes.Data.StatisticsRepository
-GameOverService ..> Classes.Data.GameRepository
+GameOverService o-- ChessService
+GameOverService o-- Classes.Data.UserRepository
+GameOverService o-- Classes.Data.StatisticsRepository
+GameOverService o-- Classes.Data.GameRepository
 GameOverService --> Classes.State.Game
 GameOverService --> Classes.Data.User
 GameOverService ..> Classes.Utilities.RatingUtilities

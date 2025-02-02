@@ -21,7 +21,6 @@ skinparam Nodesep 50
 skinparam ranksep 75
 skinparam groupInheritance 2
 skinparam packageStyle Rectangle
-!pragma layout elk
 
 left to right direction
 
@@ -29,10 +28,9 @@ package Controllers <<Rectangle>> {
     class MessageController
 }
 
-MessageController ..> Classes.Data.MessageRepository
-MessageController ..> Classes.Data.UserRepository
-MessageController ..> Services.UserService
-MessageController ..> Services.AuthenticationService
+MessageController o-- Classes.Data.MessageRepository
+MessageController o-- Classes.Data.UserRepository
+MessageController o-- Services.AuthenticationService
 MessageController --> Classes.Data.Message
 MessageController --> Classes.Data.User
 

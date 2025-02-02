@@ -21,7 +21,6 @@ skinparam Nodesep 50
 skinparam ranksep 75
 skinparam groupInheritance 2
 skinparam packageStyle Rectangle
-!pragma layout elk
 
 left to right direction
 
@@ -29,9 +28,8 @@ package Controllers <<Rectangle>> {
     class StatisticController
 }
 
-StatisticController ..> Classes.Data.StatisticsRepository
-StatisticController ..> Classes.Data.UserRepository
-StatisticController ..> Services.UserService
+StatisticController o-- Classes.Data.StatisticsRepository
+StatisticController o-- Classes.Data.UserRepository
 StatisticController --> Classes.Data.User
 StatisticController --> Classes.Data.Statistic
 
