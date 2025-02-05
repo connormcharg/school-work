@@ -123,7 +123,7 @@
                         <mxPoint x="280" y="1100" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="93" value="No" style="edgeStyle=none;html=1;" edge="1" parent="1" source="32" target="92">
+                <mxCell id="93" value="No" style="edgeStyle=none;html=1;" parent="1" source="32" target="92" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="32" value="Join game&lt;br&gt;page&lt;br&gt;chosen?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
@@ -209,21 +209,21 @@
                 <mxCell id="88" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="560" y="840" width="40" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="96" value="Yes" style="edgeStyle=none;html=1;" edge="1" parent="1" source="92" target="95">
+                <mxCell id="96" value="Yes" style="edgeStyle=none;html=1;" parent="1" source="92" target="95" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="92" value="Logout&lt;br&gt;button&lt;br&gt;chosen?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" vertex="1" parent="1">
+                <mxCell id="92" value="Logout&lt;br&gt;button&lt;br&gt;chosen?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
                     <mxGeometry x="230" y="1020" width="100" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="94" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="94" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="270" y="1120" width="40" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="97" style="edgeStyle=none;html=1;" edge="1" parent="1" source="95">
+                <mxCell id="97" style="edgeStyle=none;html=1;" parent="1" source="95" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="40" y="1070" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="95" value="Logout" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+                <mxCell id="95" value="Logout" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
                     <mxGeometry x="90" y="1040" width="100" height="60" as="geometry"/>
                 </mxCell>
             </root>

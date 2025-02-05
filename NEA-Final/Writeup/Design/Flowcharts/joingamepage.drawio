@@ -4,101 +4,102 @@
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="2" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;" vertex="1" parent="1">
+                <mxCell id="2" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;" parent="1" vertex="1">
                     <mxGeometry x="364" y="10" width="100" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="6" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="4">
+                <mxCell id="6" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" target="4" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="414" y="70" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="3" value="Join Game&lt;br&gt;Page" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="3" value="Join Game&lt;br&gt;Page" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="374" y="20" width="80" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="8" style="edgeStyle=none;html=1;" edge="1" parent="1" source="4" target="7">
+                <mxCell id="8" style="edgeStyle=none;html=1;" parent="1" source="4" target="7" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="4" value="Display All&lt;br&gt;Games" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" vertex="1" parent="1">
+                <mxCell id="4" value="Display All&lt;br&gt;Games" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" parent="1" vertex="1">
                     <mxGeometry x="364" y="110" width="100" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="14" value="No" style="edgeStyle=none;html=1;" edge="1" parent="1" source="7" target="12">
+                <mxCell id="14" value="No" style="edgeStyle=none;html=1;" parent="1" source="7" target="12" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="26" value="Yes" style="edgeStyle=none;html=1;" edge="1" parent="1" source="7">
+                <mxCell id="26" value="Yes" style="edgeStyle=none;html=1;" parent="1" source="7" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="640" y="260" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="7" value="Refresh&lt;br&gt;button&lt;br&gt;chosen?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" vertex="1" parent="1">
+                <mxCell id="7" value="Refresh&lt;br&gt;button&lt;br&gt;chosen?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
                     <mxGeometry x="364" y="210" width="100" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="Yes" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="12" target="15">
+                <mxCell id="16" value="Yes" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="12" target="15" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="31" value="No" style="edgeStyle=none;html=1;" edge="1" parent="1" source="12" target="27">
+                <mxCell id="31" value="No" style="edgeStyle=none;html=1;" parent="1" source="12" target="27" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="12" value="Specific&lt;br&gt;game&lt;br&gt;chosen?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" vertex="1" parent="1">
+                <mxCell id="12" value="Specific&lt;br&gt;game&lt;br&gt;chosen?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
                     <mxGeometry x="364" y="350" width="100" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="18" style="edgeStyle=none;html=1;" edge="1" parent="1" source="15" target="17">
+                <mxCell id="18" style="edgeStyle=none;html=1;" parent="1" source="15" target="17" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="15" value="Display&lt;br&gt;game&lt;br&gt;information" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" vertex="1" parent="1">
+                <mxCell id="15" value="Display&lt;br&gt;game&lt;br&gt;information" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" parent="1" vertex="1">
                     <mxGeometry x="510" y="370" width="100" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="23" value="Yes" style="edgeStyle=none;html=1;" edge="1" parent="1" source="17" target="19">
+                <mxCell id="23" value="Yes" style="edgeStyle=none;html=1;" parent="1" source="17" target="19" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="24" style="edgeStyle=none;html=1;" edge="1" parent="1" source="17">
+                <mxCell id="24" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="17" edge="1" target="4">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="420" y="90" as="targetPoint"/>
                         <Array as="points">
                             <mxPoint x="640" y="540"/>
                             <mxPoint x="640" y="320"/>
-                            <mxPoint x="640" y="90"/>
+                            <mxPoint x="640" y="140"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="17" value="Join game&lt;br&gt;button&lt;br&gt;chosen?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" vertex="1" parent="1">
+                <mxCell id="17" value="Join game&lt;br&gt;button&lt;br&gt;chosen?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
                     <mxGeometry x="510" y="490" width="100" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="22" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="19" target="20">
+                <mxCell id="22" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="19" target="20" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="19" value="Join Game" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+                <mxCell id="19" value="Join Game" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
                     <mxGeometry x="510" y="630" width="100" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="20" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;" vertex="1" parent="1">
+                <mxCell id="20" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;" parent="1" vertex="1">
                     <mxGeometry x="510" y="720" width="100" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="21" value="Play Game&lt;br&gt;Page" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="21" value="Play Game&lt;br&gt;Page" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="520" y="730" width="80" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="25" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="25" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="600" y="540" width="40" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="28" style="edgeStyle=none;html=1;" edge="1" parent="1" source="27">
+                <mxCell id="28" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="27" edge="1" target="4">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="414" y="90" as="targetPoint"/>
                         <Array as="points">
                             <mxPoint x="320" y="540"/>
-                            <mxPoint x="320" y="90"/>
+                            <mxPoint x="320" y="140"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="32" value="Yes" style="edgeStyle=none;html=1;" edge="1" parent="1" source="27">
+                <mxCell id="32" value="Yes" style="edgeStyle=none;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="27" edge="1" target="15">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="490" y="400" as="targetPoint"/>
                         <Array as="points">
                             <mxPoint x="490" y="540"/>
+                            <mxPoint x="490" y="413"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="27" value="Game code&lt;br&gt;entered?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" vertex="1" parent="1">
+                <mxCell id="27" value="Game code&lt;br&gt;entered?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
                     <mxGeometry x="364" y="490" width="100" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="29" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                <mxCell id="29" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="334" y="540" width="40" height="30" as="geometry"/>
                 </mxCell>
             </root>

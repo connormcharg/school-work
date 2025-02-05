@@ -1,0 +1,66 @@
+SUB FindMoveNegaMaxAlphaBeta(game, validMoves, depth, alpha, beta, turnMultiplier)
+    IF depth == 0 THEN
+        RETURN turnMultiplier * ScoreBoard(game)
+    END IF
+
+    maxScore <-- -CHECKMATE
+
+    FOR EACH move m IN validMoves DO
+        GameHandler.MakeMove(game, m)
+        nextMoves <-- GameHandler.FindValidMoves(game)
+        score <-- -FindMoveNegaMaxAlphaBeta(game, nextMoves, depth - 1, -beta, -alpha, -turnMultiplier)
+
+        IF score > maxScore THEN
+            maxScore <-- score
+            IF depth == DEPTH THEN
+                nextMove <-- m
+            END IF
+        END IF
+
+        GameHandler.UndoMove(game)
+
+        IF maxScore > alpha THEN
+            alpha <-- maxScore
+        END IF
+
+        IF alpha >= beta THEN
+            BREAK
+        END IF
+    END FOR
+
+    RETURN maxScore
+END SUB
+
+SUB ScoreBoard(game)
+    IF game.state.checkMate THEN
+        IF game.state.whiteToMove THEN
+            RETURN -CHECKMATE
+        ELSE
+            RETURN CHECKMATE
+        END IF
+    ELSE IF game.state.staleMate THEN
+        RETURN STALEMATE
+    END IF
+
+    score <-- 0
+
+    FOR row FROM 0 TO game.state.board.Count - 1 DO
+        FOR col FROM 0 TO game.state.board[row].Count - 1 DO
+            piece <-- game.state.board[row][col]
+            IF piece != "--" THEN
+                piecePositionScore <-- 0
+                IF piece[1] != 'K' THEN
+                    piecePositionScore <-- piecePositionScores[piece][row][col]
+                END IF
+
+                IF piece[0] == 'w' THEN
+                    score <-- score + pieceScores[piece[1]] + piecePositionScore
+                ELSE IF piece[0] == 'b' THEN
+                    score <-- score - pieceScores[piece[1]] - piecePositionScore
+                END IF
+            END IF
+        END FOR
+    END FOR
+
+    RETURN score
+END SUB
