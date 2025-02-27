@@ -2,16 +2,8 @@
 {
     using backend.Classes.State;
 
-    /// <summary>
-    /// Defines the <see cref="GameHandler" />
-    /// </summary>
     public static class GameHandler
     {
-        /// <summary>
-        /// The MakeMove
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="move">The move<see cref="Move"/></param>
         public static void MakeMove(Game game, Move move)
         {
             game.state.board[move.startRow][move.startCol] = "--";
@@ -89,10 +81,6 @@
             }
         }
 
-        /// <summary>
-        /// The UndoMove
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
         public static void UndoMove(Game game)
         {
             if (game.state.moveLog.Count != 0)
@@ -168,11 +156,6 @@
             }
         }
 
-        /// <summary>
-        /// The UpdateCastleRights
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="move">The move<see cref="Move"/></param>
         public static void UpdateCastleRights(Game game, Move move)
         {
             if (move.pieceMoved == "wK")
@@ -215,10 +198,6 @@
             }
         }
 
-        /// <summary>
-        /// The CheckGameOver
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
         public static void CheckGameOver(Game game)
         {
             if (game == null)
@@ -252,11 +231,6 @@
             }
         }
 
-        /// <summary>
-        /// The FindValidMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> FindValidMoves(Game game)
         {
             CastleRights tempCastleRights = new CastleRights(
@@ -369,13 +343,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The CheckForPinsAndChecks
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="_inCheck">The _inCheck<see cref="bool"/></param>
-        /// <param name="_pins">The _pins<see cref="List{List{int}}"/></param>
-        /// <param name="_checks">The _checks<see cref="List{List{int}}"/></param>
         public static void CheckForPinsAndChecks(Game game, out bool _inCheck, out List<List<int>> _pins, out List<List<int>> _checks)
         {
             var pins = new List<List<int>>();
@@ -472,13 +439,6 @@
             _checks = checks;
         }
 
-        /// <summary>
-        /// The SquareUnderAttack
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="row">The row<see cref="int"/></param>
-        /// <param name="col">The col<see cref="int"/></param>
-        /// <returns>The <see cref="bool"/></returns>
         public static bool SquareUnderAttack(Game game, int row, int col)
         {
             game.state.whiteToMove = !game.state.whiteToMove;
@@ -494,11 +454,6 @@
             return false;
         }
 
-        /// <summary>
-        /// The GetAllPossibleMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetAllPossibleMoves(Game game)
         {
             var moves = new List<Move>();
@@ -517,11 +472,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The GetMoveFunction
-        /// </summary>
-        /// <param name="piece">The piece<see cref="string"/></param>
-        /// <returns>The <see cref="Func{Game, int, int, List{Move}}"/></returns>
         public static Func<Game, int, int, List<Move>> GetMoveFunction(string piece)
         {
             var moveFunctions = new Dictionary<string, Func<Game, int, int, List<Move>>>
@@ -532,13 +482,6 @@
             return moveFunctions[piece];
         }
 
-        /// <summary>
-        /// The GetPawnMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="r">The r<see cref="int"/></param>
-        /// <param name="c">The c<see cref="int"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetPawnMoves(Game game, int r, int c)
         {
             var moves = new List<Move>();
@@ -616,13 +559,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The GetRookMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="r">The r<see cref="int"/></param>
-        /// <param name="c">The c<see cref="int"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetRookMoves(Game game, int r, int c)
         {
             var moves = new List<Move>();
@@ -641,7 +577,6 @@
                     }
                     break;
                 }
-
             }
 
             var directions = new List<List<int>> {
@@ -683,13 +618,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The GetKnightMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="r">The r<see cref="int"/></param>
-        /// <param name="c">The c<see cref="int"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetKnightMoves(Game game, int r, int c)
         {
             var moves = new List<Move>();
@@ -731,13 +659,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The GetBishopMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="r">The r<see cref="int"/></param>
-        /// <param name="c">The c<see cref="int"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetBishopMoves(Game game, int r, int c)
         {
             var moves = new List<Move>();
@@ -794,13 +715,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The GetQueenMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="r">The r<see cref="int"/></param>
-        /// <param name="c">The c<see cref="int"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetQueenMoves(Game game, int r, int c)
         {
             var moves = new List<Move>();
@@ -809,13 +723,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The GetKingMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="r">The r<see cref="int"/></param>
-        /// <param name="c">The c<see cref="int"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetKingMoves(Game game, int r, int c)
         {
             var moves = new List<Move>();
@@ -861,13 +768,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The GetCastleMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="r">The r<see cref="int"/></param>
-        /// <param name="c">The c<see cref="int"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetCastleMoves(Game game, int r, int c)
         {
             if (SquareUnderAttack(game, r, c))
@@ -886,13 +786,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The GetKingsideCastleMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="r">The r<see cref="int"/></param>
-        /// <param name="c">The c<see cref="int"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetKingsideCastleMoves(Game game, int r, int c)
         {
             var moves = new List<Move>();
@@ -906,13 +799,6 @@
             return moves;
         }
 
-        /// <summary>
-        /// The GetQueensideCastleMoves
-        /// </summary>
-        /// <param name="game">The game<see cref="Game"/></param>
-        /// <param name="r">The r<see cref="int"/></param>
-        /// <param name="c">The c<see cref="int"/></param>
-        /// <returns>The <see cref="List{Move}"/></returns>
         public static List<Move> GetQueensideCastleMoves(Game game, int r, int c)
         {
             var moves = new List<Move>();

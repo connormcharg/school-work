@@ -2,32 +2,15 @@
 {
     using Npgsql;
 
-    /// <summary>
-    /// Defines the <see cref="GameRepository" />
-    /// </summary>
     public class GameRepository : IGameRepository
     {
-        /// <summary>
-        /// Defines the configuration
-        /// </summary>
         private readonly IConfiguration configuration;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameRepository"/> class.
-        /// </summary>
-        /// <param name="configuration">The configuration<see cref="IConfiguration"/></param>
         public GameRepository(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
 
-        /// <summary>
-        /// The CreateGame
-        /// </summary>
-        /// <param name="playerOneId">The playerOneId<see cref="int"/></param>
-        /// <param name="playerTwoId">The playerTwoId<see cref="int"/></param>
-        /// <param name="gameData">The gameData<see cref="string"/></param>
-        /// <returns>The <see cref="int"/></returns>
         public int CreateGame(int playerOneId, int playerTwoId, string gameData)
         {
             if (string.IsNullOrWhiteSpace(gameData))
@@ -66,22 +49,6 @@
             }
 
             return -1;
-        }
-
-        /// <summary>
-        /// The MapReaderToGame
-        /// </summary>
-        /// <param name="reader">The reader<see cref="NpgsqlDataReader"/></param>
-        /// <returns>The <see cref="Game"/></returns>
-        private Game MapReaderToGame(NpgsqlDataReader reader)
-        {
-            return new Game
-            {
-                id = reader.GetInt32(reader.GetOrdinal("id")),
-                playerOneId = reader.GetInt32(reader.GetOrdinal("playeroneid")),
-                playerTwoId = reader.GetInt32(reader.GetOrdinal("playertwoid")),
-                gameData = reader.GetString(reader.GetOrdinal("gamedata"))
-            };
         }
     }
 }

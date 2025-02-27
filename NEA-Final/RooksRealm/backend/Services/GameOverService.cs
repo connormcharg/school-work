@@ -4,33 +4,14 @@
     using backend.Classes.Utilities;
     using Newtonsoft.Json;
 
-    /// <summary>
-    /// Defines the <see cref="GameOverService" />
-    /// </summary>
     public class GameOverService : IHostedService, IDisposable
     {
-        /// <summary>
-        /// Defines the timer
-        /// </summary>
         private Timer? timer;
-
-        /// <summary>
-        /// Defines the chessService
-        /// </summary>
         private readonly ChessService chessService;
-
-        /// <summary>
-        /// Defines the serviceProvider
-        /// </summary>
         private readonly IServiceProvider serviceProvider;
 
         /*private readonly IUserRepository userRepository;*/
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GameOverService"/> class.
-        /// </summary>
-        /// <param name="chessService">The chessService<see cref="ChessService"/></param>
-        /// <param name="serviceProvider">The serviceProvider<see cref="IServiceProvider"/></param>
         public GameOverService(ChessService chessService/*, IUserRepository userRepository*/, IServiceProvider serviceProvider)
         {
             this.chessService = chessService;
@@ -38,21 +19,12 @@
             this.serviceProvider = serviceProvider;
         }
 
-        /// <summary>
-        /// The StartAsync
-        /// </summary>
-        /// <param name="cancellationToken">The cancellationToken<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
             timer = new Timer(CheckGames, null, TimeSpan.Zero, TimeSpan.FromSeconds(0.5));
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// The CheckGames
-        /// </summary>
-        /// <param name="state">The state<see cref="object"/></param>
         private async void CheckGames(object state)
         {
             using (var scope = serviceProvider.CreateScope())
@@ -165,6 +137,7 @@
                                             outcome1 = "loss";
                                         }
                                         break;
+
                                     case 1:
                                         // win for black
                                         if (!game.players[0].isWhite)
@@ -182,6 +155,7 @@
                                             outcome1 = "loss";
                                         }
                                         break;
+
                                     case 2:
                                         // draw
                                         newRating = RatingUtilities.GetRatingChange(user.rating, 600, 0.5);
@@ -189,6 +163,7 @@
                                         ratingChange1 = $"{user.username}: {RatingUtilities.GetRatingChangeString(user.rating + newRating, newRating)}";
                                         outcome1 = "draw";
                                         break;
+
                                     default:
                                         break;
                                 }
@@ -232,6 +207,7 @@
                                             outcome2 = "win";
                                         }
                                         break;
+
                                     case 1:
                                         // win for black
                                         if (!game.players[0].isWhite)
@@ -257,6 +233,7 @@
                                             outcome2 = "win";
                                         }
                                         break;
+
                                     case 2:
                                         // draw
                                         newRating1 = RatingUtilities.GetRatingChange(user1.rating, user2.rating, 0.5);
@@ -268,6 +245,7 @@
                                         outcome1 = "draw";
                                         outcome2 = "draw";
                                         break;
+
                                     default:
                                         break;
                                 }
@@ -296,6 +274,7 @@
                                             outcome1 = "loss";
                                         }
                                         break;
+
                                     case 1:
                                         // win for black
                                         if (!game.players[0].isWhite)
@@ -307,10 +286,12 @@
                                             outcome1 = "loss";
                                         }
                                         break;
+
                                     case 2:
                                         // draw
                                         outcome1 = "draw";
                                         break;
+
                                     default:
                                         break;
                                 }
@@ -344,6 +325,7 @@
                                             outcome2 = "win";
                                         }
                                         break;
+
                                     case 1:
                                         // win for black
                                         if (!game.players[0].isWhite)
@@ -357,11 +339,13 @@
                                             outcome2 = "win";
                                         }
                                         break;
+
                                     case 2:
                                         // draw
                                         outcome1 = "draw";
                                         outcome2 = "draw";
                                         break;
+
                                     default:
                                         break;
                                 }
@@ -400,20 +384,12 @@
             }
         }
 
-        /// <summary>
-        /// The StopAsync
-        /// </summary>
-        /// <param name="cancellationToken">The cancellationToken<see cref="CancellationToken"/></param>
-        /// <returns>The <see cref="Task"/></returns>
         public Task StopAsync(CancellationToken cancellationToken)
         {
             timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// The Dispose
-        /// </summary>
         public void Dispose()
         {
             timer?.Dispose();

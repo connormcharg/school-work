@@ -3,31 +3,15 @@
     using Npgsql;
     using System;
 
-    /// <summary>
-    /// Defines the <see cref="StatisticsRepository" />
-    /// </summary>
     public class StatisticsRepository : IStatisticsRepository
     {
-        /// <summary>
-        /// Defines the configuration
-        /// </summary>
         private readonly IConfiguration configuration;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StatisticsRepository"/> class.
-        /// </summary>
-        /// <param name="configuration">The configuration<see cref="IConfiguration"/></param>
         public StatisticsRepository(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
 
-        /// <summary>
-        /// The GetStatistics
-        /// </summary>
-        /// <param name="daysAgo">The daysAgo<see cref="int"/></param>
-        /// <param name="userId">The userId<see cref="int"/></param>
-        /// <returns>The <see cref="List{Statistic}"/></returns>
         public List<Statistic> GetStatistics(int daysAgo, int userId)
         {
             var statistics = new List<Statistic>();
@@ -68,15 +52,6 @@
             return statistics;
         }
 
-        /// <summary>
-        /// The CreateStatistic
-        /// </summary>
-        /// <param name="numberOfMoves">The numberOfMoves<see cref="int"/></param>
-        /// <param name="userId">The userId<see cref="int"/></param>
-        /// <param name="gameId">The gameId<see cref="int"/></param>
-        /// <param name="outcome">The outcome<see cref="string"/></param>
-        /// <param name="dateTime">The dateTime<see cref="DateTime?"/></param>
-        /// <returns>The <see cref="bool"/></returns>
         public bool CreateStatistic(int numberOfMoves, int userId, int gameId, string outcome, DateTime? dateTime = null)
         {
             if (outcome == null)
@@ -108,11 +83,6 @@
             return true;
         }
 
-        /// <summary>
-        /// The MapReaderToStatistic
-        /// </summary>
-        /// <param name="reader">The reader<see cref="NpgsqlDataReader"/></param>
-        /// <returns>The <see cref="Statistic"/></returns>
         private Statistic MapReaderToStatistic(NpgsqlDataReader reader)
         {
             var playerTwoId = reader.IsDBNull(reader.GetOrdinal("playertwoid"))

@@ -1,9 +1,7 @@
-﻿using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
-using backend.Classes.Engine;
-using backend.Classes.State;
+﻿using backend.Classes.Engine;
 using backend.Classes.Handlers;
-using backend.Classes.Utilities;
+using backend.Classes.State;
+using BenchmarkDotNet.Attributes;
 
 namespace testing
 {
@@ -22,7 +20,7 @@ namespace testing
 
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             /*BenchmarkRunner.Run<Testing>();*/
             var b = new List<List<string>>()
@@ -49,7 +47,6 @@ namespace testing
             /*var e = new MinMaxEngine();
             e.FindBestMove(g, g.currentValidMoves);
             Console.WriteLine(e.nextMove.moveID);*/
-
         }
     }
 }

@@ -2,38 +2,18 @@
 {
     using backend.Classes.State;
 
-    /// <summary>
-    /// Defines the <see cref="MoveHandler" />
-    /// </summary>
     public static class MoveHandler
     {
-        /// <summary>
-        /// The MovesEqual
-        /// </summary>
-        /// <param name="move1">The move1<see cref="Move"/></param>
-        /// <param name="move2">The move2<see cref="Move"/></param>
-        /// <returns>The <see cref="bool"/></returns>
         public static bool MovesEqual(Move move1, Move move2)
         {
             return (move1.moveID == move2.moveID);
         }
 
-        /// <summary>
-        /// The GetChessNotation
-        /// </summary>
-        /// <param name="move">The move<see cref="Move"/></param>
-        /// <returns>The <see cref="string"/></returns>
         public static string GetChessNotation(Move move)
         {
             return GetRankFile(move.startRow, move.startCol) + GetRankFile(move.endRow, move.endCol);
         }
 
-        /// <summary>
-        /// The GetRankFile
-        /// </summary>
-        /// <param name="row">The row<see cref="int"/></param>
-        /// <param name="col">The col<see cref="int"/></param>
-        /// <returns>The <see cref="string"/></returns>
         private static string GetRankFile(int row, int col)
         {
             Dictionary<int, string> rowsToRanks = new Dictionary<int, string>

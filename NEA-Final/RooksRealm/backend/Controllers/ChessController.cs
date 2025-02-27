@@ -5,38 +5,19 @@
     using backend.Services;
     using Microsoft.AspNetCore.Mvc;
 
-    /// <summary>
-    /// Defines the <see cref="ChessController" />
-    /// </summary>
     [ApiController]
     [Route("api/[controller]")] // "api/chess"
     public class ChessController : ControllerBase
     {
-        /// <summary>
-        /// Defines the chessService
-        /// </summary>
         private readonly ChessService chessService;
-
-        /// <summary>
-        /// Defines the userService
-        /// </summary>
         private readonly UserService userService;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChessController"/> class.
-        /// </summary>
-        /// <param name="chessService">The chessService<see cref="ChessService"/></param>
-        /// <param name="userService">The userService<see cref="UserService"/></param>
         public ChessController(ChessService chessService, UserService userService)
         {
             this.chessService = chessService;
             this.userService = userService;
         }
 
-        /// <summary>
-        /// The GetNickname
-        /// </summary>
-        /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet("nickname")]
         public IActionResult GetNickname()
         {
@@ -44,10 +25,6 @@
             return Ok(nickname);
         }
 
-        /// <summary>
-        /// The GetPublicGames
-        /// </summary>
-        /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet("public")]
         public IActionResult GetPublicGameDetails()
         {
@@ -71,11 +48,6 @@
             return Ok(details);
         }
 
-        /// <summary>
-        /// The GetPrivateGameDetails
-        /// </summary>
-        /// <param name="id">The id<see cref="string"/></param>
-        /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet("details")]
         public IActionResult GetPrivateGameDetails([FromQuery] string id)
         {
@@ -103,11 +75,6 @@
             return Ok(details);
         }
 
-        /// <summary>
-        /// The GetPlayerInfo
-        /// </summary>
-        /// <param name="connectionId">The connectionId<see cref="string"/></param>
-        /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet("player/{connectionId}")]
         public IActionResult GetPlayerInfo(string connectionId)
         {
@@ -119,11 +86,6 @@
             return Ok(nickname);
         }
 
-        /// <summary>
-        /// The StartGame
-        /// </summary>
-        /// <param name="settings">The settings<see cref="Settings"/></param>
-        /// <returns>The <see cref="IActionResult"/></returns>
         [HttpPost("start")]
         public IActionResult StartGame([FromBody] Settings settings)
         {
@@ -159,11 +121,6 @@
             }
         }
 
-        /// <summary>
-        /// The JoinGame
-        /// </summary>
-        /// <param name="id">The id<see cref="string"/></param>
-        /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet("join")]
         public IActionResult JoinGame([FromQuery] string id)
         {

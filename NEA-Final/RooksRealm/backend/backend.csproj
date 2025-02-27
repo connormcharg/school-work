@@ -24,4 +24,12 @@
     <PackageReference Include="System.Text.Encodings.Web" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\conno\OneDrive\Documents\GitHub\school-work\NEA-Final\RooksRealm\backend\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\conno\OneDrive\Documents\GitHub\school-work\NEA-Final\RooksRealm\backend\.editorconfig" />
+  </ItemGroup>
+
 </Project>

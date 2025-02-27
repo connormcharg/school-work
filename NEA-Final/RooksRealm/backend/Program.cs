@@ -7,15 +7,8 @@ namespace backend
     using Microsoft.IdentityModel.Tokens;
     using System.Text;
 
-    /// <summary>
-    /// Defines the <see cref="Program" />
-    /// </summary>
     public class Program
     {
-        /// <summary>
-        /// The Main
-        /// </summary>
-        /// <param name="args">The args<see cref="string[]"/></param>
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -29,7 +22,6 @@ namespace backend
             builder.Services.AddControllers();
             builder.Services.AddSignalR(options =>
             {
-
             })
             .AddJsonProtocol(options =>
             {

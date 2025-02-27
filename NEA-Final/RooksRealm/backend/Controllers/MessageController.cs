@@ -6,34 +6,14 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
 
-    /// <summary>
-    /// Defines the <see cref="MessageController" />
-    /// </summary>
     [ApiController]
     [Route("api/[controller]")] // "api/message "
     public class MessageController : ControllerBase
     {
-        /// <summary>
-        /// Defines the messageRepository
-        /// </summary>
         private readonly IMessageRepository messageRepository;
-
-        /// <summary>
-        /// Defines the userRepository
-        /// </summary>
         private readonly IUserRepository userRepository;
-
-        /// <summary>
-        /// Defines the authenticationService
-        /// </summary>
         private readonly IAuthenticationService authenticationService;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageController"/> class.
-        /// </summary>
-        /// <param name="messageRepository">The messageRepository<see cref="IMessageRepository"/></param>
-        /// <param name="userRepository">The userRepository<see cref="IUserRepository"/></param>
-        /// <param name="authenticationService">The authenticationService<see cref="IAuthenticationService"/></param>
         public MessageController(IMessageRepository messageRepository, IUserRepository userRepository, IAuthenticationService authenticationService)
         {
             this.messageRepository = messageRepository;
@@ -41,11 +21,6 @@
             this.authenticationService = authenticationService;
         }
 
-        /// <summary>
-        /// The GetMessages
-        /// </summary>
-        /// <param name="daysAgo">The daysAgo<see cref="int"/></param>
-        /// <returns>The <see cref="IActionResult"/></returns>
         [HttpGet("")]
         public IActionResult GetMessages([FromQuery] int daysAgo)
         {
@@ -58,11 +33,6 @@
             return Ok(new { messages = messages });
         }
 
-        /// <summary>
-        /// The CreateMessage
-        /// </summary>
-        /// <param name="request">The request<see cref="CreateMessageRequest"/></param>
-        /// <returns>The <see cref="IActionResult"/></returns>
         [Authorize]
         [HttpPost("create")]
         public IActionResult CreateMessage([FromBody] CreateMessageRequest request)
@@ -92,11 +62,6 @@
             return BadRequest();
         }
 
-        /// <summary>
-        /// The DeleteMessage
-        /// </summary>
-        /// <param name="id">The id<see cref="int"/></param>
-        /// <returns>The <see cref="IActionResult"/></returns>
         [Authorize]
         [HttpPost("delete")]
         public IActionResult DeleteMessage([FromQuery] int id)
@@ -127,19 +92,9 @@
         }
     }
 
-    /// <summary>
-    /// Defines the <see cref="CreateMessageRequest" />
-    /// </summary>
     public class CreateMessageRequest
     {
-        /// <summary>
-        /// Gets or sets the title
-        /// </summary>
         public string title { get; set; }
-
-        /// <summary>
-        /// Gets or sets the content
-        /// </summary>
         public string content { get; set; }
     }
 }
