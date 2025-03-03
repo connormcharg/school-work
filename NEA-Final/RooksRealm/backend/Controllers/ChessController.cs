@@ -25,27 +25,15 @@
             return Ok(nickname);
         }
 
-        [HttpGet("public")]
-        public IActionResult GetPublicGameDetails()
+        [HttpGet("player/{connectionId}")]
+        public IActionResult GetPlayerInfo(string connectionId)
         {
-            var games = chessService.GetAllGames();
-            var publicGames = games.Where((g) => !g.settings.isPrivate && g.players.Count < 2 && !g.settings.isSinglePlayer);
-
-            var details = new List<object>();
-
-            foreach (var game in publicGames)
+            string? nickname = userService.GetNickname(connectionId);
+            if (nickname == null)
             {
-                details.Add(new
-                {
-                    game.id,
-                    title = game.settings.gameTitle,
-                    playerCount = game.players.Count,
-                    players = game.players.Select(p => p.nickName).ToList(),
-                    game.settings
-                });
+                return NotFound();
             }
-
-            return Ok(details);
+            return Ok(nickname);
         }
 
         [HttpGet("details")]
@@ -75,15 +63,50 @@
             return Ok(details);
         }
 
-        [HttpGet("player/{connectionId}")]
-        public IActionResult GetPlayerInfo(string connectionId)
+        [HttpGet("public")]
+        public IActionResult GetPublicGameDetails()
         {
-            string? nickname = userService.GetNickname(connectionId);
-            if (nickname == null)
+            var games = chessService.GetAllGames();
+            var publicGames = games.Where((g) => !g.settings.isPrivate && g.players.Count < 2 && !g.settings.isSinglePlayer);
+
+            var details = new List<object>();
+
+            foreach (var game in publicGames)
+            {
+                details.Add(new
+                {
+                    game.id,
+                    title = game.settings.gameTitle,
+                    playerCount = game.players.Count,
+                    players = game.players.Select(p => p.nickName).ToList(),
+                    game.settings
+                });
+            }
+
+            return Ok(details);
+        }
+        [HttpGet("join")]
+        public IActionResult JoinGame([FromQuery] string id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            var games = chessService.GetAllGames();
+            var game = games.FirstOrDefault(g => g.id == id);
+
+            if (game == null)
             {
                 return NotFound();
             }
-            return Ok(nickname);
+
+            if (game.players.Count < 2 && !game.settings.isSinglePlayer)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpPost("start")]
@@ -119,30 +142,6 @@
             {
                 return BadRequest();
             }
-        }
-
-        [HttpGet("join")]
-        public IActionResult JoinGame([FromQuery] string id)
-        {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-
-            var games = chessService.GetAllGames();
-            var game = games.FirstOrDefault(g => g.id == id);
-
-            if (game == null)
-            {
-                return NotFound();
-            }
-
-            if (game.players.Count < 2 && !game.settings.isSinglePlayer)
-            {
-                return Ok();
-            }
-
-            return BadRequest();
         }
     }
 }
