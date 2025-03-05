@@ -195,7 +195,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       });
 
       if (!res.ok) {
-        throw new Error((await res.json()).message || "An error occurred.");
+        throw new Error((await res.text()) || "An error occurred.");
       }
 
       toast({
@@ -207,7 +207,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       });
     } catch (error) {
       handleResponseError(error);
-      logout();
     }
   };
 

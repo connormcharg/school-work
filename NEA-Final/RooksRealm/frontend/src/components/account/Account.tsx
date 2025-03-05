@@ -25,35 +25,36 @@ const Account: React.FC = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const toast = useToast();
 
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const res = await fetch("/proxy/api/auth/details", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!res.ok) {
-          throw new Error("Failed to get user details");
-        }
-        const data = await res.json();
-        setUserDetails(data);
-        if (data) {
-          setUsername(data.username);
-          setEmail(data.email);
-          setTheme(data.boardTheme);
-          setThemePreview(`/images/boards/${data.boardTheme}.png`);
-          setRating(data.rating);
-        }
-      } catch {
-        setError("Failed to load user details");
-      } finally {
-        setLoading(false);
+  const fetchUserDetails = async () => {
+    try {
+      const res = await fetch("/proxy/api/auth/details", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to get user details");
       }
-    };
+      const data = await res.json();
+      setUserDetails(data);
+      if (data) {
+        setUsername(data.username);
+        setEmail(data.email);
+        setTheme(data.boardTheme);
+        setThemePreview(`/images/boards/${data.boardTheme}.png`);
+        setRating(data.rating);
+      }
+    } catch {
+      setError("Failed to load user details");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+
+  useEffect(() => {
     if (isLoggedIn) {
       fetchUserDetails();
     } else {
@@ -119,7 +120,7 @@ const Account: React.FC = () => {
     if (activeTab === "profile" && userDetails) {
       return (
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
             changeUsername(username);
             if (!validateTheme(theme)) {
@@ -133,6 +134,8 @@ const Account: React.FC = () => {
               return;
             }
             changeTheme(theme);
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            fetchUserDetails();
           }}
           className="space-y-4"
         >
