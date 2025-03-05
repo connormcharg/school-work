@@ -104,6 +104,15 @@
                 return NotFound("User not found");
             }
 
+            var otherUser = userRepository.GetUserByEmail(request.newEmail);
+            if (otherUser != null)
+            {
+                if (otherUser.username != user.username)
+                {
+                    return BadRequest("User already exists with that email");
+                }
+            }
+
             bool res = userRepository.UpdateUserEmail(user.email, request.newEmail);
             if (res)
             {

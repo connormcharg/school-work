@@ -197,7 +197,7 @@ const Account: React.FC = () => {
     if (activeTab === "email" && userDetails) {
       return (
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
             if (!validateEmail(email)) {
               toast({
@@ -210,6 +210,8 @@ const Account: React.FC = () => {
               return;
             }
             changeEmail(email);
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            fetchUserDetails();
           }}
           className="space-y-4"
         >
