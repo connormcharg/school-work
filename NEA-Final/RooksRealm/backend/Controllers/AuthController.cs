@@ -142,7 +142,7 @@
             {
                 return Ok();
             }
-            return BadRequest();
+            return BadRequest("Invalid Credentials");
         }
 
         [Authorize]

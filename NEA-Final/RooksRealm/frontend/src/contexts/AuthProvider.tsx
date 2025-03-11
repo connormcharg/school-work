@@ -231,15 +231,28 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
             "Username Updated",
           ),
         changePassword: async (oldPassword: string, newPassword: string) => {
-          await handleAccountAction(
-            "/proxy/api/auth/changePassword",
-            { oldPassword, newPassword },
-            "Password Updated",
-          );
+          if (oldPassword && newPassword) {
+            handleAccountAction(
+              "/proxy/api/auth/changePassword",
+              { oldPassword, newPassword },
+              "Password Updated",
+            );
+            logout();
+          } else {
+            toast({
+              title: "Error Occurred",
+              description: "Old or new password(s) left blank.",
+              status: "error",
+              duration: toastDuration,
+              isClosable: true,
+              position: toastPosition,
+            });
+          }
+        },
+        deleteAccount: async () => {
+          handleAccountAction("/proxy/api/auth/delete", {}, "Account Deleted");
           logout();
         },
-        deleteAccount: () =>
-          handleAccountAction("/proxy/api/auth/delete", {}, "Account Deleted"),
         changeTheme: async (newTheme: string) =>
           await handleAccountAction(
             "/proxy/api/auth/changeTheme",

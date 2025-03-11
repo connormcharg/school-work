@@ -1,5 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface GameDetails {
   title: string;
@@ -14,6 +15,7 @@ const JoinGame: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<any | null>(null); // Selected game details
   const [gameCode, setGameCode] = useState(""); // Entered game code
   const toast = useToast();
+  const navigate = useNavigate();
 
   const refreshGames = async () => {
     try {
@@ -83,7 +85,7 @@ const JoinGame: React.FC = () => {
         `/proxy/api/chess/join?id=${selectedGame.id}`,
       );
       if (response.ok) {
-        window.location.href = `/play/${selectedGame.id}`;
+        navigate(`/play/${selectedGame.id}`);
       } else {
         toast({
           title: "Error joining game. Please refresh.",
