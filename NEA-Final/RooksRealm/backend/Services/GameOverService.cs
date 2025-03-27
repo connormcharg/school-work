@@ -10,12 +10,9 @@
         private readonly ChessService chessService;
         private readonly IServiceProvider serviceProvider;
 
-        /*private readonly IUserRepository userRepository;*/
-
-        public GameOverService(ChessService chessService/*, IUserRepository userRepository*/, IServiceProvider serviceProvider)
+        public GameOverService(ChessService chessService, IServiceProvider serviceProvider)
         {
             this.chessService = chessService;
-            /*this.userRepository = userRepository;*/
             this.serviceProvider = serviceProvider;
         }
 
