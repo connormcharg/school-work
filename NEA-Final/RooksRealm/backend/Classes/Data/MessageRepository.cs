@@ -19,7 +19,7 @@
             {
                 connection.Open();
 
-                var dateThreshold = DateTime.Now.AddDays(-daysAgo);  // Get the date N days ago
+                var dateThreshold = DateTime.Now.AddDays(-daysAgo);
 
                 var command = new NpgsqlCommand(
                     @"SELECT m.id, m.title, m.content, u.username, m.datetime

@@ -635,9 +635,7 @@
                 }
             }
 
-            var directions = new List<List<int>> {
-                new List<int> { -2, -1 }, new List<int> { -2, 1 }, new List<int> { -1, -2 }, new List<int> { -1, 2 },
-                new List<int> { 1, -2 }, new List<int> { 1, 2 }, new List<int> { 2, -1 }, new List<int> { 2, 1 } };
+            var directions = new List<List<int>> { new List<int> { -2, -1 }, new List<int> { -2, 1 }, new List<int> { -1, -2 }, new List<int> { -1, 2 }, new List<int> { 1, -2 }, new List<int> { 1, 2 }, new List<int> { 2, -1 }, new List<int> { 2, 1 } };
             var enemyColour = game.state.whiteToMove ? 'b' : 'w';
 
             foreach (var direction in directions)
@@ -655,7 +653,6 @@
                     }
                 }
             }
-
             return moves;
         }
 
@@ -676,8 +673,7 @@
                 }
             }
 
-            var directions = new List<List<int>> {
-                new List<int> { -1, -1 }, new List<int> { -1, 1 }, new List<int> { 1, -1 }, new List<int> { 1, 1 } };
+            var directions = new List<List<int>> { new List<int> { -1, -1 }, new List<int> { -1, 1 }, new List<int> { 1, -1 }, new List<int> { 1, 1 } };
             var enemyColour = game.state.whiteToMove ? 'b' : 'w';
 
             foreach (var direction in directions)

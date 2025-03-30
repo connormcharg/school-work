@@ -85,6 +85,7 @@
 
             return Ok(details);
         }
+
         [HttpGet("join")]
         public IActionResult JoinGame([FromQuery] string id)
         {
