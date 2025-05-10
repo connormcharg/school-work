@@ -17,5 +17,8 @@ export default defineConfig({
         ws: true,
       },
     },
+    allowedHosts: [
+      "chess.mcharg.com",
+    ],
   },
 });
